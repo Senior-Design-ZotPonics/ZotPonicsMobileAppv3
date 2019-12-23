@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'infoCard.dart';
+import 'textWidget.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(ZotPonics());
 
-class MyApp extends StatelessWidget {
+class ZotPonics extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -18,9 +21,10 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        fontFamily: 'Montserrat',
+        primarySwatch: Colors.green,
       ),
-      home: MyHomePage(title: 'butter'),
+      home: MyHomePage(title: 'ZotPonics'),
     );
   }
 }
@@ -44,19 +48,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -67,94 +58,28 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets
 
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-        body: GridView.count(
-          primary: false,
-          padding: const EdgeInsets.all(20),
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 20,
-          // Create a grid with 2 columns. If you change the scrollDirection to
-          // horizontal, this produces 2 rows.
-          crossAxisCount: 2,
-          children: <Widget>[
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
-              ),
-              child: InkWell(
-                splashColor: Colors.blue.withAlpha(30),
-                onTap: () {
-                  print('Card tapped.');
-                },
-                child: Container(
-                  width: 300,
-                  height: 100,
-                  child: Center(
-                    child: Text('A card that can be tapped'),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(8),
-              child: const Text('Heed not the rabble'),
-              color: Colors.teal[200],
-            ),
-            Container(
-              padding: const EdgeInsets.all(8),
-              child: const Text('Sound of screams but the'),
-              color: Colors.teal[300],
-            ),
-            Container(
-              padding: const EdgeInsets.all(8),
-              child: const Text('Who scream'),
-              color: Colors.teal[400],
-            ),
-            Container(
-              padding: const EdgeInsets.all(8),
-              child: const Text('Revolution is coming...'),
-              color: Colors.teal[500],
-            ),
-            Container(
-              padding: const EdgeInsets.all(8),
-              child: const Text('Revolution, they...'),
-              color: Colors.teal[600],
-            ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50.0),
+        child: AppBar(
+          title: Text(widget.title, style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w800, fontSize: 50.0, color: Colors.white)),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () {},
+            )
           ],
         ),
-    );
-  }
-}
-
-class GridListExample extends StatelessWidget {
-  //const GridListExample({Key key}): super(key:key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.count(
-      // Create a grid with 2 columns. If you change the scrollDirection to
-      // horizontal, this would produce 2 rows.
-      crossAxisCount: 2,
-      scrollDirection: Axis.vertical,
-      // Generate 100 Widgets that display their index in the List
-      children: List.generate(4, (index) {
-        return Center(
-          child: Container(
-            //decoration: BoxDecoration(
-            //  border: Border.all(color: Colors.grey, width: 3.0),
-            //),
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Item $index',
-              style: Theme.of(context).textTheme.headline,
-            ),
-          ),
-        );
-      }),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          InfoCard('75°F', 'Temperature', Colors.red, Icon(FontAwesomeIcons.thermometerHalf)),
+          InfoCard('60%', 'Humidity', Colors.orange, Icon(FontAwesomeIcons.water)),
+          InfoCard('6.2 cm', 'Plant Height', Colors.lightGreen, Icon(FontAwesomeIcons.leaf)),
+          InfoCard('ON', 'Lights', Colors.yellow, Icon(FontAwesomeIcons.lightbulb))
+        ]
+      )
     );
   }
 }
