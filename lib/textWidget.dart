@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 
-class TextWidget extends StatelessWidget {
-  String _text;
-  String _font;
-  Color _color;
-  FontWeight _weight;
-  double _size;
+///Return a text widget based on input parameters
 
-  TextWidget(String text, String font, Color color, FontWeight weight, double size) {
-    this._text = text;
-    this._font = font;
-    this._color = color;
-    this._weight = weight;
-    this._size = size;
-  }
+class TextWidget extends StatelessWidget {
+  final String _text;
+  final String _font;
+  final Color _color;
+  final FontWeight _weight;
+  final double _size;
+
+  TextWidget(this._text, this._font, this._color, this._weight, this._size); ///Constructor
 
   @override
   Widget build(BuildContext context) {
-    return Text(_text, style: TextStyle(fontFamily: _font,
-        fontWeight: _weight,
-        fontSize: _size,
-        color: _color));
+    return Text(_text,
+        style: TextStyle(
+            fontFamily: _font,
+            fontWeight: _weight,
+            fontSize: _size,
+            color: _color));
   }
 }
