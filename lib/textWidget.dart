@@ -9,15 +9,19 @@ class TextWidget extends StatelessWidget {
   final FontWeight _weight;
   final double _size;
 
-  TextWidget(this._text, this._font, this._color, this._weight, this._size); ///Constructor
+  ///Constructor
+  TextWidget(this._text, this._font, this._color, this._weight, this._size);
 
   @override
   Widget build(BuildContext context) {
-    return Text(_text,
+    return Text(
+        _text,
         style: TextStyle(
             fontFamily: _font,
+            color: _color,
             fontWeight: _weight,
-            fontSize: _size,
-            color: _color));
+            fontSize: _size
+        )
+    );
   }
 }
