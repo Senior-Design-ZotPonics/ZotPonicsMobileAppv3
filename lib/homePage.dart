@@ -43,8 +43,8 @@ class HomePage extends StatelessWidget {
                         }
                       )
                   )
-                ],
-            ),
+                ]
+            )
         ),
         ///Info cards
         body: Column(
