@@ -1,15 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'dart:async';
 import 'infoCard.dart';
 import 'settingsPage.dart';
+import 'services.dart';
+import 'textWidget.dart';
+
 
 ///Main page of the app
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final String _font;
 
   ///Constructor
   HomePage(this._font);
+
+  @override
+  State<StatefulWidget> createState() => _HomePage(_font);
+}
+
+
+class _HomePage extends State<HomePage> {
+  final String _font;
+  Timer timer;
+
+  @override
+  void initState() {
+    super.initState();
+    ///Fetch data every five minutes
+    timer = Timer.periodic(Duration(minutes: 5), (Timer t) => setState(() {}));
+  }
+
+  ///Constructor
+  _HomePage(this._font);
+
+  ///Convert DateTime object to date string
+  String _formattedDate(DateTime input) {
+    return '${input.month}/${input.day}/${input.year}';
+  }
+
+  ///Convert DateTime object to time string
+  String _formattedTime(DateTime input, bool includeSeconds) {
+    String hour = (input.hour < 10) ? '0${input.hour}' : '${input.hour}';
+    String minute = (input.minute < 10) ? '0${input.minute}' : '${input.minute}';
+    String second = (input.second < 10) ? '0${input.second}' : '${input.second}';
+    return (includeSeconds) ? '$hour:$minute:$second' : '$hour:$minute';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,16 +83,43 @@ class HomePage extends StatelessWidget {
             )
         ),
         ///Info cards
-        body: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              InfoCard('75°F', 'Temperature', Colors.red, FontAwesomeIcons.thermometerHalf),
-              InfoCard('60%', 'Humidity', Colors.orange, FontAwesomeIcons.water),
-              InfoCard('ON', 'Lights', Colors.yellow, FontAwesomeIcons.lightbulb),
-              InfoCard('6.2 cm', 'Plant Height', Colors.lightGreen, FontAwesomeIcons.leaf),
-              InfoCard('17:00', 'Last Watered', Colors.lightBlue, FontAwesomeIcons.clock)
-            ]
+        body: FutureBuilder<PostGet>(
+            future: getPost(), ///Activates every time state changes
+            builder: (context, snapshot) {
+              if(snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return Center(child: TextWidget('ERROR', _font, Colors.red, FontWeight.w400, 40.0));
+                }
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      InfoCard('${snapshot.data.readings.last.temperature}°F', 'Temperature', Colors.red, FontAwesomeIcons.thermometerHalf),
+                      InfoCard('${snapshot.data.readings.last.humidity}%', 'Humidity', Colors.orange, FontAwesomeIcons.water),
+                      InfoCard('${snapshot.data.readings.last.lightStatus}', 'Lights', Colors.yellow, FontAwesomeIcons.lightbulb),
+                      InfoCard('${snapshot.data.readings.last.plantHeight}', 'Plant Height', Colors.lightGreen, FontAwesomeIcons.leaf),
+                      InfoCard('${_formattedTime(snapshot.data.readings.last.lastWateredTimestamp, false)}', 'Last Watered [${_formattedDate(snapshot.data.readings.last.lastWateredTimestamp)}]', Colors.lightBlue, FontAwesomeIcons.clock),
+                      ///Update and check info
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            TextWidget(
+                                'Last updated: ${_formattedTime(snapshot.data.readings.last.timestamp, true)}, ${_formattedDate(snapshot.data.readings.last.timestamp)}  |  Last checked: ${_formattedTime(DateTime.now(), true)}, ${_formattedDate(DateTime.now())}',
+                                _font,
+                                Colors.black,
+                                FontWeight.w400,
+                                10.0
+                            )
+                          ]
+                      )
+                    ]
+                );
+              }
+              else {
+                return Center(child: TextWidget('Loading...', _font, Colors.black, FontWeight.w400, 20.0));
+              }
+            }
         )
     );
   }

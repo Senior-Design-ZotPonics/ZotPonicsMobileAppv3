@@ -54,10 +54,7 @@ class _InfoCard extends State<InfoCard> {
             child: InkWell(
                 customBorder: _roundedRect,
                 splashColor: _color.withAlpha(1000),
-                onTap: () {
-                  ///Changes variable and displays new value
-                  setState(() { _title = 'Changed'; });
-                },
+                onTap: () {},
                 child: Row(children: [
                     ///Icon + icon background
                     Container(
