@@ -5,14 +5,16 @@ import 'textWidget.dart';
 
 class TimeSettingItem extends StatefulWidget {
   final String _title;
+  final int _start;
+  final int _end;
   final IconData _icon;
   final String _font;
 
   ///Constructor
-  TimeSettingItem(this._title, this._icon, this._font);
+  TimeSettingItem(this._title, this._start, this._end, this._icon, this._font);
 
   @override
-  State<StatefulWidget> createState() => _TimeSettingItem(_title, _icon, _font);
+  State<StatefulWidget> createState() => _TimeSettingItem(_title, _start, _end, _icon, _font);
 }
 
 ///States allow us to change variables dynamically
@@ -20,12 +22,11 @@ class _TimeSettingItem extends State<TimeSettingItem> {
   final String _title;
   final IconData _icon;
   final String _font;
-
-  TimeOfDay _timeStart = TimeOfDay(hour: 7, minute: 0);
-  TimeOfDay _timeEnd = TimeOfDay(hour: 22, minute: 0);
+  int _start;
+  int _end;
 
   ///Constructor
-  _TimeSettingItem(this._title, this._icon, this._font);
+  _TimeSettingItem(this._title, this._start, this._end, this._icon, this._font);
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class _TimeSettingItem extends State<TimeSettingItem> {
                 20.0
             ),
             subtitle: TextWidget(
-                '${_timeStart.format(context)} - ${_timeEnd.format(context)}',
+                '$_start:00 - $_end:00',
                 _font,
                 Colors.black,
                 FontWeight.w300,
@@ -56,18 +57,18 @@ class _TimeSettingItem extends State<TimeSettingItem> {
               ///When setting tapped, display start time input dialog
               showTimePicker(
                   context: context,
-                  initialTime: _timeStart
+                  initialTime: TimeOfDay(hour: _start, minute: 0)
               ).then((returnTime) {
                   if (returnTime != null) {
-                    setState(() { _timeStart = returnTime; });
+                    setState(() { _start = returnTime.hour; });
 
                     ///After start time inputted, display end time input dialog
                     showTimePicker(
                         context: context,
-                        initialTime: _timeEnd
+                        initialTime: TimeOfDay(hour: _end, minute: 0)
                     ).then((returnTime) {
                         if (returnTime != null) {
-                          setState(() { _timeEnd = returnTime; });
+                          setState(() { _end = returnTime.hour; });
                         }
                     });
                   }

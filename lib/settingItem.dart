@@ -6,16 +6,17 @@ import 'inputDialog.dart';
 
 class SettingItem extends StatefulWidget {
   final String _title;
+  final int _value;
   final String prefix;
   final String suffix;
   final IconData _icon;
   final String _font;
 
   ///Constructor
-  SettingItem(this._title, this._icon, this._font, {this.prefix = '', this.suffix = ''});
+  SettingItem(this._title, this._value, this._icon, this._font, {this.prefix = '', this.suffix = ''});
 
   @override
-  State<StatefulWidget> createState() => _SettingItem(_title, prefix, suffix, _icon, _font);
+  State<StatefulWidget> createState() => _SettingItem(_title, _value, prefix, suffix, _icon, _font);
 }
 
 ///States allow us to change variables dynamically
@@ -26,10 +27,10 @@ class _SettingItem extends State<SettingItem> {
   final IconData _icon;
   final String _font;
 
-  String _value = '100';
+  int _value;
 
   ///Constructor
-  _SettingItem(this._title, this._prefix, this._suffix, this._icon, this._font);
+  _SettingItem(this._title, this._value, this._prefix, this._suffix, this._icon, this._font);
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +67,7 @@ class _SettingItem extends State<SettingItem> {
                     return InputDialog(_title, _font, true, min: 0, max: 100);
                   }).then((returnValue) {
                     if (returnValue != null) {
-                      setState(() { _value = returnValue; });
+                      setState(() { _value = int.parse(returnValue); });
                     }
                   }
               );
