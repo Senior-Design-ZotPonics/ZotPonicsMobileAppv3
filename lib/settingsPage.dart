@@ -5,6 +5,7 @@ import 'settingItem.dart';
 import 'timeSettingItem.dart';
 import 'saveProfileButton.dart';
 import 'services.dart';
+import 'inputDialog.dart';
 
 ///Settings page
 
@@ -27,7 +28,10 @@ class _SettingsPage extends State<SettingsPage> {
   int lightEnd;
   int duration;
   int frequency;
-  SettingItem s;
+  SettingItem tempItem;
+  SettingItem humidItem;
+  SettingItem durationItem;
+  SettingItem freqItem;
 
   @override
   void initState() {
@@ -85,13 +89,16 @@ class _SettingsPage extends State<SettingsPage> {
                 duration = snapshot.data.readings.last.waterDuration.toInt();
                 frequency = snapshot.data.readings.last.waterFreq.toInt();
                 ///Key to getting values back to POST to database
-                s = SettingItem('Max Temperature', maxTemp, FontAwesomeIcons.thermometerFull, _font, suffix: '°C');
+                tempItem = SettingItem('Max Temperature', maxTemp, FontAwesomeIcons.thermometerFull, _font, suffix: '°C');
+                humidItem = SettingItem('Max Humidity', maxHumid, FontAwesomeIcons.water, _font, suffix: '%');
+                durationItem = SettingItem('Watering Duration', duration, FontAwesomeIcons.tint, _font, suffix: ' mins');
+                freqItem = SettingItem('Watering Frequency', frequency, FontAwesomeIcons.stopwatch, _font, prefix: 'Every ', suffix: ' mins');
                 return ListView(children: [
-                  s,
-                  SettingItem('Max Humidity', maxHumid, FontAwesomeIcons.water, _font, suffix: '%'),
+                  tempItem,
+                  humidItem,
                   TimeSettingItem('Light Schedule', lightStart, lightEnd, FontAwesomeIcons.clock, _font),
-                  SettingItem('Watering Duration', duration, FontAwesomeIcons.tint, _font, suffix: ' mins'),
-                  SettingItem('Watering Frequency', frequency, FontAwesomeIcons.stopwatch, _font, prefix: 'Every ', suffix: ' mins')
+                  durationItem,
+                  freqItem
                 ]);
               }
               else {
@@ -100,7 +107,41 @@ class _SettingsPage extends State<SettingsPage> {
             }
         ),
         ///Save profile button
-        floatingActionButton: SaveProfileButton(_font),
+        floatingActionButton: FloatingActionButton.extended(
+            label: TextWidget(
+                'Save Profile',
+                _font,
+                Colors.white,
+                FontWeight.w600,
+                20.0
+            ),
+            onPressed: () {
+              print(tempItem.);
+              ///When button pressed, display input dialog
+              showDialog<String>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    ///String input dialog
+                    return InputDialog('Save Profile As', _font, false);
+                  }).then((returnName) {
+                if (returnName != null) {
+                  setState(() { _name = returnName; });
+                  ///Show bar on bottom of screen confirming entry
+                  Scaffold.of(context).showSnackBar(
+                      SnackBar(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0))
+                          ),
+                          duration: Duration(seconds: 3),
+                          content: Text('Saved as $_name')
+                      )
+                  );
+                }
+              }
+              );
+            }
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat
     );
   }
