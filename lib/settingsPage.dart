@@ -32,17 +32,6 @@ class _SettingsPage extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-//    Future<CGPostGet> f = getControlGrowth();
-//    f.then((snapshot) {
-//      maxTemp = snapshot.readings.last.temperature.toInt();
-//      maxHumid = snapshot.readings.last.humidity.toInt();
-//      lightStart = snapshot.readings.last.lightStart.toInt();
-//      lightEnd = snapshot.readings.last.lightEnd.toInt();
-//      duration = snapshot.readings.last.waterDuration.toInt();
-//      frequency = snapshot.readings.last.waterFreq.toInt();
-//    }).catchError((error) {
-//      print(error);
-//    });
   }
 
   ///Constructor
