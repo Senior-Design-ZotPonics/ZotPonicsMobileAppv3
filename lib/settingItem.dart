@@ -32,6 +32,10 @@ class _SettingItem extends State<SettingItem> {
   ///Constructor
   _SettingItem(this._title, this._value, this._prefix, this._suffix, this._icon, this._font);
 
+  int getValue() {
+    return _value;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(

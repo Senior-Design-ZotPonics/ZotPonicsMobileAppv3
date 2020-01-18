@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:io';
 
-String ip = 'http://10.0.1.96:5000';
+String ip = 'http://169.234.8.107:5000';
 
 String sensorData = '/recentsensordata';
 String controlGrowth = '/usercontrolgrowth';
