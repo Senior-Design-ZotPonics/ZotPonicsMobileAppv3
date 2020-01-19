@@ -4,19 +4,21 @@
 //     final post = postFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:io';
 
-String ip = 'http://169.234.8.107:5000';
+///To modify IP address, check initState() in homePage.dart
 
+String prefix = 'http://';
 String sensorData = '/recentsensordata';
 String controlGrowth = '/usercontrolgrowth';
 
 ///Sensor GET///
 //Executes the get api
-Future<SensorPostGet> getSensorData() async{
-  final response = await http.get(ip + sensorData);
+Future<SensorPostGet> getSensorData(TextEditingController ipAddr) async{
+  final response = await http.get(prefix + ipAddr.text + sensorData);
   return sensorPostFromJson(response.body);
 }
 
@@ -67,8 +69,8 @@ class SensorReading {
 
 ///Control Growth GET and POST///
 //Executes the get api
-Future<CGPostGet> getControlGrowth() async{
-  final response = await http.get(ip + controlGrowth);
+Future<CGPostGet> getControlGrowth(TextEditingController ipAddr) async{
+  final response = await http.get(prefix + ipAddr.text + controlGrowth);
   return CGPostFromJson(response.body);
 }
 
@@ -123,9 +125,9 @@ class CGReading {
 }
 
 //Executes the put api
-Future<http.Response> postControlGrowth(PostPut post) async{
+Future<http.Response> postControlGrowth(PostPut post, TextEditingController ipAddr) async{
   final response = await http.post(
-      ip + controlGrowth,
+      prefix + ipAddr.text + controlGrowth,
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.authorizationHeader : ''
@@ -153,12 +155,12 @@ class Writing {
   String timestamp;
   int lightStart;
   int lightEnd;
-  double humidity;
-  double temp;
-  double waterFreq;
-  double waterDuration;
-  double nutrientRatio;
-  double baseLevel;
+  int humidity;
+  int temp;
+  int waterFreq;
+  int waterDuration;
+  int nutrientRatio;
+  int baseLevel;
 
   Writing({
     this.timestamp,

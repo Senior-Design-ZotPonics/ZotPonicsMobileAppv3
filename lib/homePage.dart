@@ -23,16 +23,25 @@ class HomePage extends StatefulWidget {
 class _HomePage extends State<HomePage> {
   final String _font;
   Timer timer;
+  final ipAddr = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    ipAddr.text = '10.0.1.76:5000';
     ///Fetch data every five minutes
     timer = Timer.periodic(Duration(minutes: 5), (Timer t) => setState(() {}));
   }
 
   ///Constructor
   _HomePage(this._font);
+
+  ///Required method to dispose of controllers
+  @override
+  void dispose() {
+    ipAddr.dispose();
+    super.dispose();
+  }
 
   ///Convert DateTime object to date string
   String _formattedDate(DateTime input) {
@@ -75,7 +84,7 @@ class _HomePage extends State<HomePage> {
                         splashColor: Colors.transparent,
                         onPressed: () {
                           ///Go to settings page
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsPage(_font)));
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsPage(_font, ipAddr)));
                         }
                       )
                   )
@@ -84,7 +93,7 @@ class _HomePage extends State<HomePage> {
         ),
         ///Info cards
         body: FutureBuilder<SensorPostGet>(
-            future: getSensorData(), ///Activates every time state changes
+            future: getSensorData(ipAddr), ///Activates every time state changes
             builder: (context, snapshot) {
               if(snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasError) {
@@ -96,7 +105,7 @@ class _HomePage extends State<HomePage> {
                     children: [
                       InfoCard('${snapshot.data.readings.last.temperature}°C', 'Temperature', Colors.red, FontAwesomeIcons.thermometerHalf),
                       InfoCard('${snapshot.data.readings.last.humidity}%', 'Humidity', Colors.orange, FontAwesomeIcons.water),
-                      InfoCard('${snapshot.data.readings.last.lightStatus}', 'Lights', Colors.yellow, FontAwesomeIcons.lightbulb),
+                      InfoCard(snapshot.data.readings.last.lightStatus.toLowerCase() == 'true' ? 'ON' : 'OFF', 'Lights', Colors.yellow, FontAwesomeIcons.lightbulb),
                       InfoCard('${snapshot.data.readings.last.plantHeight} cm', 'Plant Height', Colors.lightGreen, FontAwesomeIcons.leaf),
                       InfoCard('${_formattedTime(snapshot.data.readings.last.lastWateredTimestamp, false)}', 'Last Watered [${_formattedDate(snapshot.data.readings.last.lastWateredTimestamp)}]', Colors.lightBlue, FontAwesomeIcons.clock),
                       ///Update and check info

@@ -39,7 +39,7 @@ class _SaveProfileButton extends State<SaveProfileButton> {
               barrierDismissible: false,
               builder: (BuildContext context) {
                 ///String input dialog
-                return InputDialog('Save Profile As', _font, false);
+                //return InputDialog('Save Profile As', _font, false);
               }).then((returnName) {
                 if (returnName != null) {
                   setState(() { _name = returnName; });

@@ -5,16 +5,16 @@ import 'textWidget.dart';
 
 class TimeSettingItem extends StatefulWidget {
   final String _title;
-  final int _start;
-  final int _end;
   final IconData _icon;
   final String _font;
+  final _startController;
+  final _endController;
 
   ///Constructor
-  TimeSettingItem(this._title, this._start, this._end, this._icon, this._font);
+  TimeSettingItem(this._title, this._startController, this._endController, this._icon, this._font);
 
   @override
-  State<StatefulWidget> createState() => _TimeSettingItem(_title, _start, _end, _icon, _font);
+  State<StatefulWidget> createState() => _TimeSettingItem(_title, _startController, _endController, _icon, _font);
 }
 
 ///States allow us to change variables dynamically
@@ -22,11 +22,11 @@ class _TimeSettingItem extends State<TimeSettingItem> {
   final String _title;
   final IconData _icon;
   final String _font;
-  int _start;
-  int _end;
+  final _startController;
+  final _endController;
 
   ///Constructor
-  _TimeSettingItem(this._title, this._start, this._end, this._icon, this._font);
+  _TimeSettingItem(this._title, this._startController, this._endController, this._icon, this._font);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class _TimeSettingItem extends State<TimeSettingItem> {
                 20.0
             ),
             subtitle: TextWidget(
-                '$_start:00 - $_end:00',
+                '${_startController.text}:00 - ${_endController.text}:00',
                 _font,
                 Colors.black,
                 FontWeight.w300,
@@ -57,18 +57,18 @@ class _TimeSettingItem extends State<TimeSettingItem> {
               ///When setting tapped, display start time input dialog
               showTimePicker(
                   context: context,
-                  initialTime: TimeOfDay(hour: _start, minute: 0)
+                  initialTime: TimeOfDay(hour: int.parse(_startController.text), minute: 0)
               ).then((returnTime) {
                   if (returnTime != null) {
-                    setState(() { _start = returnTime.hour; });
+                    setState(() { _startController.text = returnTime.hour.toString(); });
 
                     ///After start time inputted, display end time input dialog
                     showTimePicker(
                         context: context,
-                        initialTime: TimeOfDay(hour: _end, minute: 0)
+                        initialTime: TimeOfDay(hour: int.parse(_endController.text), minute: 0)
                     ).then((returnTime) {
                         if (returnTime != null) {
-                          setState(() { _end = returnTime.hour; });
+                          setState(() { _endController.text = returnTime.hour.toString(); });
                         }
                     });
                   }

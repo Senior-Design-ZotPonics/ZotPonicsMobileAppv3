@@ -9,17 +9,14 @@ class InputDialog extends StatefulWidget {
   final bool _isNum;
   final int min;
   final int max;
+  final _controller;
 
   ///Constructor
-  InputDialog(this._title, this._font, this._isNum, {this.min = 0, this.max = 0});
+  InputDialog(this._title, this._controller, this._font, this._isNum, {this.min = 0, this.max = 0});
 
   @override
   State<StatefulWidget> createState() {
-    if (_isNum) {
-      return _InputDialog(_title, 'Enter an integer', _font, min, max, true);
-    } else {
-      return _InputDialog(_title, 'Name', _font, 0, 0, false);
-    }
+    return _InputDialog(_title, _controller, _isNum ? 'Enter an integer' : 'Name', _font, min, max, _isNum);
   }
 }
 
@@ -31,12 +28,13 @@ class _InputDialog extends State<InputDialog> {
   final int _min;
   final int _max;
   final bool _isNum;
+  final _controller;
 
   String _errorText = 'Please enter a correct value.';
   bool _inputValid = true;
 
   ///Constructor
-  _InputDialog(this._title, this._label, this._font, this._min, this._max, this._isNum);
+  _InputDialog(this._title, this._controller, this._label, this._font, this._min, this._max, this._isNum);
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +51,7 @@ class _InputDialog extends State<InputDialog> {
         ),
         ///Input field for name
         content: TextField(
+            controller: _controller,
             keyboardType: _isNum ? TextInputType.number : TextInputType.text,
             decoration: InputDecoration(
                 border: OutlineInputBorder(),

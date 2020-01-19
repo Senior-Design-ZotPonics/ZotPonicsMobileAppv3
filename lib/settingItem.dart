@@ -6,17 +6,20 @@ import 'inputDialog.dart';
 
 class SettingItem extends StatefulWidget {
   final String _title;
-  final int _value;
   final String prefix;
   final String suffix;
   final IconData _icon;
   final String _font;
+  final int min;
+  final int max;
+  final bool numInput;
+  final _controller;
 
   ///Constructor
-  SettingItem(this._title, this._value, this._icon, this._font, {this.prefix = '', this.suffix = ''});
+  SettingItem(this._title, this._controller, this._icon, this._font, {this.prefix = '', this.suffix = '', this.min = 0, this.max = 100, this.numInput = true});
 
   @override
-  State<StatefulWidget> createState() => _SettingItem(_title, _value, prefix, suffix, _icon, _font);
+  State<StatefulWidget> createState() => _SettingItem(_title, _controller, prefix, suffix, _icon, _font, min, max, numInput);
 }
 
 ///States allow us to change variables dynamically
@@ -26,14 +29,17 @@ class _SettingItem extends State<SettingItem> {
   final String _suffix;
   final IconData _icon;
   final String _font;
-
-  int _value;
+  final int _min;
+  final int _max;
+  final bool _numInput;
+  final _controller;
 
   ///Constructor
-  _SettingItem(this._title, this._value, this._prefix, this._suffix, this._icon, this._font);
+  _SettingItem(this._title, this._controller, this._prefix, this._suffix, this._icon, this._font, this._min, this._max, this._numInput);
 
-  int getValue() {
-    return _value;
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -55,7 +61,7 @@ class _SettingItem extends State<SettingItem> {
                 20.0
             ),
             subtitle: TextWidget(
-                _prefix + '$_value' + _suffix,
+                _prefix + '${_controller.text}' + _suffix,
                 _font,
                 Colors.black,
                 FontWeight.w300,
@@ -68,10 +74,11 @@ class _SettingItem extends State<SettingItem> {
                   barrierDismissible: false,
                   builder: (BuildContext context) {
                     ///Number input dialog
-                    return InputDialog(_title, _font, true, min: 0, max: 100);
+                    return InputDialog(_title, _controller, _font, _numInput, min: _min, max: _max);
                   }).then((returnValue) {
                     if (returnValue != null) {
-                      setState(() { _value = int.parse(returnValue); });
+                      ///Reloads SettingItem to show new input
+                      setState(() {});
                     }
                   }
               );
