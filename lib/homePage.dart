@@ -28,7 +28,7 @@ class _HomePage extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    ipAddr.text = '10.0.1.76:5000';
+    ipAddr.text = '169.234.18.4:5000';
     ///Fetch data every five minutes
     timer = Timer.periodic(Duration(minutes: 5), (Timer t) => setState(() {}));
   }
