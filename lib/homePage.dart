@@ -96,7 +96,7 @@ class _HomePage extends State<HomePage> {
                     children: [
                       InfoCard('${snapshot.data.readings.last.temperature}°C', 'Temperature', Colors.red, FontAwesomeIcons.thermometerHalf),
                       InfoCard('${snapshot.data.readings.last.humidity}%', 'Humidity', Colors.orange, FontAwesomeIcons.water),
-                      InfoCard(snapshot.data.readings.last.lightStatus.toLowerCase() == 'true' ? 'ON' : 'OFF', 'Lights', Colors.yellow, FontAwesomeIcons.lightbulb),
+                      snapshot.data.readings.last.lightStatus.toLowerCase() == 'true' ? InfoCard('ON', 'Lights', Colors.yellow, FontAwesomeIcons.lightbulb) : InfoCard('OFF', 'Lights', Colors.grey, FontAwesomeIcons.lightbulb),
                       InfoCard('${snapshot.data.readings.last.plantHeight} cm', 'Plant Height', Colors.lightGreen, FontAwesomeIcons.leaf),
                       InfoCard('${_formattedTime(snapshot.data.readings.last.lastWateredTimestamp, false)}', 'Last Watered [${_formattedDate(snapshot.data.readings.last.lastWateredTimestamp)}]', Colors.lightBlue, FontAwesomeIcons.clock),
                       ///Update and check info
