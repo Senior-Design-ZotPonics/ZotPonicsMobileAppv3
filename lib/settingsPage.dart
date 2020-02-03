@@ -12,19 +12,17 @@ import 'package:intl/intl.dart';
 
 class SettingsPage extends StatefulWidget {
   final String _font;
-  final ipAddr;
 
   ///Constructor
-  SettingsPage(this._font, this.ipAddr);
+  SettingsPage(this._font);
 
   @override
-  State<StatefulWidget> createState() => _SettingsPage(_font, ipAddr);
+  State<StatefulWidget> createState() => _SettingsPage(_font);
 }
 
 
 class _SettingsPage extends State<SettingsPage> {
   final String _font;
-  final ipAddr;
 
   ///Controller objects to read SettingItem inputs
   final maxTemp = TextEditingController();
@@ -58,7 +56,7 @@ class _SettingsPage extends State<SettingsPage> {
   }
 
   ///Constructor
-  _SettingsPage(this._font, this.ipAddr);
+  _SettingsPage(this._font);
 
   ///Post setting values to database
   postSettings() {
@@ -76,7 +74,7 @@ class _SettingsPage extends State<SettingsPage> {
         )]
     );
 
-    postControlGrowth(post, ipAddr).then((response) {
+    postControlGrowth(post).then((response) {
       if(response.statusCode > 200)
         print(response.body);
       else
@@ -110,7 +108,7 @@ class _SettingsPage extends State<SettingsPage> {
         ),
         ///Setting items
         body: FutureBuilder<CGPostGet>(
-            future: getControlGrowth(ipAddr), ///Activates every time state changes
+            future: getControlGrowth(), ///Activates every time state changes
             builder: (context, snapshot) {
               if(snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasError) {
@@ -138,7 +136,8 @@ class _SettingsPage extends State<SettingsPage> {
                 ]);
               }
               else {
-                return SettingItem('IP Address', ipAddr, FontAwesomeIcons.networkWired, _font, numInput: false);
+                return Center(child: TextWidget('Loading...', _font, Colors.black, FontWeight.w400, 20.0));
+                //return SettingItem('IP Address', ipAddr, FontAwesomeIcons.networkWired, _font, numInput: false);
               }
             }
         ),

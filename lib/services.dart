@@ -11,14 +11,14 @@ import 'dart:io';
 
 ///To modify IP address, check initState() in homePage.dart
 
-String prefix = 'http://';
+String url = 'http://okyang.pythonanywhere.com';
 String sensorData = '/recentsensordata';
 String controlGrowth = '/usercontrolgrowth';
 
 ///Sensor GET///
 //Executes the get api
-Future<SensorPostGet> getSensorData(TextEditingController ipAddr) async{
-  final response = await http.get(prefix + ipAddr.text + sensorData);
+Future<SensorPostGet> getSensorData() async{
+  final response = await http.get(url + sensorData);
   return sensorPostFromJson(response.body);
 }
 
@@ -61,7 +61,7 @@ class SensorReading {
       humidity: json["humidity"],
       baseLevel: json["baseLevel"],
       plantHeight: json["plantHeight"],
-      lastWateredTimestamp: DateTime.parse(json["lastWateredTimestamp"]),
+      lastWateredTimestamp: DateTime.parse(json["lastWateredTimestamp"][0]),
       lightStatus: json["lightStatus"]
   );
 }
@@ -69,8 +69,8 @@ class SensorReading {
 
 ///Control Growth GET and POST///
 //Executes the get api
-Future<CGPostGet> getControlGrowth(TextEditingController ipAddr) async{
-  final response = await http.get(prefix + ipAddr.text + controlGrowth);
+Future<CGPostGet> getControlGrowth() async{
+  final response = await http.get(url + controlGrowth);
   return CGPostFromJson(response.body);
 }
 
@@ -125,9 +125,9 @@ class CGReading {
 }
 
 //Executes the put api
-Future<http.Response> postControlGrowth(PostPut post, TextEditingController ipAddr) async{
+Future<http.Response> postControlGrowth(PostPut post) async{
   final response = await http.post(
-      prefix + ipAddr.text + controlGrowth,
+      url + controlGrowth,
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.authorizationHeader : ''
