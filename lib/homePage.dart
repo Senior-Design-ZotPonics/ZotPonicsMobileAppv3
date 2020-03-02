@@ -88,6 +88,7 @@ class _HomePage extends State<HomePage> {
             builder: (context, snapshot) {
               if(snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasError) {
+                  print(snapshot.error);
                   return Center(child: TextWidget('ERROR', _font, Colors.red, FontWeight.w400, 40.0));
                 }
                 return Column(

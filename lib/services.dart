@@ -61,7 +61,7 @@ class SensorReading {
       humidity: json["humidity"],
       baseLevel: json["baseLevel"],
       plantHeight: json["plantHeight"],
-      lastWateredTimestamp: DateTime.parse(json["lastWateredTimestamp"][0]),
+      lastWateredTimestamp: DateTime.parse(json["lastWateredTimestamp"]),
       lightStatus: json["lightStatus"]
   );
 }
