@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'textWidget.dart';
@@ -90,37 +92,53 @@ class _SettingsPage extends State<SettingsPage> {
     return Scaffold(
         ///Off-white background
         backgroundColor: const Color(0xFFF8F8F8),
-        appBar: AppBar(
-            ///Back button
-            leading: IconButton(
-                icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
-                iconSize: 35.0,
-                splashColor: Colors.transparent,
-                ///Go back to home page
-                onPressed: () => Navigator.of(context).pop()
-            ),
-            title: TextWidget(
-                'Settings',
-                _font,
-                Colors.white,
-                FontWeight.w600,
-                35.0
-            ),
-            actions: [
-              ///Settings button
-              Padding(
-                  padding: EdgeInsets.only(top: 12.0),
-                  child: IconButton(
-                      icon: Icon(FontAwesomeIcons.edit, color: Colors.white),
-                      iconSize: 35.0,
-                      splashColor: Colors.transparent,
-                      onPressed: () {
-                        ///Go to settings page
+        appBar: PreferredSize(
+            ///Modifies height of AppBar
+            preferredSize: Size.fromHeight(70.0),
+            child: AppBar(
+                ///Back button
+                leading: IconButton(
+                    padding: EdgeInsets.only(top: 12.0),
+                    icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
+                    iconSize: 35.0,
+                    splashColor: Colors.transparent,
+                    ///Go back to home page
+                    onPressed: () => Navigator.of(context).pop()
+                ),
+                title: Text(
+                    'Settings',
+                    style: TextStyle(
+                        height: 1.8,
+                        fontFamily: _font,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 36.0,
+                        color: Colors.white
+                    )
+                ),
+                ///Drop down menu to access demo mode or load profile
+                actions: [
+                  PopupMenuButton<String>(
+                    padding: EdgeInsets.only(top: 12.0, right: 3.0),
+                    offset: Offset.fromDirection(pi/2, 70.0),
+                    icon: Icon(Icons.more_vert, color: Colors.white, size: 30),
+                    onSelected: (value) {
+                      if (value == "Demo") {
                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => DemoPage(_font)));
                       }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem<String>(
+                        value: 'Demo',
+                        child: Text('Demo Mode')
+                      ),
+                      PopupMenuItem<String>(
+                          value: 'Profile',
+                          child: Text('Load Profile')
+                      ),
+                    ],
                   )
-              )
-            ]
+                ]
+            )
         ),
         ///Setting items
         body: FutureBuilder<CGPostGet>(

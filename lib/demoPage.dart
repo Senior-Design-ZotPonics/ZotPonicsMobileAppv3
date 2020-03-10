@@ -83,21 +83,29 @@ class _DemoPage extends State<DemoPage> {
     return Scaffold(
         ///Off-white background
         backgroundColor: const Color(0xFFF8F8F8),
-        appBar: AppBar(
-            ///Back button
-            leading: IconButton(
-                icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
-                iconSize: 35.0,
-                splashColor: Colors.transparent,
-                ///Go back to home page
-                onPressed: () => Navigator.of(context).pop()
-            ),
-            title: TextWidget(
-                'Demo Mode',
-                _font,
-                Colors.white,
-                FontWeight.w700,
-                35.0
+        appBar: PreferredSize(
+            ///Modifies height of AppBar
+            preferredSize: Size.fromHeight(70.0),
+            child: AppBar(
+                ///Back button
+                leading: IconButton(
+                    padding: EdgeInsets.only(top: 12.0),
+                    icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
+                    iconSize: 35.0,
+                    splashColor: Colors.transparent,
+                    ///Go back to home page
+                    onPressed: () => Navigator.of(context).pop()
+                ),
+                title: Text(
+                    'Demo Mode',
+                    style: TextStyle(
+                        height: 1.8,
+                        fontFamily: _font,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 36.0,
+                        color: Colors.white
+                    )
+                )
             )
         ),
         ///Info cards
