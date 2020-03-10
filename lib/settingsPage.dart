@@ -7,6 +7,7 @@ import 'saveProfileButton.dart';
 import 'services.dart';
 import 'inputDialog.dart';
 import 'package:intl/intl.dart';
+import 'demoPage.dart';
 
 ///Settings page
 
@@ -60,8 +61,8 @@ class _SettingsPage extends State<SettingsPage> {
 
   ///Post setting values to database
   postSettings() {
-    PostPut post = PostPut(
-        writings: [ Writing(
+    CGPostPut post = CGPostPut(
+        writings: [ CGWriting(
             timestamp: DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()),
             lightStart: int.parse(lightStart.text),
             lightEnd: int.parse(lightEnd.text),
@@ -104,7 +105,22 @@ class _SettingsPage extends State<SettingsPage> {
                 Colors.white,
                 FontWeight.w600,
                 35.0
-            )
+            ),
+            actions: [
+              ///Settings button
+              Padding(
+                  padding: EdgeInsets.only(top: 12.0),
+                  child: IconButton(
+                      icon: Icon(FontAwesomeIcons.edit, color: Colors.white),
+                      iconSize: 35.0,
+                      splashColor: Colors.transparent,
+                      onPressed: () {
+                        ///Go to settings page
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DemoPage(_font)));
+                      }
+                  )
+              )
+            ]
         ),
         ///Setting items
         body: FutureBuilder<CGPostGet>(

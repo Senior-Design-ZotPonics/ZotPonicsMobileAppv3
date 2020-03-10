@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'homePage.dart';
 import 'demoPage.dart';
 
@@ -9,6 +10,7 @@ void main() => runApp(ZotPonics());
 class ZotPonics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
       title: 'ZotPonics',
       theme: ThemeData(

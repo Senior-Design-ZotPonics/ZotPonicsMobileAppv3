@@ -4,7 +4,6 @@
 //     final post = postFromJson(jsonString);
 
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:io';
@@ -14,8 +13,10 @@ import 'dart:io';
 String url = 'http://okyang.pythonanywhere.com';
 String sensorData = '/recentsensordata';
 String controlGrowth = '/usercontrolgrowth';
+String userDemo = '/userdemo';
 
-///Sensor GET///
+
+///Sensor GET///////////////////////////////////////////////////////////////////
 //Executes the get api
 Future<SensorPostGet> getSensorData() async{
   final response = await http.get(url + sensorData);
@@ -67,7 +68,7 @@ class SensorReading {
 }
 
 
-///Control Growth GET and POST///
+///Control Growth GET and POST//////////////////////////////////////////////////
 //Executes the get api
 Future<CGPostGet> getControlGrowth() async{
   final response = await http.get(url + controlGrowth);
@@ -125,33 +126,33 @@ class CGReading {
 }
 
 //Executes the put api
-Future<http.Response> postControlGrowth(PostPut post) async{
+Future<http.Response> postControlGrowth(CGPostPut post) async{
   final response = await http.post(
       url + controlGrowth,
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.authorizationHeader : ''
       },
-      body: postToJson(post)
+      body: postCGToJson(post)
   );
   return response;
 }
 
 //This function is used to post JSON data to the ZotPonics Server
-String postToJson(PostPut data) => json.encode(data.toJson());
+String postCGToJson(CGPostPut data) => json.encode(data.toJson());
 
 //This class is used with the put api and used with a Writing Object
-class PostPut {
-  List<Writing> writings;
+class CGPostPut {
+  List<CGWriting> writings;
 
-  PostPut({ this.writings });
+  CGPostPut({ this.writings });
 
   Map<String, dynamic> toJson() => {
     "controlfactors": List<dynamic>.from(writings.map((x) => x.toJson()))
   };
 }
 
-class Writing {
+class CGWriting {
   String timestamp;
   int lightStart;
   int lightEnd;
@@ -162,7 +163,7 @@ class Writing {
   int nutrientRatio;
   int baseLevel;
 
-  Writing({
+  CGWriting({
     this.timestamp,
     this.lightStart,
     this.lightEnd,
@@ -184,5 +185,102 @@ class Writing {
     "waterdur": waterDuration,
     "nutrientratio": nutrientRatio,
     "baselevel": baseLevel
+  };
+}
+
+
+///User Demo GET and POST///////////////////////////////////////////////////////
+//Executes the get api
+Future<DemoPostGet> getDemoValues() async{
+  final response = await http.get(url + userDemo);
+  return DemoPostFromJson(response.body);
+}
+
+//This function is used to get JSON data from the ZotPonics Server
+DemoPostGet DemoPostFromJson(String str) => DemoPostGet.fromJson(json.decode(str));
+
+//This class is used with the get api call and uses a Reading Object
+class DemoPostGet {
+  List<DemoReading> readings;
+
+  DemoPostGet({ this.readings });
+
+  factory DemoPostGet.fromJson(Map<String, dynamic> json) => DemoPostGet(
+      readings: List<DemoReading>.from(json["readings"].map((x) => DemoReading.fromJson(x)))
+  );
+}
+
+class DemoReading {
+  int baselevelnotify;
+  int fanvents;
+  int lights;
+  int vents;
+  int water;
+
+  DemoReading({
+    this.baselevelnotify,
+    this.fanvents,
+    this.lights,
+    this.vents,
+    this.water
+  });
+
+  factory DemoReading.fromJson(Map<String, dynamic> json) => DemoReading(
+      baselevelnotify: json["baselevelnotify"],
+      fanvents: json["fanvents"],
+      lights: json["lights"],
+      vents: json["vents"],
+      water: json["water"]
+  );
+}
+
+//Executes the put api
+Future<http.Response> postDemoValues(DemoPostPut post) async{
+  final response = await http.post(
+      url + userDemo,
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader : ''
+      },
+      body: postDemoToJson(post)
+  );
+  return response;
+}
+
+//This function is used to post JSON data to the ZotPonics Server
+String postDemoToJson(DemoPostPut data) => json.encode(data.toJson());
+
+//This class is used with the put api and used with a Writing Object
+class DemoPostPut {
+  List<DemoWriting> writings;
+
+  DemoPostPut({ this.writings });
+
+  Map<String, dynamic> toJson() => {
+    "user_demo": List<dynamic>.from(writings.map((x) => x.toJson()))
+  };
+}
+
+class DemoWriting {
+  int baselevelnotify;
+  int fanvents;
+  int lights;
+  int vents;
+  int water;
+
+  DemoWriting({
+    this.baselevelnotify,
+    this.fanvents,
+    this.lights,
+    this.vents,
+    this.water
+  });
+
+  Map<String,dynamic> toJson() => {
+    "baselevelnotify": baselevelnotify,
+    "fanvents": fanvents,
+    "lights": lights,
+    "vents": vents,
+    "water": water
   };
 }

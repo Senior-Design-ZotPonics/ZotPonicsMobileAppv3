@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/demoPage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
 import 'infoCard.dart';
 import 'settingsPage.dart';
 import 'services.dart';
 import 'textWidget.dart';
+import 'demoPage.dart';
 
 
 ///Main page of the app

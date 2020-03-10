@@ -7,12 +7,13 @@ class DemoCard extends StatefulWidget {
   final String _title;
   final Color _color;
   final IconData _icon;
+  final _controller;
 
   ///Constructor
-  DemoCard(this._title, this._color, this._icon);
+  DemoCard(this._title, this._color, this._icon, this._controller);
 
   @override
-  State<StatefulWidget> createState() => _DemoCard(_title, _color, _icon);
+  State<StatefulWidget> createState() => _DemoCard(_title, _color, _icon, _controller);
 }
 
 ///States allow us to change variables dynamically
@@ -20,7 +21,9 @@ class _DemoCard extends State<DemoCard> {
   String _title;
   Color _color;
   IconData _icon;
-  bool _switch = false;
+  TextEditingController _controller;
+  bool _switch;
+
   ///Roundness of card corners
   static double _roundness = 10.0;
   ///Rounded rectangle shape
@@ -28,7 +31,13 @@ class _DemoCard extends State<DemoCard> {
       borderRadius: BorderRadius.all(Radius.circular(_roundness)));
 
   ///Constructor
-  _DemoCard(this._title, this._color, this._icon);
+  _DemoCard(title, color, icon, controller) {
+    this._title = title;
+    this._color = color;
+    this._icon = icon;
+    this._controller = controller;
+    _switch = int.parse(_controller.text) == 1;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +93,10 @@ class _DemoCard extends State<DemoCard> {
                         value: _switch,
                         activeColor: Colors.green,
                         onChanged: (value) {
-                          setState(() { _switch = value; });
+                          setState(() {
+                            _switch = value;
+                            _controller.text = value ? "1" : "0";
+                          });
                         }
                     )
                 )
