@@ -129,8 +129,8 @@ class _SettingsPage extends State<SettingsPage> {
                   SettingItem('Max Temperature', maxTemp, FontAwesomeIcons.thermometerFull, _font, suffix: '°C'),
                   SettingItem('Max Humidity', maxHumid, FontAwesomeIcons.water, _font, suffix: '%'),
                   TimeSettingItem('Light Schedule', lightStart, lightEnd, FontAwesomeIcons.clock, _font),
-                  SettingItem('Watering Duration', duration, FontAwesomeIcons.tint, _font, suffix: ' mins'),
-                  SettingItem('Watering Frequency', frequency, FontAwesomeIcons.stopwatch, _font, prefix: 'Every ', suffix: ' mins'),
+                  SettingItem('Watering Duration', duration, FontAwesomeIcons.tint, _font, suffix: ' seconds'),
+                  SettingItem('Watering Frequency', frequency, FontAwesomeIcons.stopwatch, _font, prefix: 'Every ', suffix: ' seconds'),
                   SettingItem('Nutrient Ratio', nutrientRatio, FontAwesomeIcons.percentage, _font, suffix: '%'),
                   SettingItem('Base Level', baseLevel, FontAwesomeIcons.rulerVertical, _font, suffix: ' cm')
                 ]);

@@ -16,7 +16,7 @@ class SettingItem extends StatefulWidget {
   final _controller;
 
   ///Constructor
-  SettingItem(this._title, this._controller, this._icon, this._font, {this.prefix = '', this.suffix = '', this.min = 0, this.max = 100, this.numInput = true});
+  SettingItem(this._title, this._controller, this._icon, this._font, {this.prefix = '', this.suffix = '', this.min = 0, this.max = 10000, this.numInput = true});
 
   @override
   State<StatefulWidget> createState() => _SettingItem(_title, _controller, prefix, suffix, _icon, _font, min, max, numInput);
