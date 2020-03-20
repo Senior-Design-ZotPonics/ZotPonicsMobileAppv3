@@ -4,6 +4,9 @@ A new Flutter application.
 
 ![](https://github.com/Senior-Design-ZotPonics/Documentation/blob/master/App%20Recording.gif)
 
+# Wiki
+View our wiki here: [ZotPonics Mobile App Wiki](https://github.com/Senior-Design-ZotPonics/ZotPonicsMobileApp/wiki)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
