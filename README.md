@@ -1,6 +1,8 @@
-# zotponics_mobile_app
+# ZotPonics Mobile App
 
 A new Flutter application.
+
+![](https://github.com/Senior-Design-ZotPonics/Documentation/blob/master/App%20Recording.gif)
 
 ## Getting Started
 
