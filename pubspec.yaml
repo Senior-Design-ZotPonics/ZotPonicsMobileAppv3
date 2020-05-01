@@ -23,6 +23,7 @@ dependencies:
   flutter:
     sdk: flutter
   font_awesome_flutter: ^8.5.0
+  flutter_local_notifications: ^1.4.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -34,6 +35,19 @@ dev_dependencies:
   json_serializable: ^3.2.0
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.5
+
+# App icon settings
+# After any modification, run:
+# - flutter pub get
+# - flutter pub run flutter_launcher_icons:main
+# More info can be found here: https://pub.dev/packages/flutter_launcher_icons#-readme-tab-
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app_icon.png"
+  adaptive_icon_foreground: "assets/images/icon.png"
+  adaptive_icon_background: "#4CAF50" # Hex value of Flutter preset Green material color
 
 
 # For information on the generic Dart part of this file, see the
