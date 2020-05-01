@@ -62,7 +62,7 @@ class _SettingsPage extends State<SettingsPage> {
   _SettingsPage(this._font);
 
   ///Post setting values to database
-  postSettings() {
+  bool postSettings() {
     CGPostPut post = CGPostPut(
         writings: [ CGWriting(
             timestamp: DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()),
@@ -84,7 +84,10 @@ class _SettingsPage extends State<SettingsPage> {
         print(response.statusCode);
     }).catchError((error) {
       print('error : $error');
+      return false;
     });
+
+    return true;
   }
 
   @override
@@ -162,54 +165,47 @@ class _SettingsPage extends State<SettingsPage> {
                 return ListView(children: [
                   SettingItem('Max Temperature', maxTemp, FontAwesomeIcons.thermometerFull, _font, suffix: '°C'),
                   SettingItem('Max Humidity', maxHumid, FontAwesomeIcons.water, _font, suffix: '%'),
-                  TimeSettingItem('Light Schedule', lightStart, lightEnd, FontAwesomeIcons.clock, _font),
+                  TimeSettingItem('Light Start Time', lightStart, FontAwesomeIcons.clock, _font),
+                  TimeSettingItem('Light End Time', lightEnd, FontAwesomeIcons.solidClock, _font),
                   SettingItem('Watering Duration', duration, FontAwesomeIcons.tint, _font, suffix: ' seconds'),
                   SettingItem('Watering Frequency', frequency, FontAwesomeIcons.stopwatch, _font, prefix: 'Every ', suffix: ' seconds'),
-                  SettingItem('Nutrient Ratio', nutrientRatio, FontAwesomeIcons.percentage, _font, suffix: '%'),
-                  SettingItem('Base Level', baseLevel, FontAwesomeIcons.rulerVertical, _font, suffix: ' cm')
+                  SettingItem('Nutrient Ratio', nutrientRatio, FontAwesomeIcons.percentage, _font, suffix: '%')
                 ]);
               }
               else {
                 return Center(child: TextWidget('Loading...', _font, Colors.black, FontWeight.w400, 20.0));
+                ///In case you may need to connect to a local server (would have to modify services.dart as well)
                 //return SettingItem('IP Address', ipAddr, FontAwesomeIcons.networkWired, _font, numInput: false);
               }
             }
         ),
         ///Save profile button
-        floatingActionButton: FloatingActionButton.extended(
-            label: TextWidget(
-                'Save Profile',
-                _font,
-                Colors.white,
-                FontWeight.w600,
-                20.0
-            ),
-            onPressed: () {
-              postSettings();
-              ///When button pressed, display input dialog
-//              showDialog<String>(
-//                  context: context,
-//                  barrierDismissible: false,
-//                  builder: (BuildContext context) {
-//                    ///String input dialog
-//                    return InputDialog('Save Profile As', profileName, _font, false);
-//                  }).then((returnName) {
-//                if (returnName != null) {
-//                  postSettings();
-//                  ///Show bar on bottom of screen confirming entry
-//                  Scaffold.of(context).showSnackBar(
-//                      SnackBar(
-//                          shape: RoundedRectangleBorder(
-//                              borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0))
-//                          ),
-//                          duration: Duration(seconds: 3),
-//                          content: Text('Saved as ${profileName.text}')
-//                      )
-//                  );
-//                }
-//              }
-//              );
-            }
+        floatingActionButton: Builder( ///Builder required to create a context so that snack bar can be shown
+            builder: (context) => FloatingActionButton.extended(
+                label: TextWidget(
+                    'Save',
+                    _font,
+                    Colors.white,
+                    FontWeight.w600,
+                    20.0
+                ),
+                onPressed: () {
+                  if (postSettings()) { ///Returns true if settings successfully posted
+                    Scaffold.of(context).showSnackBar(
+                        ///Popup confirmation bar
+                        SnackBar(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10.0),
+                                    topRight: Radius.circular(10.0))
+                            ),
+                            duration: Duration(seconds: 1, milliseconds: 500),
+                            content: Text('Settings successfully saved!')
+                        )
+                    );
+                  }
+                }
+            )
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat
     );

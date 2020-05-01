@@ -7,14 +7,13 @@ class TimeSettingItem extends StatefulWidget {
   final String _title;
   final IconData _icon;
   final String _font;
-  final _startController;
-  final _endController;
+  final _controller;
 
   ///Constructor
-  TimeSettingItem(this._title, this._startController, this._endController, this._icon, this._font);
+  TimeSettingItem(this._title, this._controller, this._icon, this._font);
 
   @override
-  State<StatefulWidget> createState() => _TimeSettingItem(_title, _startController, _endController, _icon, _font);
+  State<StatefulWidget> createState() => _TimeSettingItem(_title, _controller, _icon, _font);
 }
 
 ///States allow us to change variables dynamically
@@ -22,11 +21,10 @@ class _TimeSettingItem extends State<TimeSettingItem> {
   final String _title;
   final IconData _icon;
   final String _font;
-  final _startController;
-  final _endController;
+  final _controller;
 
   ///Constructor
-  _TimeSettingItem(this._title, this._startController, this._endController, this._icon, this._font);
+  _TimeSettingItem(this._title, this._controller, this._icon, this._font);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +35,7 @@ class _TimeSettingItem extends State<TimeSettingItem> {
             leading: Container(
                 height: 35.0,
                 width: 40.0,
-                child: Icon(_icon, color: Colors.green, size: 35.0)
+                child: Icon(_icon, color: Colors.lightGreen, size: 35.0)
             ),
             title: TextWidget(
                 _title,
@@ -47,30 +45,21 @@ class _TimeSettingItem extends State<TimeSettingItem> {
                 20.0
             ),
             subtitle: TextWidget(
-                '${_startController.text}:00 - ${_endController.text}:00',
+                '${_controller.text}:00',
                 _font,
                 Colors.black,
                 FontWeight.w300,
                 15.0
             ),
             onTap: () {
-              ///When setting tapped, display start time input dialog
+              ///When setting tapped, display time input dialog
               showTimePicker(
                   context: context,
-                  initialTime: TimeOfDay(hour: int.parse(_startController.text), minute: 0)
+                  ///Only records hour value
+                  initialTime: TimeOfDay(hour: int.parse(_controller.text), minute: 0)
               ).then((returnTime) {
                   if (returnTime != null) {
-                    setState(() { _startController.text = returnTime.hour.toString(); });
-
-                    ///After start time inputted, display end time input dialog
-                    showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay(hour: int.parse(_endController.text), minute: 0)
-                    ).then((returnTime) {
-                        if (returnTime != null) {
-                          setState(() { _endController.text = returnTime.hour.toString(); });
-                        }
-                    });
+                    setState(() { _controller.text = returnTime.hour.toString(); });
                   }
               });
             }
