@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'textWidget.dart';
@@ -10,6 +11,7 @@ import 'services.dart';
 import 'inputDialog.dart';
 import 'package:intl/intl.dart';
 import 'demoPage.dart';
+import 'profilePage.dart';
 
 ///Settings page
 
@@ -26,6 +28,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPage extends State<SettingsPage> {
   final String _font;
+  bool profileLoaded; ///Controls whether setting values are pulled from database
 
   ///Controller objects to read SettingItem inputs
   final maxTemp = TextEditingController();
@@ -40,6 +43,7 @@ class _SettingsPage extends State<SettingsPage> {
 
   @override
   void initState() {
+    profileLoaded = false;
     super.initState();
   }
 
@@ -128,6 +132,10 @@ class _SettingsPage extends State<SettingsPage> {
                       if (value == "Demo") {
                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => DemoPage(_font)));
                       }
+                      else if (value == "Profile") {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(_font, maxTemp, maxHumid, lightStart, lightEnd, duration, frequency, nutrientRatio)))
+                            .then((value) { profileLoaded = value; });
+                      }
                     },
                     itemBuilder: (context) => [
                       PopupMenuItem<String>(
@@ -152,15 +160,18 @@ class _SettingsPage extends State<SettingsPage> {
                   return Center(child: TextWidget('ERROR', _font, Colors.red, FontWeight.w400, 40.0));
                 }
 
-                ///Sets initial values of controllers to database values
-                maxTemp.text = snapshot.data.readings.last.temperature.toInt().toString();
-                maxHumid.text = snapshot.data.readings.last.humidity.toInt().toString();
-                lightStart.text = snapshot.data.readings.last.lightStart.toInt().toString();
-                lightEnd.text = snapshot.data.readings.last.lightEnd.toInt().toString();
-                duration.text = snapshot.data.readings.last.waterDuration.toInt().toString();
-                frequency.text = snapshot.data.readings.last.waterFreq.toInt().toString();
-                nutrientRatio.text = snapshot.data.readings.last.nutrientRatio.toInt().toString();
-                baseLevel.text = snapshot.data.readings.last.baseLevel.toInt().toString();
+                if (!profileLoaded) { ///If profile not loaded from profile page
+                  ///Sets initial values of controllers to database values
+                  maxTemp.text = snapshot.data.readings.last.temperature.toInt().toString();
+                  maxHumid.text = snapshot.data.readings.last.humidity.toInt().toString();
+                  lightStart.text = snapshot.data.readings.last.lightStart.toInt().toString();
+                  lightEnd.text = snapshot.data.readings.last.lightEnd.toInt().toString();
+                  duration.text = snapshot.data.readings.last.waterDuration.toInt().toString();
+                  frequency.text = snapshot.data.readings.last.waterFreq.toInt().toString();
+                  nutrientRatio.text = snapshot.data.readings.last.nutrientRatio.toInt().toString();
+                  baseLevel.text = snapshot.data.readings.last.baseLevel.toInt().toString();
+                }
+                profileLoaded = false;
 
                 return ListView(children: [
                   SettingItem('Max Temperature', maxTemp, FontAwesomeIcons.thermometerFull, _font, suffix: '°C'),

@@ -5,7 +5,7 @@ import 'demoCard.dart';
 import 'services.dart';
 import 'textWidget.dart';
 
-///Demo page of the app
+///Demo page
 
 class DemoPage extends StatefulWidget {
   final String _font;

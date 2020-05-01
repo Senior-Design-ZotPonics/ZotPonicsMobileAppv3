@@ -51,7 +51,7 @@ class _SettingItem extends State<SettingItem> {
             leading: Container(
                 height: 35.0,
                 width: 40.0,
-                child: Icon(_icon, color: Colors.lightGreen, size: 35.0)
+                child: Icon(_icon, color: Colors.green, size: 35.0)
             ),
             title: TextWidget(
                 _title,

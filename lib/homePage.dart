@@ -1,4 +1,3 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/demoPage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,6 +7,11 @@ import 'settingsPage.dart';
 import 'services.dart';
 import 'textWidget.dart';
 import 'demoPage.dart';
+
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+///For more information on how to work with notifications, check these out:
+/// - https://pub.dev/packages/flutter_local_notifications#-readme-tab-
+/// - https://www.youtube.com/watch?v=xMeCwF5MO6w
 
 
 ///Main page of the app
@@ -27,12 +31,29 @@ class _HomePage extends State<HomePage> {
   final String _font;
   Timer timer;
 
+  ///Plugin to handle notifications
+  FlutterLocalNotificationsPlugin notifPlugin = FlutterLocalNotificationsPlugin();
+
   @override
   void initState() {
     super.initState();
     ///Fetch data every five minutes
     timer = Timer.periodic(Duration(minutes: 5), (Timer t) => setState(() {}));
+
+    ///Initializing settings for notifications
+    final androidSettings = AndroidInitializationSettings('notif_icon');
+    final iOSSettings = IOSInitializationSettings(
+        onDidReceiveLocalNotification: (id, title, body, payload) => notificationSelected(payload));
+
+    notifPlugin.initialize( InitializationSettings(androidSettings, iOSSettings), onSelectNotification: notificationSelected);
+
+    displayReminderNotifPeriodically();
   }
+
+  ///When notification is tapped, this function is run
+  Future notificationSelected(String payload) async => await Navigator.push(
+    context, MaterialPageRoute(builder: (context) => HomePage(_font))
+  );
 
   ///Constructor
   _HomePage(this._font);
@@ -48,6 +69,24 @@ class _HomePage extends State<HomePage> {
     String minute = (input.minute < 10) ? '0${input.minute}' : '${input.minute}';
     String second = (input.second < 10) ? '0${input.second}' : '${input.second}';
     return (includeSeconds) ? '$hour:$minute:$second' : '$hour:$minute';
+  }
+
+  ///Displays reminder notifications
+  Future displayReminderNotifPeriodically() {
+    ///Notification setup
+    var time = Time(12, 0, 0); ///12:00
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'Channel ID', 'ZotPonics', 'Channel Description',
+        importance: Importance.Default, priority: Priority.Default, ticker: 'Replace your nutrient water!');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+
+    ///Notification appears weekly Sunday at 12:00
+    ///We should have biweekly notifications, but that would require modifying the package source code
+    ///Needs more discussion
+    notifPlugin.showWeeklyAtDayAndTime(
+        0, 'ZotPonics Reminder', 'Replace your nutrient water!', Day.Sunday, time, platformChannelSpecifics);
   }
 
   @override
