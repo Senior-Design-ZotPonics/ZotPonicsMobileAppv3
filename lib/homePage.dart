@@ -52,7 +52,7 @@ class _HomePage extends State<HomePage> {
 
   ///When notification is tapped, this function is run
   Future notificationSelected(String payload) async => await Navigator.push(
-    context, MaterialPageRoute(builder: (context) => HomePage(_font))
+    context, MaterialPageRoute(builder: (context) => SettingsPage(_font))
   );
 
   ///Constructor
@@ -74,7 +74,7 @@ class _HomePage extends State<HomePage> {
   ///Displays reminder notifications
   Future displayReminderNotifPeriodically() {
     ///Notification setup
-    var time = Time(12, 0, 0); ///12:00
+    var time = Time(20, 0, 0); ///8:00 PM
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'Channel ID', 'ZotPonics', 'Channel Description',
         importance: Importance.Default, priority: Priority.Default, ticker: 'Replace your nutrient water!');
@@ -86,7 +86,7 @@ class _HomePage extends State<HomePage> {
     ///We should have biweekly notifications, but that would require modifying the package source code
     ///Needs more discussion
     notifPlugin.showWeeklyAtDayAndTime(
-        0, 'ZotPonics Reminder', 'Replace your nutrient water!', Day.Sunday, time, platformChannelSpecifics);
+        0, 'ZotPonics Reminder', 'Replace your nutrient water!', Day.Saturday, time, RepeatInterval.Biweekly, platformChannelSpecifics);
   }
 
   @override
