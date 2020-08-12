@@ -4,7 +4,7 @@ import 'textWidget.dart';
 
 ///Currently only has hard-coded profiles
 ///If we were to allow users to add their own profiles or load from the database,
-/// this would require a bit more work
+///this would require a bit more work
 
 ///Stores profile info
 class Profile {

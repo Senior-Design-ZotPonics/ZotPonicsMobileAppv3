@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'textWidget.dart';
 import 'inputDialog.dart';
 
+///Not currently used
+///I actually don't really remember why I made this
+///I think it was to modular-ify the profile button but it doesn't work that way
+
 ///Display floating save profile button
 
 class SaveProfileButton extends StatefulWidget {
