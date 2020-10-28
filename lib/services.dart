@@ -7,13 +7,14 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/material.dart';
 
 ///To modify IP address, check initState() in homePage.dart
 
 String url = 'http://okyang.pythonanywhere.com';
-String sensorData = '/recentsensordata';
-String controlGrowth = '/usercontrolgrowth';
-String userDemo = '/userdemo';
+String sensorData = '/recentsensordata?shelf_number=3';
+String controlGrowth = '/usercontrolgrowth?shelf_number=3';
+String userDemo = '/userdemo?shelf_number=3';
 
 
 ///Sensor GET///////////////////////////////////////////////////////////////////
@@ -33,38 +34,37 @@ class SensorPostGet {
   SensorPostGet({ this.readings });
 
   factory SensorPostGet.fromJson(Map<String, dynamic> json) => SensorPostGet(
-      readings: List<SensorReading>.from(json["readings"].map((x) => SensorReading.fromJson(x)))
-  );
+       readings: List<SensorReading>.from(json["readings"].map((x) => SensorReading.fromJson(x))));
 }
 
 class SensorReading {
-  DateTime timestamp;
-  double temperature;
-  double humidity;
   double baseLevel;
-  double plantHeight;
+  double humidity;
   DateTime lastWateredTimestamp;
   dynamic lightStatus;
+  double shelf_number;
+  double temperature;
+  DateTime timestamp;
 
   SensorReading({
-    this.timestamp,
-    this.temperature,
-    this.humidity,
     this.baseLevel,
-    this.plantHeight,
+    this.humidity,
     this.lastWateredTimestamp,
-    this.lightStatus
+    this.lightStatus,
+    this.shelf_number,
+    this.temperature,
+    this.timestamp
   });
 
   factory SensorReading.fromJson(Map<String, dynamic> json) => SensorReading(
-      timestamp: DateTime.parse(json["timestamp"]),
-      temperature: json["temperature"],
-      humidity: json["humidity"],
       baseLevel: json["baseLevel"],
-      plantHeight: json["plantHeight"],
+      humidity: json["humidity"],
       lastWateredTimestamp: DateTime.parse(json["lastWateredTimestamp"]),
-      lightStatus: json["lightStatus"]
-  );
+      lightStatus: json["lightStatus"],
+      shelf_number: json["shelf_number"],
+      temperature: json["temperature"],
+      timestamp: DateTime.parse(json["timestamp"])
+    );
 }
 
 
@@ -90,38 +90,39 @@ class CGPostGet {
 }
 
 class CGReading {
-  DateTime timestamp;
+  double baseLevel;
+  double humidity;
   double lightStart;
   double lightEnd;
-  double humidity;
+  double nutrientRatio;
   double temperature;
+  DateTime timestamp;
   double waterFreq;
   double waterDuration;
-  double nutrientRatio;
-  double baseLevel;
 
   CGReading({
-    this.timestamp,
+    this.baseLevel,
+    this.humidity,
     this.lightStart,
     this.lightEnd,
-    this.humidity,
-    this.temperature,
-    this.waterFreq,
-    this.waterDuration,
     this.nutrientRatio,
-    this.baseLevel
+    //this.shelf_number,
+    this.temperature,
+    this.timestamp,
+    this.waterFreq,
+    this.waterDuration
   });
 
   factory CGReading.fromJson(Map<String, dynamic> json) => CGReading(
-      timestamp: DateTime.parse(json["timestamp"]),
+      baseLevel: json["baseLevel"],
+      humidity: json["humidity"],
       lightStart: json["lightStartTime"],
       lightEnd: json["lightEndTime"],
-      humidity: json["humidity"],
-      temperature: json["temperature"],
-      waterFreq: json["waterFreq"],
-      waterDuration: json["waterDuration"],
       nutrientRatio: json["nutrientRatio"],
-      baseLevel: json["baseLevel"]
+      temperature: json["temperature"],
+      timestamp: DateTime.parse(json["timestamp"]),
+      waterFreq: json["waterFreq"],
+      waterDuration: json["waterDuration"]
   );
 }
 
