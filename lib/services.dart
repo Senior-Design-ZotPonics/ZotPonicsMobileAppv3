@@ -12,15 +12,15 @@ import 'package:flutter/material.dart';
 ///To modify IP address, check initState() in homePage.dart
 
 String url = 'http://okyang.pythonanywhere.com';
-String sensorData = '/recentsensordata?shelf_number=3';
-String controlGrowth = '/usercontrolgrowth?shelf_number=3';
-String userDemo = '/userdemo?shelf_number=3';
+String sensorData = '/recentsensordata?shelf_number=';
+String controlGrowth = '/usercontrolgrowth?shelf_number=';
+String userDemo = '/userdemo?shelf_number=';
 
 
 ///Sensor GET///////////////////////////////////////////////////////////////////
 //Executes the get api
-Future<SensorPostGet> getSensorData() async{
-  final response = await http.get(url + sensorData);
+Future<SensorPostGet> getSensorData(int shelfNum) async{
+  final response = await http.get(url + sensorData + shelfNum.toString());
   return sensorPostFromJson(response.body);
 }
 
@@ -42,7 +42,7 @@ class SensorReading {
   double humidity;
   DateTime lastWateredTimestamp;
   dynamic lightStatus;
-  double shelf_number;
+  double shelfNumber;
   double temperature;
   DateTime timestamp;
 
@@ -51,7 +51,7 @@ class SensorReading {
     this.humidity,
     this.lastWateredTimestamp,
     this.lightStatus,
-    this.shelf_number,
+    this.shelfNumber,
     this.temperature,
     this.timestamp
   });
@@ -61,7 +61,7 @@ class SensorReading {
       humidity: json["humidity"],
       lastWateredTimestamp: DateTime.parse(json["lastWateredTimestamp"]),
       lightStatus: json["lightStatus"],
-      shelf_number: json["shelf_number"],
+      shelfNumber: json["shelf_number"],
       temperature: json["temperature"],
       timestamp: DateTime.parse(json["timestamp"])
     );
@@ -70,8 +70,10 @@ class SensorReading {
 
 ///Control Growth GET and POST//////////////////////////////////////////////////
 //Executes the get api
-Future<CGPostGet> getControlGrowth() async{
-  final response = await http.get(url + controlGrowth);
+Future<CGPostGet> getControlGrowth(int shelfNumber) async{
+  debugPrint(url + controlGrowth + shelfNumber.toString());
+  final response = await http.get(url + controlGrowth + shelfNumber.toString());
+  debugPrint(response.body);
   return CGPostFromJson(response.body);
 }
 
@@ -95,6 +97,7 @@ class CGReading {
   double lightStart;
   double lightEnd;
   double nutrientRatio;
+  double shelfNumber;
   double temperature;
   DateTime timestamp;
   double waterFreq;
@@ -106,7 +109,7 @@ class CGReading {
     this.lightStart,
     this.lightEnd,
     this.nutrientRatio,
-    //this.shelf_number,
+    this.shelfNumber,
     this.temperature,
     this.timestamp,
     this.waterFreq,
@@ -119,6 +122,7 @@ class CGReading {
       lightStart: json["lightStartTime"],
       lightEnd: json["lightEndTime"],
       nutrientRatio: json["nutrientRatio"],
+      shelfNumber: json["shelf_number"],
       temperature: json["temperature"],
       timestamp: DateTime.parse(json["timestamp"]),
       waterFreq: json["waterFreq"],
@@ -127,9 +131,9 @@ class CGReading {
 }
 
 //Executes the put api
-Future<http.Response> postControlGrowth(CGPostPut post) async{
+Future<http.Response> postControlGrowth(CGPostPut post, int shelfNumber) async{
   final response = await http.post(
-      url + controlGrowth,
+      url + controlGrowth + shelfNumber.toString(),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.authorizationHeader : ''
@@ -154,46 +158,48 @@ class CGPostPut {
 }
 
 class CGWriting {
-  String timestamp;
+  int baseLevel;
+  int humidity;
   int lightStart;
   int lightEnd;
-  int humidity;
+  int nutrientRatio;
+  int shelfNumber;
   int temp;
+  String timestamp;
   int waterFreq;
   int waterDuration;
-  int nutrientRatio;
-  int baseLevel;
 
   CGWriting({
-    this.timestamp,
+    this.baseLevel,
+    this.humidity,
     this.lightStart,
     this.lightEnd,
-    this.humidity,
+    this.nutrientRatio,
+    this.timestamp,
     this.temp,
     this.waterFreq,
-    this.waterDuration,
-    this.nutrientRatio,
-    this.baseLevel
+    this.waterDuration
   });
 
   Map<String,dynamic> toJson() => {
-    "timestamp": timestamp,
+    "baselevel": baseLevel,
+    "humidity": humidity,
     "lightstart": lightStart,
     "lightend": lightEnd,
-    "humidity": humidity,
-    "temp": temp,
-    "waterfreq": waterFreq,
-    "waterdur": waterDuration,
     "nutrientratio": nutrientRatio,
-    "baselevel": baseLevel
+    "shelf_number": shelfNumber,
+    "temp": temp,
+    "timestamp": timestamp,
+    "waterfreq": waterFreq,
+    "waterdur": waterDuration
   };
 }
 
 
 ///User Demo GET and POST///////////////////////////////////////////////////////
 //Executes the get api
-Future<DemoPostGet> getDemoValues() async{
-  final response = await http.get(url + userDemo);
+Future<DemoPostGet> getDemoValues(int shelfNumber) async{
+  final response = await http.get(url + userDemo + shelfNumber.toString());
   return DemoPostFromJson(response.body);
 }
 
@@ -236,9 +242,9 @@ class DemoReading {
 }
 
 //Executes the put api
-Future<http.Response> postDemoValues(DemoPostPut post) async{
+Future<http.Response> postDemoValues(DemoPostPut post, int shelfNumber) async{
   final response = await http.post(
-      url + userDemo,
+      url + userDemo + shelfNumber.toString(),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.authorizationHeader : ''

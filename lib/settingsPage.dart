@@ -17,17 +17,19 @@ import 'profilePage.dart';
 
 class SettingsPage extends StatefulWidget {
   final String _font;
+  final int shelfNumber;
 
   ///Constructor
-  SettingsPage(this._font);
+  SettingsPage(this._font, this.shelfNumber);
 
   @override
-  State<StatefulWidget> createState() => _SettingsPage(_font);
+  State<StatefulWidget> createState() => _SettingsPage(_font, shelfNumber);
 }
 
 
 class _SettingsPage extends State<SettingsPage> {
   final String _font;
+  final int shelfNumber;
   bool profileLoaded; ///Controls whether setting values are pulled from database
 
   ///Controller objects to read SettingItem inputs
@@ -63,7 +65,7 @@ class _SettingsPage extends State<SettingsPage> {
   }
 
   ///Constructor
-  _SettingsPage(this._font);
+  _SettingsPage(this._font, this.shelfNumber);
 
   ///Post setting values to database
   bool postSettings() {
@@ -81,7 +83,7 @@ class _SettingsPage extends State<SettingsPage> {
         )]
     );
 
-    postControlGrowth(post).then((response) {
+    postControlGrowth(post, shelfNumber).then((response) {
       if(response.statusCode > 200)
         print(response.body);
       else
@@ -130,7 +132,7 @@ class _SettingsPage extends State<SettingsPage> {
                     icon: Icon(Icons.more_vert, color: Colors.white, size: 30),
                     onSelected: (value) {
                       if (value == "Demo") {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DemoPage(_font)));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DemoPage(_font, shelfNumber)));
                       }
                       else if (value == "Profile") {
                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(_font, maxTemp, maxHumid, lightStart, lightEnd, duration, frequency, nutrientRatio)))
@@ -153,7 +155,7 @@ class _SettingsPage extends State<SettingsPage> {
         ),
         ///Setting items
         body: FutureBuilder<CGPostGet>(
-            future: getControlGrowth(), ///Activates every time state changes
+            future: getControlGrowth(shelfNumber), ///Activates every time state changes
             builder: (context, snapshot) {
               if(snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasError) {

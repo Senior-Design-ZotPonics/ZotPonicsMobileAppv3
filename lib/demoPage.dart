@@ -9,17 +9,19 @@ import 'textWidget.dart';
 
 class DemoPage extends StatefulWidget {
   final String _font;
+  final int shelfNumber;
 
   ///Constructor
-  DemoPage(this._font);
+  DemoPage(this._font, this.shelfNumber);
 
   @override
-  State<StatefulWidget> createState() => _DemoPage(_font);
+  State<StatefulWidget> createState() => _DemoPage(_font, shelfNumber);
 }
 
 
 class _DemoPage extends State<DemoPage> {
   final String _font;
+  final int shelfNumber;
 
   ///Controller objects to read DemoCard inputs
   final baselevelnotify = TextEditingController(text: "0");
@@ -54,7 +56,7 @@ class _DemoPage extends State<DemoPage> {
   }
 
   ///Constructor
-  _DemoPage(this._font);
+  _DemoPage(this._font, this.shelfNumber);
 
   ///Post demo values to database
   postValues() {
@@ -68,7 +70,7 @@ class _DemoPage extends State<DemoPage> {
         )]
     );
 
-    postDemoValues(post).then((response) {
+    postDemoValues(post, shelfNumber).then((response) {
       if(response.statusCode > 200)
         print(response.body);
       else
