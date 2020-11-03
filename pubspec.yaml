@@ -49,7 +49,7 @@ flutter_icons:
   ios: true
   image_path: "assets/images/app_icon.png"
   adaptive_icon_foreground: "assets/images/icon.png"
-  adaptive_icon_background: "#4CAF50" # Hex value of Flutter preset Green material color
+  adaptive_icon_background: "#D7F5D7" # Hex value of Flutter preset Green material color
 
 
 # For information on the generic Dart part of this file, see the
