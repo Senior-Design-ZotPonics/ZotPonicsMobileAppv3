@@ -151,6 +151,7 @@ class _SystemPage extends State<SystemPage> {
                       InfoCard('${snapshot.data.readings.last.temperature}°C', 'Temperature', Colors.red, FontAwesomeIcons.thermometerHalf),
                       InfoCard('${snapshot.data.readings.last.humidity}%', 'Humidity', Colors.cyan, FontAwesomeIcons.tint),
                       snapshot.data.readings.last.lightStatus.toLowerCase() == 'true' ? InfoCard('ON', 'Lights', Colors.yellow, FontAwesomeIcons.lightbulb) : InfoCard('OFF', 'Lights', Colors.grey, FontAwesomeIcons.lightbulb),
+                      InfoCard('${snapshot.data.readings.last.baseLevel}', 'Base Level', Colors.brown, FontAwesomeIcons.windowMaximize),
                       InfoCard('${_formattedTime(snapshot.data.readings.last.lastWateredTimestamp, false)}', 'Last Watered [${_formattedDate(snapshot.data.readings.last.lastWateredTimestamp)}]', Colors.indigo, FontAwesomeIcons.clock),
                       ///Update and check info
                       Row(
