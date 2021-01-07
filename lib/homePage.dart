@@ -7,6 +7,7 @@ import 'systemPage.dart';
 import 'services.dart';
 import 'textWidget.dart';
 import 'demoPage.dart';
+import 'growGuide.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 ///For more information on how to work with notifications, check these out:
@@ -66,7 +67,7 @@ class _HomePage extends State<HomePage> {
                           splashColor: Colors.transparent,
                           onPressed: () {
                             ///Go to growing guide
-                            ///Navigator.of(context).push(MaterialPageRoute(builder: (context) => growGuide(_font)));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => GrowGuide(_font)));
                           }
                       )
                   )
