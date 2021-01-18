@@ -135,7 +135,7 @@ class _SettingsPage extends State<SettingsPage> {
                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => DemoPage(_font, shelfNumber)));
                       }
                       else if (value == "Profile") {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(_font, maxTemp, maxHumid, lightStart, lightEnd, duration, frequency, nutrientRatio)))
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(_font, shelfNumber, int.parse(maxTemp.text), int.parse(maxHumid.text), int.parse(lightStart.text), int.parse(lightEnd.text), int.parse(duration.text), int.parse(frequency.text), int.parse(nutrientRatio.text))))
                             .then((value) { profileLoaded = value; });
                       }
                     },
@@ -146,7 +146,7 @@ class _SettingsPage extends State<SettingsPage> {
                       ),
                       PopupMenuItem<String>(
                           value: 'Profile',
-                          child: Text('Load Profile')
+                          child: Text('Profiles')
                       ),
                     ],
                   )
