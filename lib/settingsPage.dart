@@ -136,7 +136,7 @@ class _SettingsPage extends State<SettingsPage> {
                       }
                       else if (value == "Profile") {
                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(_font, shelfNumber, int.parse(maxTemp.text), int.parse(maxHumid.text), int.parse(lightStart.text), int.parse(lightEnd.text), int.parse(duration.text), int.parse(frequency.text), int.parse(nutrientRatio.text))))
-                            .then((value) { profileLoaded = value; });
+                            .then((value) { profileLoaded = value; setState( () {} ); });
                       }
                     },
                     itemBuilder: (context) => [
@@ -162,18 +162,14 @@ class _SettingsPage extends State<SettingsPage> {
                   return Center(child: TextWidget('ERROR', _font, Colors.red, FontWeight.w400, 40.0));
                 }
 
-                if (!profileLoaded) { ///If profile not loaded from profile page
-                  ///Sets initial values of controllers to database values
-                  maxTemp.text = snapshot.data.readings.last.temperature.toInt().toString();
-                  maxHumid.text = snapshot.data.readings.last.humidity.toInt().toString();
-                  lightStart.text = snapshot.data.readings.last.lightStart.toInt().toString();
-                  lightEnd.text = snapshot.data.readings.last.lightEnd.toInt().toString();
-                  duration.text = snapshot.data.readings.last.waterDuration.toInt().toString();
-                  frequency.text = snapshot.data.readings.last.waterFreq.toInt().toString();
-                  nutrientRatio.text = snapshot.data.readings.last.nutrientRatio.toInt().toString();
-                  baseLevel.text = snapshot.data.readings.last.baseLevel.toInt().toString();
-                }
-                profileLoaded = false;
+                maxTemp.text = snapshot.data.readings.last.temperature.toInt().toString();
+                maxHumid.text = snapshot.data.readings.last.humidity.toInt().toString();
+                lightStart.text = snapshot.data.readings.last.lightStart.toInt().toString();
+                lightEnd.text = snapshot.data.readings.last.lightEnd.toInt().toString();
+                duration.text = snapshot.data.readings.last.waterDuration.toInt().toString();
+                frequency.text = snapshot.data.readings.last.waterFreq.toInt().toString();
+                nutrientRatio.text = snapshot.data.readings.last.nutrientRatio.toInt().toString();
+                baseLevel.text = snapshot.data.readings.last.baseLevel.toInt().toString();
 
                 return ListView(children: [
                   SettingItem('Max Temperature', maxTemp, FontAwesomeIcons.thermometerFull, _font, suffix: '°C'),

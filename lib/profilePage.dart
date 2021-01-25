@@ -25,7 +25,7 @@ Profile Spinach = Profile("Spinach", 50, 50, 50, 50, 50, 50, 50);
 Profile Tomato = Profile("Tomato", 42, 42, 42, 42, 42, 42, 42);
 
 List<Profile> profiles = [Lettuce, Potato, Spinach, Tomato];
-List<String> profileNames = [];
+List<String> profileNames = ["Select a profile"];
 
 ///Profile selection page
 
@@ -63,12 +63,11 @@ class _ProfilePage extends State<ProfilePage> {
   final profileField = TextEditingController();
   String newName = '';
 
-  String deleteName; //needs to be an existing value from profileNames
+  String deleteName = "Select a profile"; /// default value for delete drop-down menu
 
   @override
   void initState() {
     super.initState();
-    debugPrint(this.maxTemp.toString());
   }
 
   getProfileValue() {
@@ -76,12 +75,16 @@ class _ProfilePage extends State<ProfilePage> {
   }
 
   deleteProfile(String name) {
-    setState( () {
-      deleteName = null; ///value of dropDownButton must be set to null before reassigning value
-      deleteName = profileNames[0];
-    } );
     profiles.removeWhere( (item) => item.name == name);
     profileNames.remove(name);
+    setState( () { /// reset drop-down menu
+      if (profileNames.length == 1) {
+        deleteName = profileNames[0];
+      }
+      else {
+        deleteName = profileNames[1];
+      }
+    });
   }
 
   @override
@@ -90,19 +93,48 @@ class _ProfilePage extends State<ProfilePage> {
     super.dispose();
   }
 
+  bool postSettings(Profile plant) {
+    CGPostPut post = CGPostPut(
+        writings: [ CGWriting(
+            timestamp: DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()),
+            lightStart: plant.lightStart,
+            lightEnd: plant.lightEnd,
+            humidity: plant.maxHumid,
+            temp: plant.maxTemp,
+            waterFreq: plant.frequency,
+            waterDuration: plant.duration,
+            nutrientRatio: plant.nutrientRatio,
+            baseLevel: 40,
+            shelfNumber: shelfNumber
+        )]
+    );
+
+    postControlGrowth(post, shelfNumber).then((response) {
+      if(response.statusCode > 200)
+        print(response.body);
+      else
+        print(response.statusCode);
+    }).catchError((error) {
+      print('error : $error');
+      return false;
+    });
+
+    return true;
+  }
+
   ///Constructor
   _ProfilePage(this._font, this.shelfNumber, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency, this.nutrientRatio);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      ///Off-white background
+        /// off-white background
         backgroundColor: const Color(0xFFF8F8F8),
         appBar: PreferredSize(
-          ///Modifies height of AppBar
+            /// modifies height of AppBar
             preferredSize: Size.fromHeight(60.0),
             child: AppBar(
-                automaticallyImplyLeading: false, ///Removes automatically included back button
+                automaticallyImplyLeading: false, /// removes automatically included back button
                 title: Text(
                     'Profiles',
                     style: TextStyle(
@@ -121,8 +153,8 @@ class _ProfilePage extends State<ProfilePage> {
                           icon: Icon(Icons.close, color: Colors.white),
                           iconSize: 35.0,
                           splashColor: Colors.transparent,
-                          ///Go to previous page
-                          onPressed: () => Navigator.of(context).pop(false) ///Profile not loaded
+                          /// go back to previous page
+                          onPressed: () => Navigator.of(context).pop(false) /// profile not loaded - not sure if profileLoaded is still needed
                       )
                   )
                 ]
@@ -139,9 +171,23 @@ class _ProfilePage extends State<ProfilePage> {
                         ListTile(
                             dense: true,
                             title: TextWidget(profiles[i].name, _font, Colors.black, FontWeight.w300, 20.0),
-                            trailing: FlatButton( ///load -> changes settings to profile's settings, and returns to updated settings
-                              child: TextWidget("Load", _font, Colors.green, FontWeight.w300, 15.0),
-                              onPressed: () {}
+                            trailing: FlatButton( /// load button changes current settings to profile's settings
+                                child: TextWidget("Load", _font, Colors.green, FontWeight.w300, 15.0),
+                                onPressed: () {
+                                    if (postSettings(profiles[i])) {
+                                      Scaffold.of(context).showSnackBar( /// pop-up confirmation bar
+                                          SnackBar(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.only(
+                                                      topLeft: Radius.circular(10.0),
+                                                      topRight: Radius.circular(10.0))
+                                              ),
+                                              duration: Duration(seconds: 1, milliseconds: 500),
+                                              content: Text('Profile loaded!')
+                                          )
+                                      );
+                                    }
+                                }
                             )
                         ),
                         Divider(
@@ -153,91 +199,97 @@ class _ProfilePage extends State<ProfilePage> {
                 }
             )
         ),
-      bottomNavigationBar: new BottomAppBar( ///Save current settings under new profile, delete existing profile in drop down menu
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                 child: FlatButton(
-                     color: Colors.white,
-                     child: TextWidget("Create", _font, Colors.green, FontWeight.w400, 15.0),
-                     onPressed: () {
-                       showDialog(
-                           context: context,
-                           builder: (_) => new AlertDialog(
-                               title: TextWidget("New profile name", _font, Colors.black, FontWeight.w400, 15.0),
-                               content: new TextField(
-                                   controller: profileField,
-                                   obscureText: false,
-                                   decoration: InputDecoration( border: OutlineInputBorder() )
-                               ),
-                               actions: <Widget>[
-                                 RaisedButton(
-                                     child: TextWidget("Create", _font, Colors.white, FontWeight.w400, 15.0),
-                                     color: Colors.green,
-                                     onPressed: () {
-                                       getProfileValue();
-                                       List<String> existingProfiles = [];
-                                       for (int p = 0; p < profiles.length; p++) { existingProfiles.add(profiles[p].name); }
-                                       if (newName != "" && !existingProfiles.contains(newName)) {
-                                         profiles.add(Profile(newName, 0, 0, 0, 0, 0, 0, 0));
-                                         profileNames.add(newName);
-                                         Navigator.of(context).pop();
-                                       }
-                                     }
+        bottomNavigationBar: new BottomAppBar( /// create and delete buttons
+            child: Row(
+                children: <Widget>[
+                    Expanded(
+                       child: FlatButton(
+                           color: Colors.white,
+                           child: TextWidget("Create", _font, Colors.green, FontWeight.w400, 15.0),
+                           onPressed: () {
+                             showDialog(
+                                 context: context,
+                                 builder: (_) => new AlertDialog( /// pop-up window to enter new profile name
+                                     title: Column(
+                                         children: [
+                                             TextWidget("New profile name", _font, Colors.black, FontWeight.w400, 15.0),
+                                             TextWidget("Current settings will be saved under this name", _font, Colors.black54, FontWeight.w400, 10.0)
+                                         ]
+                                     ),
+                                     content: new TextField(
+                                         controller: profileField,
+                                         obscureText: false,
+                                         decoration: InputDecoration( border: OutlineInputBorder() )
+                                     ),
+                                     actions: <Widget>[
+                                       RaisedButton(
+                                           child: TextWidget("Create", _font, Colors.white, FontWeight.w400, 15.0),
+                                           color: Colors.green,
+                                           onPressed: () { /// make sure that the new profile name isn't empty and doesn't exist already
+                                               getProfileValue();
+                                               List<String> existingProfiles = [];
+                                               for (int p = 0; p < profiles.length; p++) { existingProfiles.add(profiles[p].name); }
+                                               if (newName != "" && !existingProfiles.contains(newName)) {
+                                                   profiles.add(Profile(newName, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency, this.nutrientRatio));
+                                                   profileNames.add(newName);
+                                                   Navigator.of(context).pop();
+                                               }
+                                           }
+                                       )
+                                     ]
                                  )
-                               ]
-                           )
-                       );
-                     }
-                 )
-              ),
-              Container(
-                width: 1.0,
-                height: 30.0,
-                color: Colors.black26
-              ),
-              Expanded(
-                child: FlatButton(
-                    color: Colors.white,
-                    child: TextWidget("Delete", _font, Colors.green, FontWeight.w400, 15.0),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (_) => new AlertDialog(
-                              title: TextWidget("Delete a profile", _font, Colors.black, FontWeight.w400, 15.0),
-                              content: StatefulBuilder(
-                                builder: (BuildContext context, StateSetter setState) {
-                                  return new DropdownButton(
-                                      hint: Text("Select profile"),
-                                      value: deleteName,
-                                      onChanged: (String name) {
-                                        setState( () { deleteName = name; } );
-                                      },
-                                      items: profileNames.map((String name) {
-                                        return new DropdownMenuItem<String>(
-                                            value: name,
-                                            child: new Text(name)
+                             );
+                           }
+                       )
+                    ),
+                    Container(
+                      width: 1.0,
+                      height: 30.0,
+                      color: Colors.black26
+                    ),
+                    Expanded(
+                      child: FlatButton(
+                          color: Colors.white,
+                          child: TextWidget("Delete", _font, Colors.green, FontWeight.w400, 15.0),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (_) => new AlertDialog( /// pop-up window of a drop-down menu of created profiles
+                                    title: TextWidget("Delete a profile", _font, Colors.black, FontWeight.w400, 15.0),
+                                    content: StatefulBuilder(
+                                      builder: (BuildContext context, StateSetter setState) {
+                                        return new DropdownButton(
+                                            hint: Text("Select profile"),
+                                            value: deleteName,
+                                            onChanged: (String name) {
+                                              setState( () { deleteName = name; } );
+                                            },
+                                            items: profileNames.map((String name) {
+                                              return new DropdownMenuItem<String>(
+                                                  value: name,
+                                                  child: new Text(name)
+                                              );
+                                            }).toList()
                                         );
-                                      }).toList()
-                                  );
-                                }
-                              ),
-                              actions: <Widget>[
-                                RaisedButton(
-                                    child: TextWidget("Delete", _font, Colors.white, FontWeight.w400, 15.0),
-                                    color: Colors.green,
-                                    onPressed: () {
-                                      deleteProfile(deleteName);
-                                      ///figure out why reopening the delete pop up after deleting a profile triggers "same value" error
-                                      Navigator.of(context).pop();
-                                    }
+                                      }
+                                    ),
+                                    actions: <Widget>[
+                                      RaisedButton(
+                                          child: TextWidget("Delete", _font, Colors.white, FontWeight.w400, 15.0),
+                                          color: Colors.green,
+                                          onPressed: () { /// make sure the user selected a profile
+                                            if (deleteName != "Select a profile") {
+                                              deleteProfile(deleteName);
+                                              Navigator.of(context).pop();
+                                            }
+                                          }
+                                      )
+                                    ]
                                 )
-                              ]
-                          )
-                      );
-                    }
-                )
-              )
+                            );
+                          }
+                      )
+                    )
             ]
           )
         )

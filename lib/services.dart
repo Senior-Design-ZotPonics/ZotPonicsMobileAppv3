@@ -71,9 +71,9 @@ class SensorReading {
 ///Control Growth GET and POST//////////////////////////////////////////////////
 //Executes the get api
 Future<CGPostGet> getControlGrowth(int shelfNumber) async{
-  debugPrint(url + controlGrowth + shelfNumber.toString());
+  //debugPrint(url + controlGrowth + shelfNumber.toString());
   final response = await http.get(url + controlGrowth + shelfNumber.toString());
-  debugPrint(response.body);
+  //debugPrint(response.body);
   return CGPostFromJson(response.body);
 }
 
@@ -170,6 +170,7 @@ class CGWriting {
   int waterDuration;
 
   CGWriting({
+    this.shelfNumber,
     this.baseLevel,
     this.humidity,
     this.lightStart,
