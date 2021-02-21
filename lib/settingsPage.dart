@@ -123,34 +123,7 @@ class _SettingsPage extends State<SettingsPage> {
                         fontSize: 36.0,
                         color: Colors.white
                     )
-                ),
-                ///Drop down menu to access demo mode or load profile
-                actions: [
-                  PopupMenuButton<String>(
-                    padding: EdgeInsets.only(top: 12.0, right: 3.0),
-                    offset: Offset.fromDirection(pi/2, 70.0),
-                    icon: Icon(Icons.more_vert, color: Colors.white, size: 30),
-                    onSelected: (value) {
-                      if (value == "Demo") {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DemoPage(_font, shelfNumber)));
-                      }
-                      else if (value == "Profile") {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(_font, shelfNumber, int.parse(maxTemp.text), int.parse(maxHumid.text), int.parse(lightStart.text), int.parse(lightEnd.text), int.parse(duration.text), int.parse(frequency.text), int.parse(nutrientRatio.text))))
-                            .then((value) { profileLoaded = value; setState( () {} ); });
-                      }
-                    },
-                    itemBuilder: (context) => [
-                      PopupMenuItem<String>(
-                        value: 'Demo',
-                        child: Text('Demo Mode')
-                      ),
-                      PopupMenuItem<String>(
-                          value: 'Profile',
-                          child: Text('Profiles')
-                      ),
-                    ],
-                  )
-                ]
+                )
             )
         ),
         ///Setting items
@@ -188,35 +161,48 @@ class _SettingsPage extends State<SettingsPage> {
               }
             }
         ),
-        ///Save profile button
-        floatingActionButton: Builder( ///Builder required to create a context so that snack bar can be shown
-            builder: (context) => FloatingActionButton.extended(
-                label: TextWidget(
-                    'Save',
-                    _font,
-                    Colors.white,
-                    FontWeight.w600,
-                    20.0
-                ),
-                onPressed: () {
-                  if (postSettings()) { ///Returns true if settings successfully posted
-                    Scaffold.of(context).showSnackBar(
-                        ///Popup confirmation bar
-                        SnackBar(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10.0),
-                                    topRight: Radius.circular(10.0))
-                            ),
-                            duration: Duration(seconds: 1, milliseconds: 500),
-                            content: Text('Settings successfully saved!')
-                        )
-                    );
-                  }
-                }
+        bottomNavigationBar: new BottomAppBar( /// save and profiles buttons
+            child: Row(
+                children: <Widget>[
+                  Expanded(
+                      child: FlatButton(
+                          color: Colors.white,
+                          child: TextWidget("Save", _font, Colors.green, FontWeight.w400, 15.0),
+                          onPressed: () {
+                            if (postSettings()) { ///Returns true if settings successfully posted
+                              Scaffold.of(context).showSnackBar(
+                                ///Popup confirmation bar
+                                  SnackBar(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10.0),
+                                              topRight: Radius.circular(10.0))
+                                      ),
+                                      duration: Duration(seconds: 1, milliseconds: 500),
+                                      content: Text('Settings successfully saved!')
+                                  )
+                              );
+                            }
+                          }
+                      )
+                  ),
+                  Container(
+                      width: 1.0,
+                      height: 30.0,
+                      color: Colors.black26
+                  ),
+                  Expanded(
+                      child: FlatButton(
+                          color: Colors.white,
+                          child: TextWidget("Profiles", _font, Colors.green, FontWeight.w400, 15.0),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(_font, shelfNumber, int.parse(maxTemp.text), int.parse(maxHumid.text), int.parse(lightStart.text), int.parse(lightEnd.text), int.parse(duration.text), int.parse(frequency.text), int.parse(nutrientRatio.text))));
+                          }
+                      )
+                  )
+                ]
             )
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat
+        )
     );
   }
 }

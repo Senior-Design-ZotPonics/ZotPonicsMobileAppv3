@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 ///To modify IP address, check initState() in homePage.dart
 
-String url = 'http://192.168.1.21:5000';
+String url = 'http://192.168.1.28:5000';
 String sensorData = '/recentsensordata?shelf_number=';
 String controlGrowth = '/usercontrolgrowth?shelf_number=';
 String userDemo = '/userdemo?shelf_number=';

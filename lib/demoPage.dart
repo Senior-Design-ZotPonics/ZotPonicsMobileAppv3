@@ -9,19 +9,17 @@ import 'textWidget.dart';
 
 class DemoPage extends StatefulWidget {
   final String _font;
-  final int shelfNumber;
 
   ///Constructor
-  DemoPage(this._font, this.shelfNumber);
+  DemoPage(this._font);
 
   @override
-  State<StatefulWidget> createState() => _DemoPage(_font, shelfNumber);
+  State<StatefulWidget> createState() => _DemoPage(_font);
 }
 
 
 class _DemoPage extends State<DemoPage> {
   final String _font;
-  final int shelfNumber;
 
   ///Controller objects to read DemoCard inputs
   final baselevelnotify = TextEditingController(text: "0");
@@ -56,7 +54,7 @@ class _DemoPage extends State<DemoPage> {
   }
 
   ///Constructor
-  _DemoPage(this._font, this.shelfNumber);
+  _DemoPage(this._font);
 
   ///Post demo values to database
   postValues() {
@@ -70,13 +68,31 @@ class _DemoPage extends State<DemoPage> {
         )]
     );
 
-    postDemoValues(post, shelfNumber).then((response) {
+    postDemoValues(post, 1).then((response) {
       if(response.statusCode > 200)
         print(response.body);
       else
         print(response.statusCode);
     }).catchError((error) {
-      print('error : $error');
+      print('error for shelf 1: $error');
+    });
+
+    postDemoValues(post, 2).then((response) {
+      if(response.statusCode > 200)
+        print(response.body);
+      else
+        print(response.statusCode);
+    }).catchError((error) {
+      print('error for shelf 2: $error');
+    });
+
+    postDemoValues(post, 3).then((response) {
+      if(response.statusCode > 200)
+        print(response.body);
+      else
+        print(response.statusCode);
+    }).catchError((error) {
+      print('error for shelf 3: $error');
     });
   }
 

@@ -83,7 +83,23 @@ class _HomePage extends State<HomePage> {
                       ShelfButton('Shelf 2', Colors.lightGreen, FontAwesomeIcons.seedling, _font, 2),
                       ShelfButton('Shelf 3', Colors.lightBlue, FontAwesomeIcons.water, _font, 3)
                     ]
-                )
+                ),
+        bottomNavigationBar: new BottomAppBar( /// create and delete buttons
+            child: Row(
+                children: <Widget>[
+                  Expanded(
+                      child: FlatButton(
+                          color: Colors.white,
+                          child: TextWidget("Demo", _font, Colors.green, FontWeight.w400, 15.0),
+                          onPressed: () {
+                            ///Go to demo page
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => DemoPage(_font)));
+                          }
+                      )
+                  )
+                ]
+            )
+        )
     );
   }
 }
