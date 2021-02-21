@@ -60,45 +60,45 @@ class _HydroponicsOverview extends State<HydroponicsOverview> {
                   SizedBox(height: 10),
                   Container(
                     margin: const EdgeInsets.all(10.0),
-                    child: TextWidget("Hydroponics is the method of growing plants without soil.", this._font, Colors.black, FontWeight.w500, 20.0),
+                    child: TextWidget("Hydroponics is the method of growing plants in nutrient-rich water instead of soil. "
+                        "Plants only require water, air, and nutrients to grow, so soil is not necessary! Hydroponics comes "
+                        "with many benefits, such as faster and higher yields without pests or weeds. It’s a clean process "
+                        "that can happen in places of all sizes with power.", this._font, Colors.black, FontWeight.w400, 16.0)
                   ),
                   Container(
                       margin: const EdgeInsets.all(10.0),
-                      child: TextWidget("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor "
-                          "incididunt ut labore et dolore magna aliqua. Tellus id interdum "
-                          "velit laoreet id donec ultrices tincidunt. Nibh venenatis cras sed felis eget "
-                          "velit aliquet sagittis. Suscipit adipiscing bibendum est ultricies. "
-                          "Condimentum vitae sapien pellentesque habitant morbi tristique. Purus sit amet "
-                          "volutpat consequat. Proin sagittis nisl rhoncus mattis rhoncus urna "
-                          "neque. Amet est placerat in egestas erat imperdiet sed. Gravida dictum fusce "
-                          "ut placerat orci nulla pellentesque dignissim. Velit euismod in "
-                          "pellentesque massa placerat duis ultricies lacus. Sit amet tellus cras adipiscing "
-                          "enim. Orci eu lobortis elementum nibh tellus molestie. Tempus "
-                          "imperdiet nulla malesuada pellentesque elit. Et netus et malesuada fames ac "
-                          "turpis egestas. Dignissim sodales ut eu sem integer vitae justo eget. "
-                          "Egestas egestas fringilla phasellus faucibus. Semper risus in hendrerit gravida.",
+                      child: TextWidget("Here are some examples of hydroponics systems:",
                           this._font, Colors.black, FontWeight.w400, 16.0)
                   ),
                   Container(
                       margin: const EdgeInsets.all(10.0),
-                      child: TextWidget("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor "
-                          "incididunt ut labore et dolore magna aliqua. Tellus id interdum "
-                          "velit laoreet id donec ultrices tincidunt. Nibh venenatis cras sed felis eget "
-                          "velit aliquet sagittis. Suscipit adipiscing bibendum est ultricies. "
-                          "Condimentum vitae sapien pellentesque habitant morbi tristique. Purus sit amet "
-                          "volutpat consequat. Proin sagittis nisl rhoncus mattis rhoncus urna "
-                          "neque. Amet est placerat in egestas erat imperdiet sed. Gravida dictum fusce "
-                          "ut placerat orci nulla pellentesque dignissim. Velit euismod in "
-                          "pellentesque massa placerat duis ultricies lacus. Sit amet tellus cras adipiscing "
-                          "enim. Orci eu lobortis elementum nibh tellus molestie. Tempus "
-                          "imperdiet nulla malesuada pellentesque elit. Et netus et malesuada fames ac "
-                          "turpis egestas. Dignissim sodales ut eu sem integer vitae justo eget. "
-                          "Egestas egestas fringilla phasellus faucibus. Semper risus in hendrerit gravida.",
-                          this._font, Colors.black, FontWeight.w400, 16.0)
+                      child: Image(
+                          image: AssetImage('assets/images/horizontal-hp.jpg')
+                      )
+                  ),
+                  Container(
+                      margin: const EdgeInsets.all(10.0),
+                      child: Image(
+                          image: AssetImage('assets/images/vertical-hp.jpg')
+                      )
+                  ),
+                  Container(
+                      margin: const EdgeInsets.all(10.0),
+                      child: Image(
+                          image: AssetImage('assets/images/diagonal-hp.jpg')
+                      )
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10.0),
+                    child: TextWidget("To grow plants hydroponically, the plants are set up in a structure that allows for "
+                        "them to be held in place with their roots exposed. The structures can be in all kinds of shapes and "
+                        "sizes, as long as the nutrient water can be delivered to the plants. With a well-maintained growth "
+                        "environment, the plants can be fully grown to completion. Once the plants have been harvested, the "
+                        "process can be started all over again!", this._font, Colors.black, FontWeight.w400, 16.0)
                   )
-                ]
+            ]
             )
         )
-    );
+        );
   }
 }
