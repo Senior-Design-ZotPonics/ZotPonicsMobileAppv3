@@ -39,7 +39,6 @@ class _SettingsPage extends State<SettingsPage> {
   final lightEnd = TextEditingController();
   final duration = TextEditingController();
   final frequency = TextEditingController();
-  final nutrientRatio = TextEditingController();
   final baseLevel = TextEditingController();
   final profileName = TextEditingController();
 
@@ -58,7 +57,6 @@ class _SettingsPage extends State<SettingsPage> {
     lightEnd.dispose();
     duration.dispose();
     frequency.dispose();
-    nutrientRatio.dispose();
     baseLevel.dispose();
     profileName.dispose();
     super.dispose();
@@ -78,7 +76,6 @@ class _SettingsPage extends State<SettingsPage> {
             temp: int.parse(maxTemp.text),
             waterFreq: int.parse(frequency.text),
             waterDuration: int.parse(duration.text),
-            nutrientRatio: int.parse(nutrientRatio.text),
             baseLevel: int.parse(baseLevel.text)
         )]
     );
@@ -141,7 +138,6 @@ class _SettingsPage extends State<SettingsPage> {
                 lightEnd.text = snapshot.data.readings.last.lightEnd.toInt().toString();
                 duration.text = snapshot.data.readings.last.waterDuration.toInt().toString();
                 frequency.text = snapshot.data.readings.last.waterFreq.toInt().toString();
-                nutrientRatio.text = snapshot.data.readings.last.nutrientRatio.toInt().toString();
                 baseLevel.text = snapshot.data.readings.last.baseLevel.toInt().toString();
 
                 return ListView(children: [
@@ -150,8 +146,7 @@ class _SettingsPage extends State<SettingsPage> {
                   TimeSettingItem('Light Start Time', lightStart, FontAwesomeIcons.clock, _font),
                   TimeSettingItem('Light End Time', lightEnd, FontAwesomeIcons.solidClock, _font),
                   SettingItem('Watering Duration', duration, FontAwesomeIcons.tint, _font, suffix: ' seconds'),
-                  SettingItem('Watering Frequency', frequency, FontAwesomeIcons.stopwatch, _font, prefix: 'Every ', suffix: ' seconds'),
-                  SettingItem('Nutrient Ratio', nutrientRatio, FontAwesomeIcons.percentage, _font, suffix: '%')
+                  SettingItem('Watering Frequency', frequency, FontAwesomeIcons.stopwatch, _font, prefix: 'Every ', suffix: ' seconds')
                 ]);
               }
               else {
@@ -196,7 +191,7 @@ class _SettingsPage extends State<SettingsPage> {
                           color: Colors.white,
                           child: TextWidget("Profiles", _font, Colors.green, FontWeight.w400, 15.0),
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(_font, shelfNumber, int.parse(maxTemp.text), int.parse(maxHumid.text), int.parse(lightStart.text), int.parse(lightEnd.text), int.parse(duration.text), int.parse(frequency.text), int.parse(nutrientRatio.text))));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(_font, shelfNumber, int.parse(maxTemp.text), int.parse(maxHumid.text), int.parse(lightStart.text), int.parse(lightEnd.text), int.parse(duration.text), int.parse(frequency.text))));
                           }
                       )
                   )

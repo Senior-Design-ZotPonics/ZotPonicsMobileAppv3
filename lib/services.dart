@@ -96,7 +96,6 @@ class CGReading {
   double humidity;
   double lightStart;
   double lightEnd;
-  double nutrientRatio;
   double shelfNumber;
   double temperature;
   DateTime timestamp;
@@ -108,7 +107,6 @@ class CGReading {
     this.humidity,
     this.lightStart,
     this.lightEnd,
-    this.nutrientRatio,
     this.shelfNumber,
     this.temperature,
     this.timestamp,
@@ -121,7 +119,6 @@ class CGReading {
       humidity: json["humidity"],
       lightStart: json["lightStartTime"],
       lightEnd: json["lightEndTime"],
-      nutrientRatio: json["nutrientRatio"],
       shelfNumber: json["shelf_number"],
       temperature: json["temperature"],
       timestamp: DateTime.parse(json["timestamp"]),
@@ -162,7 +159,6 @@ class CGWriting {
   int humidity;
   int lightStart;
   int lightEnd;
-  int nutrientRatio;
   int shelfNumber;
   int temp;
   String timestamp;
@@ -175,7 +171,6 @@ class CGWriting {
     this.humidity,
     this.lightStart,
     this.lightEnd,
-    this.nutrientRatio,
     this.timestamp,
     this.temp,
     this.waterFreq,
@@ -187,7 +182,6 @@ class CGWriting {
     "humidity": humidity,
     "lightstart": lightStart,
     "lightend": lightEnd,
-    "nutrientratio": nutrientRatio,
     "shelf_number": shelfNumber,
     "temp": temp,
     "timestamp": timestamp,

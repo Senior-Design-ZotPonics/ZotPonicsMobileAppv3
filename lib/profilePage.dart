@@ -13,18 +13,19 @@ class Profile {
   int lightEnd;
   int duration;
   int frequency;
-  int nutrientRatio;
 
-  Profile(this.name, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency, this.nutrientRatio);
+  Profile(this.name, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency);
 }
 
 ///Preset profiles
-Profile Lettuce = Profile("Lettuce", 0, 0, 0, 0, 0, 0, 0);
-Profile Potato = Profile("Potato", 100, 100, 100, 100, 100, 100, 100);
-Profile Spinach = Profile("Spinach", 50, 50, 50, 50, 50, 50, 50);
-Profile Tomato = Profile("Tomato", 42, 42, 42, 42, 42, 42, 42);
+Profile Spinach = Profile("Spinach", 72, 60, 8, 20, 300, 10800);
+Profile Lettuce = Profile("Lettuce", 72, 60, 8, 18, 300, 10800);
+Profile Kale = Profile("Kale", 70, 60, 8, 4, 300, 10800);
+Profile Pepper = Profile("Pepper", 73, 60, 6, 22, 300, 10800);
+Profile Onion = Profile("Onion", 67, 70, 7, 19, 300, 10800);
+Profile Tomato = Profile("Tomato", 82, 60, 6, 22, 300, 10800);
 
-List<Profile> profiles = [Lettuce, Potato, Spinach, Tomato];
+List<Profile> profiles = [Spinach, Lettuce, Kale, Pepper, Onion, Tomato];
 List<String> profileNames = ["Select a profile"];
 
 ///Profile selection page
@@ -40,13 +41,12 @@ class ProfilePage extends StatefulWidget {
   final lightEnd;
   final duration;
   final frequency;
-  final nutrientRatio;
 
   ///Constructor
-  ProfilePage(this._font, this.shelfNumber, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency, this.nutrientRatio);
+  ProfilePage(this._font, this.shelfNumber, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency);
 
   @override
-  State<StatefulWidget> createState() => _ProfilePage(_font, shelfNumber, maxTemp, maxHumid, lightStart, lightEnd, duration, frequency, nutrientRatio);
+  State<StatefulWidget> createState() => _ProfilePage(_font, shelfNumber, maxTemp, maxHumid, lightStart, lightEnd, duration, frequency);
 }
 
 class _ProfilePage extends State<ProfilePage> {
@@ -58,7 +58,6 @@ class _ProfilePage extends State<ProfilePage> {
   final int lightEnd;
   final int duration;
   final int frequency;
-  final int nutrientRatio;
 
   final profileField = TextEditingController();
   String newName = '';
@@ -103,7 +102,6 @@ class _ProfilePage extends State<ProfilePage> {
             temp: plant.maxTemp,
             waterFreq: plant.frequency,
             waterDuration: plant.duration,
-            nutrientRatio: plant.nutrientRatio,
             baseLevel: 40,
             shelfNumber: shelfNumber
         )]
@@ -123,7 +121,7 @@ class _ProfilePage extends State<ProfilePage> {
   }
 
   ///Constructor
-  _ProfilePage(this._font, this.shelfNumber, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency, this.nutrientRatio);
+  _ProfilePage(this._font, this.shelfNumber, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency);
 
   @override
   Widget build(BuildContext context) {
@@ -230,7 +228,7 @@ class _ProfilePage extends State<ProfilePage> {
                                                List<String> existingProfiles = [];
                                                for (int p = 0; p < profiles.length; p++) { existingProfiles.add(profiles[p].name); }
                                                if (newName != "" && !existingProfiles.contains(newName)) {
-                                                   profiles.add(Profile(newName, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency, this.nutrientRatio));
+                                                   profiles.add(Profile(newName, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency));
                                                    profileNames.add(newName);
                                                    Navigator.of(context).pop();
                                                }
