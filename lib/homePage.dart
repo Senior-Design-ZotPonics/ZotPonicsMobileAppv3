@@ -83,8 +83,8 @@ class _HomePage extends State<HomePage> {
                       ShelfButton('Shelf 2', Colors.lightGreen, FontAwesomeIcons.seedling, _font, 2),
                       ShelfButton('Shelf 3', Colors.lightBlue, FontAwesomeIcons.water, _font, 3)
                     ]
-                ),
-        bottomNavigationBar: new BottomAppBar( /// create and delete buttons
+                )
+        /*bottomNavigationBar: new BottomAppBar( /// create and delete buttons
             child: Row(
                 children: <Widget>[
                   Expanded(
@@ -99,7 +99,7 @@ class _HomePage extends State<HomePage> {
                   )
                 ]
             )
-        )
+        )*/
     );
   }
 }
