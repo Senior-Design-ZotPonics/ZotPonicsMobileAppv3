@@ -27,13 +27,46 @@ class HomePage extends StatefulWidget {
   State<StatefulWidget> createState() => _HomePage(_font);
 }
 
-
 class _HomePage extends State<HomePage> {
   final String _font;
 
   @override
   void initState() {
     super.initState();
+
+    ///Initializing settings for notifications
+    final androidSettings = AndroidInitializationSettings('notif_icon');
+    final iOSSettings = IOSInitializationSettings(
+        onDidReceiveLocalNotification: (id, title, body, payload) => notificationSelected(payload));
+
+    notifPlugin.initialize(InitializationSettings(androidSettings, iOSSettings), onSelectNotification: notificationSelected);
+
+    displayReminderNotifPeriodically();
+  }
+
+  ///Plugin to handle notifications
+  FlutterLocalNotificationsPlugin notifPlugin = FlutterLocalNotificationsPlugin();
+
+  ///When notification is tapped, this function is run
+  Future notificationSelected(String payload) async => await Navigator.push(
+      context, MaterialPageRoute(builder: (context) => HomePage(_font))
+  );
+
+  ///Displays reminder notifications
+  Future displayReminderNotifPeriodically() {
+    ///Notification setup
+    var time = Time(12, 0, 0); ///Notification appears biweekly Sunday at 12:00
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'Channel ID', 'ZotPonics', 'Channel Description',
+        importance: Importance.Default,
+        priority: Priority.Default,
+        ticker: 'Replace your nutrient water!');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+
+    ///Biweekly notifications handled by modified package code in directory
+    notifPlugin.showWeeklyAtDayAndTime(0, 'ZotPonics', 'Replace your nutrient water!', Day.Sunday, time, RepeatInterval.Biweekly, platformChannelSpecifics);
   }
 
   ///Constructor
@@ -75,15 +108,34 @@ class _HomePage extends State<HomePage> {
             )
         ),
         ///Info cards
-        body: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ShelfButton('Shelf 1', Colors.amberAccent, FontAwesomeIcons.solidSun, _font, 1),
-                      ShelfButton('Shelf 2', Colors.lightGreen, FontAwesomeIcons.seedling, _font, 2),
-                      ShelfButton('Shelf 3', Colors.lightBlue, FontAwesomeIcons.water, _font, 3)
-                    ]
-                )
+        body: FutureBuilder<SensorPostGet>(
+            future: getSensorData(1), ///Activates every time state changes
+            builder: (context, snapshot) {
+                try { /// Display reservoir water level if possible
+                    return Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                            ShelfButton('Shelf 1', Colors.amberAccent, FontAwesomeIcons.solidSun, _font, 1),
+                            ShelfButton('Shelf 2', Colors.lightGreen, FontAwesomeIcons.seedling, _font, 2),
+                            ShelfButton('Shelf 3', Colors.lightBlue, FontAwesomeIcons.water, _font, 3),
+                            TextWidget('Reservoir Water Level: ${snapshot.data.readings.last.baseLevel} cm', _font, Colors.black, FontWeight.w400, 15)
+                      ]
+                    );
+                }
+                catch (e) { /// Display just the shelves if the water level can't be identified
+                    return Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ShelfButton('Shelf 1', Colors.amberAccent, FontAwesomeIcons.solidSun, _font, 1),
+                          ShelfButton('Shelf 2', Colors.lightGreen, FontAwesomeIcons.seedling, _font, 2),
+                          ShelfButton('Shelf 3', Colors.lightBlue, FontAwesomeIcons.water, _font, 3),
+                        ]
+                    );
+                }
+            }
+        )
         /*bottomNavigationBar: new BottomAppBar( /// create and delete buttons
             child: Row(
                 children: <Widget>[

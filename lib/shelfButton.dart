@@ -66,7 +66,7 @@ class _ShelfButton extends State<ShelfButton> {
                       ///Icon + icon background
                       Container(
                           width: 100,
-                          height: 100,
+                          height: 125,
                           decoration: BoxDecoration(
                               color: _color,
                               borderRadius: BorderRadius.only(
