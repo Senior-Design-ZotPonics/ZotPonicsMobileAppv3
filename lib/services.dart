@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 ///To modify IP address, check initState() in homePage.dart
 
-String url = 'http://192.168.1.28:5000';
+String url = 'http://192.168.1.25:5000';
 String sensorData = '/recentsensordata?shelf_number=';
 String controlGrowth = '/usercontrolgrowth?shelf_number=';
 String userDemo = '/userdemo?shelf_number=';
@@ -182,6 +182,7 @@ class CGWriting {
     "humidity": humidity,
     "lightstart": lightStart,
     "lightend": lightEnd,
+    "nutrientratio": 50, /// filler value to match flask_app.py
     "shelf_number": shelfNumber,
     "temp": temp,
     "timestamp": timestamp,

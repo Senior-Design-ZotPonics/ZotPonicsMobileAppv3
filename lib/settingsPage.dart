@@ -191,7 +191,12 @@ class _SettingsPage extends State<SettingsPage> {
                           color: Colors.white,
                           child: TextWidget("Profiles", _font, Colors.green, FontWeight.w400, 15.0),
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(_font, shelfNumber, int.parse(maxTemp.text), int.parse(maxHumid.text), int.parse(lightStart.text), int.parse(lightEnd.text), int.parse(duration.text), int.parse(frequency.text))));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(_font, shelfNumber, int.parse(maxTemp.text),
+                                int.parse(maxHumid.text), int.parse(lightStart.text), int.parse(lightEnd.text), int.parse(duration.text),
+                                int.parse(frequency.text))
+                            )).then((value) {
+                              setState(() {}); /// refresh settings in case of profile update
+                            });
                           }
                       )
                   )

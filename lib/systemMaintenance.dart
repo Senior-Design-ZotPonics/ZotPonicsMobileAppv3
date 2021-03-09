@@ -59,24 +59,19 @@ class _SystemMaintenance extends State<SystemMaintenance> {
                 children: <Widget>[
                   SizedBox(height: 10),
                   Container(
-                    margin: const EdgeInsets.all(10.0),
-                    child: TextWidget("Parts to check on", this._font, Colors.black, FontWeight.w500, 20.0),
+                      margin: const EdgeInsets.all(10.0),
+                      child: TextWidget("The ZotPonics system is self-sufficient, but it requires some occasional maintenance. "
+                          "As you may already know, the nutrient water must be replaced every two weeks. When doing so, dump out "
+                          "the existing water and make sure to wipe down the reservoir before adding the fresh batch of nutrient "
+                          "water.",
+                          this._font, Colors.black, FontWeight.w400, 16.0)
                   ),
                   Container(
                       margin: const EdgeInsets.all(10.0),
-                      child: TextWidget("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor "
-                          "incididunt ut labore et dolore magna aliqua. Tellus id interdum "
-                          "velit laoreet id donec ultrices tincidunt. Nibh venenatis cras sed felis eget "
-                          "velit aliquet sagittis. Suscipit adipiscing bibendum est ultricies. "
-                          "Condimentum vitae sapien pellentesque habitant morbi tristique. Purus sit amet "
-                          "volutpat consequat. Proin sagittis nisl rhoncus mattis rhoncus urna "
-                          "neque. Amet est placerat in egestas erat imperdiet sed. Gravida dictum fusce "
-                          "ut placerat orci nulla pellentesque dignissim. Velit euismod in "
-                          "pellentesque massa placerat duis ultricies lacus. Sit amet tellus cras adipiscing "
-                          "enim. Orci eu lobortis elementum nibh tellus molestie. Tempus "
-                          "imperdiet nulla malesuada pellentesque elit. Et netus et malesuada fames ac "
-                          "turpis egestas. Dignissim sodales ut eu sem integer vitae justo eget. "
-                          "Egestas egestas fringilla phasellus faucibus. Semper risus in hendrerit gravida.",
+                      child: TextWidget("It is also ideal to clean the tubes whenever you replace the nutrient water. The tubes "
+                          "can be disconnected from the reservoir and the troughs, and should be run under fresh water to rinse "
+                          "out any nutrient residue and prevent mold from growing. Make sure to secure the tubes when reconnecting "
+                          "them to the system, so that no nutrient water escapes once the water is pumping again.",
                           this._font, Colors.black, FontWeight.w400, 16.0)
                   )
                 ]
