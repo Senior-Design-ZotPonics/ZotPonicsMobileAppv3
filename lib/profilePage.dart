@@ -18,12 +18,12 @@ class Profile {
 }
 
 ///Preset profiles
-Profile Spinach = Profile("Spinach", 72, 60, 8, 20, 300, 10800);
-Profile Lettuce = Profile("Lettuce", 72, 60, 8, 18, 300, 10800);
-Profile Kale = Profile("Kale", 70, 60, 8, 4, 300, 10800);
-Profile Pepper = Profile("Pepper", 73, 60, 6, 22, 300, 10800);
-Profile Onion = Profile("Onion", 67, 70, 7, 19, 300, 10800);
-Profile Tomato = Profile("Tomato", 82, 60, 6, 22, 300, 10800);
+Profile Spinach = Profile("Spinach", 22, 60, 8, 20, 300, 10800);
+Profile Lettuce = Profile("Lettuce", 22, 60, 8, 18, 300, 10800);
+Profile Kale = Profile("Kale", 21, 60, 8, 4, 300, 10800);
+Profile Pepper = Profile("Pepper", 22, 60, 6, 22, 300, 10800);
+Profile Onion = Profile("Onion", 19, 70, 7, 19, 300, 10800);
+Profile Tomato = Profile("Tomato", 27, 60, 6, 22, 300, 10800);
 
 List<Profile> profiles = [Spinach, Lettuce, Kale, Pepper, Onion, Tomato];
 List<String> profileNames = ["Select a profile"];

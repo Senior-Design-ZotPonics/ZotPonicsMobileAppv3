@@ -76,7 +76,8 @@ class _SettingsPage extends State<SettingsPage> {
             temp: int.parse(maxTemp.text),
             waterFreq: int.parse(frequency.text),
             waterDuration: int.parse(duration.text),
-            baseLevel: int.parse(baseLevel.text)
+            baseLevel: int.parse(baseLevel.text),
+            shelfNumber: this.shelfNumber
         )]
     );
 
@@ -156,8 +157,9 @@ class _SettingsPage extends State<SettingsPage> {
               }
             }
         ),
-        bottomNavigationBar: new BottomAppBar( /// save and profiles buttons
-            child: Row(
+        bottomNavigationBar: Builder( ///Builder required to create a context so that snack bar can be shown
+            builder: (context) => new BottomAppBar( /// save and profiles buttons
+              child: Row(
                 children: <Widget>[
                   Expanded(
                       child: FlatButton(
@@ -202,7 +204,7 @@ class _SettingsPage extends State<SettingsPage> {
                   )
                 ]
             )
-        )
+        ))
     );
   }
 }
