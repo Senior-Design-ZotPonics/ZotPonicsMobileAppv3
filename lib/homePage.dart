@@ -29,6 +29,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePage extends State<HomePage> {
   final String _font;
+  Icon searchOrCancelIcon = const Icon(Icons.search);
+  Widget titleText = const Text('ZotPonics');
 
   @override
   void initState() {
@@ -81,16 +83,63 @@ class _HomePage extends State<HomePage> {
             ///Modifies height of AppBar
             preferredSize: Size.fromHeight(70.0),
             child: AppBar(
-                title: Text(
-                    'ZotPonics',
-                    style: TextStyle(
-                        height: 2,
-                        fontFamily: _font,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 40.0,
-                        color: Colors.white)
-                ),
+                title: titleText,
                 actions: [
+                  ///Search button
+                  Padding(
+                      padding: EdgeInsets.only(top: 12.0),
+                      child: IconButton(
+                          icon: searchOrCancelIcon,
+                          iconSize: 35.0,
+                          splashColor: Colors.transparent,
+                          onPressed: () {
+                            ///Open search entry box
+                            setState(() {
+                              if (searchOrCancelIcon.icon == Icons.search) {
+                                searchOrCancelIcon = const Icon(Icons.cancel);
+                                titleText = const ListTile(
+                                  contentPadding: EdgeInsets.only(left: 0.0, top: 5.0),
+                                  leading: Padding(
+                                    padding: EdgeInsets.only(top: 12.0),
+                                    child: Icon (
+                                      Icons.search,
+                                      color: Colors.white,
+                                      size: 35.0,
+                                    )
+                                  ),
+                                  title: TextField(
+                                    decoration: InputDecoration(
+                                      hintText: 'Type in a shelf or plant...',
+                                      hintStyle: TextStyle(
+                                        color: Colors.white,
+                                        height: 2,
+                                        fontSize: 18.0,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                      border: InputBorder.none,
+                                    ),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                );
+                              }
+                              else {
+                                searchOrCancelIcon = const Icon(Icons.search);
+                                titleText = Text(
+                                    'ZotPonics',
+                                    style: TextStyle(
+                                        height: 2,
+                                        fontFamily: _font,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 40.0,
+                                        color: Colors.white)
+                                );
+                              }
+                            });
+                          }
+                      )
+                  ),
                   ///Guide button
                   Padding(
                       padding: EdgeInsets.only(top: 12.0),
