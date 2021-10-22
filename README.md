@@ -1,6 +1,6 @@
-# ZotPonics 2.0 Mobile App
+# ZotPonics 3.0 Mobile App
 
-View our wiki here: [ZotPonics 2.0 Mobile App Wiki](https://github.com/Senior-Design-ZotPonics/ZotPonicsMobileAppv2/wiki)
+View our wiki here: [ZotPonics 3.0 Mobile App Wiki](https://github.com/Senior-Design-ZotPonics/ZotPonicsMobileAppv3/wiki)
 
 The mobile app is written in Flutter:
 
