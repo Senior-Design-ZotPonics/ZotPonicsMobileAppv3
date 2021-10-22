@@ -31,6 +31,7 @@ class _HomePage extends State<HomePage> {
   final String _font;
   Icon searchOrCancelIcon = const Icon(Icons.search);
   Widget titleText;
+  List<Widget> listedShelves = [];
 
   @override
   void initState() {
@@ -81,16 +82,12 @@ class _HomePage extends State<HomePage> {
   }
 
   ///Returns a list of the shelves to display
-  List<Widget> getListedShelves(displayWaterLevel, baseLevel) {
+  List<Widget> getListedShelves() {
     List<Widget> shelves = [];
     ShelfButton shelf1 = ShelfButton('Shelf 1', Colors.amberAccent, FontAwesomeIcons.solidSun, _font, 1);
     ShelfButton shelf2 = ShelfButton('Shelf 2', Colors.lightGreen, FontAwesomeIcons.seedling, _font, 2);
     ShelfButton shelf3 = ShelfButton('Shelf 3', Colors.lightBlue, FontAwesomeIcons.water, _font, 3);
     shelves = [shelf1, shelf2, shelf3];
-    if (displayWaterLevel == true) {
-      TextWidget waterLevel = TextWidget('Reservoir Water Level: ${baseLevel} cm', _font, Colors.black, FontWeight.w400, 15);
-      shelves.add(waterLevel);
-    }
     return shelves;
   }
 
@@ -189,18 +186,21 @@ class _HomePage extends State<HomePage> {
         body: FutureBuilder<SensorPostGet>(
             future: getSensorData(1), ///Activates every time state changes
             builder: (context, snapshot) {
+              List<Widget> shelves = getListedShelves();
                 try { /// Display reservoir water level if possible
+                  List<Widget> shelvesWithWaterLevel = [TextWidget('Reservoir Water Level: ${snapshot.data.readings.last.baseLevel} cm', _font, Colors.black, FontWeight.w400, 15)];
+                  shelves.addAll(shelves);
                     return Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: getListedShelves(true, snapshot.data.readings.last.baseLevel)
+                        children: shelvesWithWaterLevel
                     );
                 }
                 catch (e) { /// Display just the shelves if the water level can't be identified
                     return Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: getListedShelves(false, null)
+                        children: shelves
                     );
                 }
             }
