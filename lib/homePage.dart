@@ -81,14 +81,37 @@ class _HomePage extends State<HomePage> {
     notifPlugin.showWeeklyAtDayAndTime(0, 'ZotPonics', 'Replace your nutrient water!', Day.Sunday, time, RepeatInterval.Biweekly, platformChannelSpecifics);
   }
 
-  ///Returns a list of the shelves to display
-  List<Widget> getListedShelves() {
-    List<Widget> shelves = [];
+  ///Updates list of shelves to display based on user's inputted search
+  void updateListedShelves(searchText) {
     ShelfButton shelf1 = ShelfButton('Shelf 1', Colors.amberAccent, FontAwesomeIcons.solidSun, _font, 1);
     ShelfButton shelf2 = ShelfButton('Shelf 2', Colors.lightGreen, FontAwesomeIcons.seedling, _font, 2);
     ShelfButton shelf3 = ShelfButton('Shelf 3', Colors.lightBlue, FontAwesomeIcons.water, _font, 3);
-    shelves = [shelf1, shelf2, shelf3];
-    return shelves;
+    switch (searchText) {
+      case '1': { listedShelves = [shelf1]; }
+        break;
+      case '2': { listedShelves = [shelf2]; }
+        break;
+      case '3': { listedShelves = [shelf3]; }
+        break;
+      case '': { listedShelves = [shelf1, shelf2, shelf3]; }
+      break;
+      default: { listedShelves = [Align(
+          alignment: Alignment.center,
+          child: Container(
+            child: Text(
+                'No Results',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    height: 2,
+                    fontFamily: _font,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 40.0)
+            ),
+          ),
+        )];}
+      break;
+    }
+    print(listedShelves);
   }
 
   ///Constructor
@@ -144,7 +167,9 @@ class _HomePage extends State<HomePage> {
                                     ),
                                     onSubmitted: (String searchText) {
                                       ///Update listed shelves once user submits search entry
-                                      titleText = Text(searchText);
+                                      setState(() {
+                                        updateListedShelves(searchText.replaceAll(' ', ''));
+                                      });
                                     }
                                   ),
                                 );
@@ -161,6 +186,9 @@ class _HomePage extends State<HomePage> {
                                         fontSize: 40.0,
                                         color: Colors.white)
                                 );
+                                setState(() {
+                                  updateListedShelves('');
+                                });
                               }
                             });
                           }
@@ -186,7 +214,7 @@ class _HomePage extends State<HomePage> {
         body: FutureBuilder<SensorPostGet>(
             future: getSensorData(1), ///Activates every time state changes
             builder: (context, snapshot) {
-              List<Widget> shelves = getListedShelves();
+              List<Widget> shelves = listedShelves;
                 try { /// Display reservoir water level if possible
                   List<Widget> shelvesWithWaterLevel = [TextWidget('Reservoir Water Level: ${snapshot.data.readings.last.baseLevel} cm', _font, Colors.black, FontWeight.w400, 15)];
                   shelves.addAll(shelves);
