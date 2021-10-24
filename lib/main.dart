@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'homePage.dart';
 import 'demoPage.dart';
+import 'getTest.dart';
+import 'tempStatistics.dart';
 
 ///Guide to JSON: https://stackoverflow.com/questions/51061412/how-to-set-the-text-value-dynamically-from-the-json-in-flutter
 
@@ -18,8 +20,10 @@ class ZotPonics extends StatelessWidget {
         ///Colors AppBar and other general things
         primarySwatch: Colors.green
       ),
-      home: HomePage('Montserrat')
+      home: TempStatistics()
+      //home: HomePage('Montserrat')
       //home: DemoPage('Montserrat')
+      // home: GetTest() -- used to test http request
     );
   }
 }
