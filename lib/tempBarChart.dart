@@ -21,28 +21,26 @@ class TemperatureChart extends StatelessWidget {
 
     return Container(
       height: 300,
-      padding: EdgeInsets.all(25),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(9.0),
-          child: Column(
-            children: <Widget>[
-              FittedBox(
-                fit: BoxFit.fitHeight,
-                child: Text(
-                "Temperature Sensor Data",
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .bodyText1,
-                )
-              ),
-              Expanded(
-                child: charts.BarChart(series, animate: true),
-              )
-            ],
-          ),
-        ),
+      child: Padding(
+        padding: const EdgeInsets.all(9.0),
+        child: charts.BarChart(series, animate: true),
+        // child: Column(
+        //   children: <Widget>[
+        //     FittedBox(
+        //       fit: BoxFit.fitHeight,
+        //       child: Text(
+        //       "Temperature Sensor Data",
+        //       style: Theme
+        //           .of(context)
+        //           .textTheme
+        //           .bodyText1,
+        //       )
+        //     ),
+        //     Expanded(
+        //       child: charts.BarChart(series, animate: true),
+        //     )
+        //   ],
+        // ),
       ),
     );
   }

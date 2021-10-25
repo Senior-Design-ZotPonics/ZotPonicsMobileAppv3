@@ -20,8 +20,8 @@ class ZotPonics extends StatelessWidget {
         ///Colors AppBar and other general things
         primarySwatch: Colors.green
       ),
-      home: TempStatistics()
-      //home: HomePage('Montserrat')
+        home: HomePage('Montserrat')
+      // home: TempStatistics() -- used to test bar chart
       //home: DemoPage('Montserrat')
       // home: GetTest() -- used to test http request
     );
