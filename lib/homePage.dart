@@ -50,7 +50,7 @@ class _HomePage extends State<HomePage> {
     shelf1 = ShelfButton('Shelf 1', Colors.amberAccent, FontAwesomeIcons.solidSun, _font, 1);
     shelf2 = ShelfButton('Shelf 2', Colors.lightGreen, FontAwesomeIcons.seedling, _font, 2);
     shelf3 = ShelfButton('Shelf 3', Colors.lightBlue, FontAwesomeIcons.water, _font, 3);
-    listedShelves.addAll([shelf1]);
+    listedShelves.addAll([shelf1, shelf2, shelf3]);
 
     displayReminderNotifPeriodically();
     titleText = Text(
@@ -91,6 +91,7 @@ class _HomePage extends State<HomePage> {
 
   ///Updates list of shelves to display based on user's inputted search
   void updateListedShelves(searchText) {
+    listedShelves.removeRange(0, listedShelves.length);
     switch (searchText) {
       case '1': { listedShelves = [shelf1]; }
         break;
@@ -120,6 +121,17 @@ class _HomePage extends State<HomePage> {
 
   ///Constructor
   _HomePage(this._font);
+
+  ///Returns list of shelves to display after updates in FutureBuilder.
+  Future<List<Widget>> getListedShelves() async{
+    return listedShelves;
+  }
+
+  ///Returns water level to display on home page.
+  double getWaterBaseLevel() {
+    SensorPostGet sensorData = sensorPostFromJson('1');
+    return sensorData.readings.last.baseLevel;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,12 +229,12 @@ class _HomePage extends State<HomePage> {
             )
         ),
         ///Info cards
-        body: FutureBuilder<SensorPostGet>(
-            future: getSensorData(1), ///Activates every time state changes
+        body: FutureBuilder<List<Widget>>(
+            future: getListedShelves(), ///Activates every time state changes
             builder: (context, snapshot) {
                 try { /// Display reservoir water level if possible
-                  List<Widget> shelvesWithWaterLevel = [TextWidget('Reservoir Water Level: ${snapshot.data.readings.last.baseLevel} cm', _font, Colors.black, FontWeight.w400, 15)];
-                  shelvesWithWaterLevel.addAll(listedShelves);
+                  List<Widget> shelvesWithWaterLevel = [TextWidget('Reservoir Water Level: ${getWaterBaseLevel()} cm', _font, Colors.black, FontWeight.w400, 15)];
+                  shelvesWithWaterLevel.addAll(snapshot.data);
                     return Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -230,12 +242,11 @@ class _HomePage extends State<HomePage> {
                     );
                 }
                 catch (e) { /// Display just the shelves if the water level can't be identified
-                  Column col = Column(
+                  return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: listedShelves
+                      children: snapshot.data
                   );
-                  return col;
                 }
             }
         )
