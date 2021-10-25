@@ -31,6 +31,9 @@ class _HomePage extends State<HomePage> {
   final String _font;
   Icon searchOrCancelIcon = const Icon(Icons.search);
   Widget titleText;
+  ShelfButton shelf1;
+  ShelfButton shelf2;
+  ShelfButton shelf3;
   List<Widget> listedShelves = [];
 
   @override
@@ -43,6 +46,11 @@ class _HomePage extends State<HomePage> {
         onDidReceiveLocalNotification: (id, title, body, payload) => notificationSelected(payload));
 
     notifPlugin.initialize(InitializationSettings(androidSettings, iOSSettings), onSelectNotification: notificationSelected);
+
+    shelf1 = ShelfButton('Shelf 1', Colors.amberAccent, FontAwesomeIcons.solidSun, _font, 1);
+    shelf2 = ShelfButton('Shelf 2', Colors.lightGreen, FontAwesomeIcons.seedling, _font, 2);
+    shelf3 = ShelfButton('Shelf 3', Colors.lightBlue, FontAwesomeIcons.water, _font, 3);
+    listedShelves.addAll([shelf1]);
 
     displayReminderNotifPeriodically();
     titleText = Text(
@@ -83,9 +91,6 @@ class _HomePage extends State<HomePage> {
 
   ///Updates list of shelves to display based on user's inputted search
   void updateListedShelves(searchText) {
-    ShelfButton shelf1 = ShelfButton('Shelf 1', Colors.amberAccent, FontAwesomeIcons.solidSun, _font, 1);
-    ShelfButton shelf2 = ShelfButton('Shelf 2', Colors.lightGreen, FontAwesomeIcons.seedling, _font, 2);
-    ShelfButton shelf3 = ShelfButton('Shelf 3', Colors.lightBlue, FontAwesomeIcons.water, _font, 3);
     switch (searchText) {
       case '1': { listedShelves = [shelf1]; }
         break;
@@ -94,7 +99,7 @@ class _HomePage extends State<HomePage> {
       case '3': { listedShelves = [shelf3]; }
         break;
       case '': { listedShelves = [shelf1, shelf2, shelf3]; }
-      break;
+        break;
       default: { listedShelves = [Align(
           alignment: Alignment.center,
           child: Container(
@@ -111,7 +116,6 @@ class _HomePage extends State<HomePage> {
         )];}
       break;
     }
-    print(listedShelves);
   }
 
   ///Constructor
@@ -120,6 +124,7 @@ class _HomePage extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset : false,
         ///Off-white background
         backgroundColor: const Color(0xFFF8F8F8),
         appBar: PreferredSize(
@@ -168,6 +173,7 @@ class _HomePage extends State<HomePage> {
                                     onSubmitted: (String searchText) {
                                       ///Update listed shelves once user submits search entry
                                       setState(() {
+                                        ///Remove whitespace before sending search.
                                         updateListedShelves(searchText.replaceAll(' ', ''));
                                       });
                                     }
@@ -214,10 +220,9 @@ class _HomePage extends State<HomePage> {
         body: FutureBuilder<SensorPostGet>(
             future: getSensorData(1), ///Activates every time state changes
             builder: (context, snapshot) {
-              List<Widget> shelves = listedShelves;
                 try { /// Display reservoir water level if possible
                   List<Widget> shelvesWithWaterLevel = [TextWidget('Reservoir Water Level: ${snapshot.data.readings.last.baseLevel} cm', _font, Colors.black, FontWeight.w400, 15)];
-                  shelves.addAll(shelves);
+                  shelvesWithWaterLevel.addAll(listedShelves);
                     return Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -225,11 +230,12 @@ class _HomePage extends State<HomePage> {
                     );
                 }
                 catch (e) { /// Display just the shelves if the water level can't be identified
-                    return Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: shelves
-                    );
+                  Column col = Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: listedShelves
+                  );
+                  return col;
                 }
             }
         )
