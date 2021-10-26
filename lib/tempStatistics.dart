@@ -4,6 +4,7 @@ import 'package:flutter_app/tempBarChart.dart';
 import 'package:flutter_app/tempSeries.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'textWidget.dart';
+import 'services.dart';
 
 class TempStatistics extends StatefulWidget {
 

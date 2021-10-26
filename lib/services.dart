@@ -14,11 +14,12 @@ import 'package:flutter/material.dart';
 String url = 'http://192.168.0.47:5000';
 String sensorData = '/recentsensordata?shelf_number=';
 String controlGrowth = '/usercontrolgrowth?shelf_number=';
+String temperatureData = '/getTemperatureData?shelf_number=';
 String userDemo = '/userdemo?shelf_number=';
 
 
 ///Sensor GET///////////////////////////////////////////////////////////////////
-//Executes the get api
+//Executes the get api for retrieving most recent sensor data record
 Future<SensorPostGet> getSensorData(int shelfNum) async{
   final response = await http.get(Uri.parse(url + sensorData + shelfNum.toString()));
   return sensorPostFromJson(response.body);
@@ -286,4 +287,40 @@ class DemoWriting {
     "vents": vents,
     "water": water
   };
+}
+
+///Temperature GET/////////////////////////////////////////////////////////////
+//GETs all temperature and timestamp data for specified shelf_number
+Future<TemperaturePostGet> getTemperatureData(int shelfNum) async{
+  final response = await http.get(Uri.parse(url + temperatureData + shelfNum.toString()));
+  return temperaturePostFromJson(response.body);
+}
+
+//This function is used to get JSON data from the ZotPonics Server
+TemperaturePostGet temperaturePostFromJson(String str) => TemperaturePostGet.fromJson(json.decode(str));
+
+//This class is used with the get api call and uses a Reading Object
+class TemperaturePostGet {
+  List<TemperatureReading> allRecords;
+
+  TemperaturePostGet({ this.allRecords });
+
+  factory TemperaturePostGet.fromJson(Map<String, dynamic> json) => TemperaturePostGet(
+      allRecords: List<TemperatureReading>.from(json["all_records"].map((x) =>
+          TemperatureReading.fromJson(x))));
+}
+
+class TemperatureReading {
+  double temperature;
+  DateTime timestamp;
+
+  TemperatureReading({
+    this.temperature,
+    this.timestamp
+  });
+
+  factory TemperatureReading.fromJson(Map<String, dynamic> json) => TemperatureReading(
+      temperature: json["temperature"],
+      timestamp: DateTime.parse(json["timestamp"])
+  );
 }
