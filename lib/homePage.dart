@@ -29,6 +29,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePage extends State<HomePage> {
   final String _font;
+  Icon searchOrCancelIcon = const Icon(Icons.search);
+  Widget titleText;
+  ShelfButton shelf1;
+  ShelfButton shelf2;
+  ShelfButton shelf3;
+  List<Widget> listedShelves = [];
 
   @override
   void initState() {
@@ -41,7 +47,21 @@ class _HomePage extends State<HomePage> {
 
     notifPlugin.initialize(InitializationSettings(androidSettings, iOSSettings), onSelectNotification: notificationSelected);
 
+    shelf1 = ShelfButton('Shelf 1', Colors.amberAccent, FontAwesomeIcons.solidSun, _font, 1);
+    shelf2 = ShelfButton('Shelf 2', Colors.lightGreen, FontAwesomeIcons.seedling, _font, 2);
+    shelf3 = ShelfButton('Shelf 3', Colors.lightBlue, FontAwesomeIcons.water, _font, 3);
+    listedShelves.addAll([shelf1, shelf2, shelf3]);
+
     displayReminderNotifPeriodically();
+    titleText = Text(
+        'ZotPonics',
+        style: TextStyle(
+            height: 2,
+            fontFamily: _font,
+            fontWeight: FontWeight.w700,
+            fontSize: 40.0,
+            color: Colors.white)
+    );
   }
 
   ///Plugin to handle notifications
@@ -69,28 +89,129 @@ class _HomePage extends State<HomePage> {
     notifPlugin.showWeeklyAtDayAndTime(0, 'ZotPonics', 'Replace your nutrient water!', Day.Sunday, time, RepeatInterval.Biweekly, platformChannelSpecifics);
   }
 
+  ///Updates list of shelves to display based on user's inputted search
+  void updateListedShelves(searchText) {
+    listedShelves.removeRange(0, listedShelves.length);
+    switch (searchText) {
+      case '1': { listedShelves = [shelf1]; }
+        break;
+      case '2': { listedShelves = [shelf2]; }
+        break;
+      case '3': { listedShelves = [shelf3]; }
+        break;
+      case '': { listedShelves = [shelf1, shelf2, shelf3]; }
+        break;
+      default: { listedShelves = [Align(
+          alignment: Alignment.center,
+          child: Container(
+            child: Text(
+                'No Results',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    height: 2,
+                    fontFamily: _font,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 40.0)
+            ),
+          ),
+        )];}
+      break;
+    }
+  }
+
   ///Constructor
   _HomePage(this._font);
+
+  ///Returns list of shelves to display after updates in FutureBuilder.
+  Future<List<Widget>> getListedShelves() async{
+    return listedShelves;
+  }
+
+  ///Returns water level to display on home page.
+  double getWaterBaseLevel() {
+    SensorPostGet sensorData = sensorPostFromJson('1');
+    return sensorData.readings.last.baseLevel;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset : false,
         ///Off-white background
         backgroundColor: const Color(0xFFF8F8F8),
         appBar: PreferredSize(
             ///Modifies height of AppBar
             preferredSize: Size.fromHeight(70.0),
             child: AppBar(
-                title: Text(
-                    'ZotPonics',
-                    style: TextStyle(
-                        height: 2,
-                        fontFamily: _font,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 40.0,
-                        color: Colors.white)
-                ),
+                title: titleText,
                 actions: [
+                  ///Search button
+                  Padding(
+                      padding: EdgeInsets.only(top: 12.0),
+                      child: IconButton(
+                          icon: searchOrCancelIcon,
+                          iconSize: 35.0,
+                          splashColor: Colors.transparent,
+                          onPressed: () {
+                            ///Open search entry box
+                            setState(() {
+                              if (searchOrCancelIcon.icon == Icons.search) {
+                                ///Display text box for user's search input
+                                searchOrCancelIcon = const Icon(Icons.cancel);
+                                titleText = ListTile(
+                                  contentPadding: EdgeInsets.only(left: 0.0, top: 5.0),
+                                  leading: Padding(
+                                    padding: EdgeInsets.only(top: 12.0),
+                                    child: Icon (
+                                      Icons.search,
+                                      color: Colors.white,
+                                      size: 35.0,
+                                    )
+                                  ),
+                                  title: TextField(
+                                    decoration: InputDecoration(
+                                      hintText: 'Type in a shelf or plant...',
+                                      hintStyle: TextStyle(
+                                        color: Colors.white,
+                                        height: 2,
+                                        fontSize: 18.0,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                      border: InputBorder.none,
+                                    ),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                    onSubmitted: (String searchText) {
+                                      ///Update listed shelves once user submits search entry
+                                      setState(() {
+                                        ///Remove whitespace before sending search.
+                                        updateListedShelves(searchText.replaceAll(' ', ''));
+                                      });
+                                    }
+                                  ),
+                                );
+                              }
+                              else {
+                                ///Reset to search button and default title
+                                searchOrCancelIcon = const Icon(Icons.search);
+                                titleText = Text(
+                                    'ZotPonics',
+                                    style: TextStyle(
+                                        height: 2,
+                                        fontFamily: _font,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 40.0,
+                                        color: Colors.white)
+                                );
+                                setState(() {
+                                  updateListedShelves('');
+                                });
+                              }
+                            });
+                          }
+                      )
+                  ),
                   ///Guide button
                   Padding(
                       padding: EdgeInsets.only(top: 12.0),
@@ -108,31 +229,24 @@ class _HomePage extends State<HomePage> {
             )
         ),
         ///Info cards
-        body: FutureBuilder<SensorPostGet>(
-            future: getSensorData(1), ///Activates every time state changes
+        body: FutureBuilder<List<Widget>>(
+            future: getListedShelves(), ///Activates every time state changes
             builder: (context, snapshot) {
                 try { /// Display reservoir water level if possible
+                  List<Widget> shelvesWithWaterLevel = [TextWidget('Reservoir Water Level: ${getWaterBaseLevel()} cm', _font, Colors.black, FontWeight.w400, 15)];
+                  shelvesWithWaterLevel.addAll(snapshot.data);
                     return Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                            ShelfButton('Shelf 1', Colors.amberAccent, FontAwesomeIcons.solidSun, _font, 1),
-                            ShelfButton('Shelf 2', Colors.lightGreen, FontAwesomeIcons.seedling, _font, 2),
-                            ShelfButton('Shelf 3', Colors.lightBlue, FontAwesomeIcons.water, _font, 3),
-                            TextWidget('Reservoir Water Level: ${snapshot.data.readings.last.baseLevel} cm', _font, Colors.black, FontWeight.w400, 15)
-                      ]
+                        children: shelvesWithWaterLevel
                     );
                 }
                 catch (e) { /// Display just the shelves if the water level can't be identified
-                    return Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ShelfButton('Shelf 1', Colors.amberAccent, FontAwesomeIcons.solidSun, _font, 1),
-                          ShelfButton('Shelf 2', Colors.lightGreen, FontAwesomeIcons.seedling, _font, 2),
-                          ShelfButton('Shelf 3', Colors.lightBlue, FontAwesomeIcons.water, _font, 3),
-                        ]
-                    );
+                  return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: snapshot.data
+                  );
                 }
             }
         )
