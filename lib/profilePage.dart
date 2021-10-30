@@ -27,6 +27,8 @@ Profile Tomato = Profile("Tomato", 27, 60, 6, 22, 300, 10800);
 
 List<Profile> profiles = [Spinach, Lettuce, Kale, Pepper, Onion, Tomato];
 List<String> profileNames = ["Select a profile"];
+String plantTypeFilterValue = "Plant Type";
+String orderFilterValue = "Order";
 
 ///Profile selection page
 
@@ -160,41 +162,111 @@ class _ProfilePage extends State<ProfilePage> {
         ),
         ///Profile list view
         body: Container(
-            child: ListView.builder(
-                itemCount: profiles.length,
-                itemBuilder: (context, int i) {
-                  return Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        ListTile(
-                            dense: true,
-                            title: TextWidget(profiles[i].name, _font, Colors.black, FontWeight.w300, 20.0),
-                            trailing: FlatButton( /// load button changes current settings to profile's settings
-                                child: TextWidget("Load", _font, Colors.green, FontWeight.w300, 15.0),
-                                onPressed: () {
-                                    if (postSettings(profiles[i])) {
-                                      Scaffold.of(context).showSnackBar( /// pop-up confirmation bar
-                                          SnackBar(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.only(
-                                                      topLeft: Radius.circular(10.0),
-                                                      topRight: Radius.circular(10.0))
-                                              ),
-                                              duration: Duration(seconds: 1, milliseconds: 500),
-                                              content: Text('Profile loaded!')
-                                          )
-                                      );
-                                    }
-                                }
-                            )
+            child: new Column(
+                children: [
+                  new Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      new Container(
+                        child: DropdownButton<String>(
+                          value: plantTypeFilterValue,
+                          icon: const Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.green
+                          ),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.green,
+                          ),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              plantTypeFilterValue = newValue;
+                            });
+                          },
+                          items: <String>['Plant Type', 'Fruit', 'Vegetable', 'Other']
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          })
+                              .toList(),
                         ),
-                        Divider(
-                          height: 5.0,
-                          color: Colors.black26,
-                        )
-                      ]
-                  );
-                }
+                      ),
+                      new Container(
+                        child: DropdownButton<String>(
+                          value: orderFilterValue,
+                          icon: const Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.green
+                          ),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.green,
+                          ),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              orderFilterValue = newValue;
+                            });
+                          },
+                          items: <String>['Order', 'A-Z', 'Z-A']
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          })
+                              .toList(),
+                        ),
+                      )
+                    ]
+                  ),
+                  new Container(
+                    height: 500,
+                      child: ListView.builder(
+                      itemCount: profiles.length,
+                      itemBuilder: (context, int i) {
+                        return Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              ListTile(
+                                  dense: true,
+                                  title: TextWidget(profiles[i].name, _font, Colors.black, FontWeight.w300, 20.0),
+                                  trailing: FlatButton( /// load button changes current settings to profile's settings
+                                      child: TextWidget("Load", _font, Colors.green, FontWeight.w300, 15.0),
+                                      onPressed: () {
+                                          if (postSettings(profiles[i])) {
+                                            Scaffold.of(context).showSnackBar( /// pop-up confirmation bar
+                                                SnackBar(
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.only(
+                                                            topLeft: Radius.circular(10.0),
+                                                            topRight: Radius.circular(10.0))
+                                                    ),
+                                                    duration: Duration(seconds: 1, milliseconds: 500),
+                                                    content: Text('Profile loaded!')
+                                                )
+                                            );
+                                          }
+                                      }
+                                  )
+                              ),
+                              Divider(
+                                height: 5.0,
+                                color: Colors.black26,
+                              )
+                            ]
+                        );
+                      }
+                    )
+                  )
+              ]
             )
         ),
         bottomNavigationBar: new BottomAppBar( /// create and delete buttons
