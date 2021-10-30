@@ -128,22 +128,22 @@ class _HomePage extends State<HomePage> {
             ),
           ),
         )];}
-        break;
         return;
       }
     }
 
+    ///Search through shelves by plant name
     List<ShelfButton> allShelves = [shelf1, shelf2, shelf3];
-    for(int i = 0; i < allShelves.length; i++) {
-      ProfilePage profilePage = ProfilePage(_font, i+1, 0, 0, 0, 0, 0, 0);
+    for(int shelfIndex = 0; shelfIndex < allShelves.length; shelfIndex++) {
+      ProfilePage profilePage = ProfilePage(_font, shelfIndex+1, 0, 0, 0, 0, 0, 0);
       List<String> profileNames = profilePage.getProfileNames();
 
       ///Add default plant profiles
       profileNames.addAll(["Spinach", "Lettuce", "Kale", "Pepper", "Onion", "Tomato"]);
 
-      for(int j = 0; j < profileNames.length; j++) {
-        if (searchText == profileNames[j].toLowerCase()) {
-          listedShelves.add(allShelves[i]);
+      for(int profileIndex = 0; profileIndex < profileNames.length; profileIndex++) {
+        if (searchText == profileNames[profileIndex].toLowerCase()) {
+          listedShelves.add(allShelves[shelfIndex]);
           break;
         }
       }
