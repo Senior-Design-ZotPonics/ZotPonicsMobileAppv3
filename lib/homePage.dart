@@ -8,6 +8,7 @@ import 'services.dart';
 import 'textWidget.dart';
 import 'demoPage.dart';
 import 'growGuide.dart';
+import 'profilePage.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 ///For more information on how to work with notifications, check these out:
@@ -89,19 +90,31 @@ class _HomePage extends State<HomePage> {
     notifPlugin.showWeeklyAtDayAndTime(0, 'ZotPonics', 'Replace your nutrient water!', Day.Sunday, time, RepeatInterval.Biweekly, platformChannelSpecifics);
   }
 
+  bool isNumeric(String value) {
+    if (value == null) {
+      return false;
+    }
+    return double.tryParse(value) != null;
+  }
+
   ///Updates list of shelves to display based on user's inputted search
-  void updateListedShelves(searchText) {
+  void updateListedShelves(String searchText) {
     listedShelves.removeRange(0, listedShelves.length);
-    switch (searchText) {
-      case '1': { listedShelves = [shelf1]; }
-        break;
-      case '2': { listedShelves = [shelf2]; }
-        break;
-      case '3': { listedShelves = [shelf3]; }
-        break;
-      case '': { listedShelves = [shelf1, shelf2, shelf3]; }
-        break;
-      default: { listedShelves = [Align(
+    searchText = searchText.toLowerCase();
+
+    ///No search returns back to default list of shelves
+    if (searchText == '') {
+      listedShelves = [shelf1, shelf2, shelf3];
+      return;
+    }
+
+    ///Numeric values search for a specific shelf number
+    if (isNumeric(searchText)) {
+      switch (searchText) {
+        case '1': { listedShelves = [shelf1]; return; }
+        case '2': { listedShelves = [shelf2]; return; }
+        case '3': { listedShelves = [shelf3]; return; }
+        default: { listedShelves = [Align(
           alignment: Alignment.center,
           child: Container(
             child: Text(
@@ -115,7 +128,43 @@ class _HomePage extends State<HomePage> {
             ),
           ),
         )];}
-      break;
+        break;
+        return;
+      }
+    }
+
+    List<ShelfButton> allShelves = [shelf1, shelf2, shelf3];
+    for(int i = 0; i < allShelves.length; i++) {
+      ProfilePage profilePage = ProfilePage(_font, i+1, 0, 0, 0, 0, 0, 0);
+      List<String> profileNames = profilePage.getProfileNames();
+
+      ///Add default plant profiles
+      profileNames.addAll(["Spinach", "Lettuce", "Kale", "Pepper", "Onion", "Tomato"]);
+
+      for(int j = 0; j < profileNames.length; j++) {
+        if (searchText == profileNames[j].toLowerCase()) {
+          listedShelves.add(allShelves[i]);
+          break;
+        }
+      }
+    }
+
+    ///If search text is not found then display "No Results"
+    if (listedShelves.isEmpty) {
+      listedShelves = [Align(
+        alignment: Alignment.center,
+        child: Container(
+          child: Text(
+              'No Results',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  height: 2,
+                  fontFamily: _font,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 40.0)
+          ),
+        ),
+      )];
     }
   }
 
