@@ -4,14 +4,14 @@ import 'package:flutter/foundation.dart';
 // creates model for temperature data
 class TempSeries {
   final double temp;
-  final String day; // update this to DateTime for real data
-  final charts.Color barColor;
+  final DateTime timestamp; // update this to DateTime for real data
+  // final charts.Color barColor;
 
   TempSeries(
     {
       @required this.temp,
-      @required this.day,
-      @required this.barColor
+      @required this.timestamp
+      // @required this.barColor
     }
   );
 }

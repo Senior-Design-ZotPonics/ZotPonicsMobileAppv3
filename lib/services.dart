@@ -4,17 +4,17 @@
 //     final post = postFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:flutter_app/TemperatureReading.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/material.dart';
 
 ///To modify IP address, check initState() in homePage.dart
 
-String url = 'http://192.168.0.47:5000';
+String url = 'http://192.168.0.48:5000';
 String sensorData = '/recentsensordata?shelf_number=';
 String controlGrowth = '/usercontrolgrowth?shelf_number=';
-String temperatureData = '/getTemperatureData?shelf_number=';
+String temperature = '/getTemperatureData?shelf_number=';
 String userDemo = '/userdemo?shelf_number=';
 
 
@@ -291,36 +291,15 @@ class DemoWriting {
 
 ///Temperature GET/////////////////////////////////////////////////////////////
 //GETs all temperature and timestamp data for specified shelf_number
-Future<TemperaturePostGet> getTemperatureData(int shelfNum) async{
-  final response = await http.get(Uri.parse(url + temperatureData + shelfNum.toString()));
-  return temperaturePostFromJson(response.body);
-}
+Future<List<TemperatureReading>> getTemperatureData(int shelfNum) async{
+  final response = await http.get(Uri.parse(url + temperature + shelfNum.toString()));
 
-//This function is used to get JSON data from the ZotPonics Server
-TemperaturePostGet temperaturePostFromJson(String str) => TemperaturePostGet.fromJson(json.decode(str));
-
-//This class is used with the get api call and uses a Reading Object
-class TemperaturePostGet {
-  List<TemperatureReading> allRecords;
-
-  TemperaturePostGet({ this.allRecords });
-
-  factory TemperaturePostGet.fromJson(Map<String, dynamic> json) => TemperaturePostGet(
-      allRecords: List<TemperatureReading>.from(json["all_records"].map((x) =>
-          TemperatureReading.fromJson(x))));
-}
-
-class TemperatureReading {
-  double temperature;
-  DateTime timestamp;
-
-  TemperatureReading({
-    this.temperature,
-    this.timestamp
-  });
-
-  factory TemperatureReading.fromJson(Map<String, dynamic> json) => TemperatureReading(
-      temperature: json["temperature"],
-      timestamp: DateTime.parse(json["timestamp"])
-  );
+  if (response.statusCode == 200) {
+    var list = json.decode(response.body) as List;
+    List<TemperatureReading> readings = list.map((i) => TemperatureReading.fromJson(i)).toList();
+    return readings;
+  }
+  else {
+    throw Exception('Failed to load temperatures');
+  }
 }

@@ -13,14 +13,15 @@ class TemperatureChart extends StatelessWidget {
       charts.Series(
           id: "temperatures",
           data: temperatureData,
-          domainFn: (TempSeries series, _) => series.day,
+          domainFn: (TempSeries series, _) => series.timestamp.day.toString(),
           measureFn: (TempSeries series, _) => series.temp,
-          colorFn: (TempSeries series, _) => series.barColor
+          colorFn: (TempSeries series, _) => charts.ColorUtil.fromDartColor(Colors.red)
       )
     ];
 
     return Container(
       height: 300,
+      width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.all(9.0),
         child: charts.BarChart(series, animate: true),

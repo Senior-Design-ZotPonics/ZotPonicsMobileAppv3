@@ -58,7 +58,6 @@ class _InfoCard extends State<InfoCard> {
                 customBorder: _roundedRect,
                 splashColor: _color.withAlpha(1000),
                 onTap: () {
-                  // print(_shelfNum);
                   if (_subtitle == 'Temperature') {
                     // go to statistics page
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => TempStatistics(_shelfNum)));

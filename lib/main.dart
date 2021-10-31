@@ -4,7 +4,7 @@ import 'homePage.dart';
 import 'demoPage.dart';
 import 'getTest.dart';
 import 'tempStatistics.dart';
-import 'temperatureDataTest.dart';
+import 'widgetsForTesting/temperatureDataTest.dart';
 
 ///Guide to JSON: https://stackoverflow.com/questions/51061412/how-to-set-the-text-value-dynamically-from-the-json-in-flutter
 
@@ -22,7 +22,7 @@ class ZotPonics extends StatelessWidget {
         primarySwatch: Colors.green
       ),
         home: HomePage('Montserrat')
-        // home: DataTest(1)
+        // home: DataTest(1) -- used to test temperature data from database
         // home: TempStatistics() -- used to test bar chart
         //home: DemoPage('Montserrat')
         // home: GetTest() -- used to test http request
