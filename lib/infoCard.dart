@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'textWidget.dart';
+import 'tempStatistics.dart';
 
 ///Displays an info card
 
@@ -8,12 +9,13 @@ class InfoCard extends StatefulWidget {
   final String _subtitle;
   final Color _color;
   final IconData _icon;
+  final int _shelfNum;
 
   ///Constructor
-  InfoCard(this._title, this._subtitle, this._color, this._icon);
+  InfoCard(this._title, this._subtitle, this._color, this._icon, this._shelfNum);
 
   @override
-  State<StatefulWidget> createState() => _InfoCard(_title, _subtitle, _color, _icon);
+  State<StatefulWidget> createState() => _InfoCard(_title, _subtitle, _color, _icon, _shelfNum);
 }
 
 ///States allow us to change variables dynamically
@@ -22,6 +24,7 @@ class _InfoCard extends State<InfoCard> {
   String _subtitle;
   Color _color;
   IconData _icon;
+  int _shelfNum;
   ///Roundness of card corners
   static double _roundness = 10.0;
   ///Rounded rectangle shape
@@ -29,7 +32,7 @@ class _InfoCard extends State<InfoCard> {
       borderRadius: BorderRadius.all(Radius.circular(_roundness)));
 
   ///Constructor
-  _InfoCard(this._title, this._subtitle, this._color, this._icon);
+  _InfoCard(this._title, this._subtitle, this._color, this._icon, this._shelfNum);
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +57,14 @@ class _InfoCard extends State<InfoCard> {
             child: InkWell(
                 customBorder: _roundedRect,
                 splashColor: _color.withAlpha(1000),
-                onTap: () {},
+                onTap: () {
+                  if (_subtitle == 'Temperature') {
+                    // go to statistics page
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => TempStatistics(_shelfNum)));
+                  } else if (_subtitle == 'Humidity') {
+                    print(_shelfNum);
+                  } else {}
+                },
                 child: Row(children: [
                     ///Icon + icon background
                     Container(

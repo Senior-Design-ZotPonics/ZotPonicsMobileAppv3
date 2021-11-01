@@ -4,23 +4,24 @@
 //     final post = postFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:flutter_app/TemperatureReading.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/material.dart';
 
 ///To modify IP address, check initState() in homePage.dart
 
-String url = 'http://192.168.1.25:5000';
+String url = 'http://192.168.0.48:5000';
 String sensorData = '/recentsensordata?shelf_number=';
 String controlGrowth = '/usercontrolgrowth?shelf_number=';
+String temperature = '/getTemperatureData?shelf_number=';
 String userDemo = '/userdemo?shelf_number=';
 
 
 ///Sensor GET///////////////////////////////////////////////////////////////////
-//Executes the get api
+//Executes the get api for retrieving most recent sensor data record
 Future<SensorPostGet> getSensorData(int shelfNum) async{
-  final response = await http.get(url + sensorData + shelfNum.toString());
+  final response = await http.get(Uri.parse(url + sensorData + shelfNum.toString()));
   return sensorPostFromJson(response.body);
 }
 
@@ -72,7 +73,7 @@ class SensorReading {
 //Executes the get api
 Future<CGPostGet> getControlGrowth(int shelfNumber) async{
   //debugPrint(url + controlGrowth + shelfNumber.toString());
-  final response = await http.get(url + controlGrowth + shelfNumber.toString());
+  final response = await http.get(Uri.parse(url + controlGrowth + shelfNumber.toString()));
   //debugPrint(response.body);
   return CGPostFromJson(response.body);
 }
@@ -129,8 +130,8 @@ class CGReading {
 
 //Executes the put api
 Future<http.Response> postControlGrowth(CGPostPut post, int shelfNumber) async{
-  final response = await http.post(
-      url + controlGrowth + shelfNumber.toString(),
+  final response = await http.post(Uri.parse(url + controlGrowth + shelfNumber.toString())
+      ,
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.authorizationHeader : ''
@@ -195,7 +196,7 @@ class CGWriting {
 ///User Demo GET and POST///////////////////////////////////////////////////////
 //Executes the get api
 Future<DemoPostGet> getDemoValues(int shelfNumber) async{
-  final response = await http.get(url + userDemo + shelfNumber.toString());
+  final response = await http.get(Uri.parse(url + userDemo + shelfNumber.toString()));
   return DemoPostFromJson(response.body);
 }
 
@@ -239,8 +240,8 @@ class DemoReading {
 
 //Executes the put api
 Future<http.Response> postDemoValues(DemoPostPut post, int shelfNumber) async{
-  final response = await http.post(
-      url + userDemo + shelfNumber.toString(),
+  final response = await http.post(Uri.parse(url + userDemo + shelfNumber.toString())
+      ,
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.authorizationHeader : ''
@@ -286,4 +287,19 @@ class DemoWriting {
     "vents": vents,
     "water": water
   };
+}
+
+///Temperature GET/////////////////////////////////////////////////////////////
+//GETs all temperature and timestamp data for specified shelf_number
+Future<List<TemperatureReading>> getTemperatureData(int shelfNum) async{
+  final response = await http.get(Uri.parse(url + temperature + shelfNum.toString()));
+
+  if (response.statusCode == 200) {
+    var list = json.decode(response.body) as List;
+    List<TemperatureReading> readings = list.map((i) => TemperatureReading.fromJson(i)).toList();
+    return readings;
+  }
+  else {
+    throw Exception('Failed to load temperatures');
+  }
 }
