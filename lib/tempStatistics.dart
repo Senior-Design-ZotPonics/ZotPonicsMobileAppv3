@@ -54,6 +54,7 @@ class _TempStatistics extends State<TempStatistics> {
   Widget build(BuildContext context) {
     List<TempSeries> temperatureData = [];
     List toSort = [];
+    double average;
     return Scaffold(
       backgroundColor: const Color(0xFFF8F8F8),
       appBar: PreferredSize(
@@ -71,7 +72,7 @@ class _TempStatistics extends State<TempStatistics> {
                   onPressed: () => Navigator.of(context).pop()
               ),
               title: Text(
-                  'Temperature - Shelf ' + this.shelfNum.toString(),
+                  'Temperature Statistics',
                   style: TextStyle(
                       height: 2,
                       // fontFamily: _font,
@@ -116,33 +117,51 @@ class _TempStatistics extends State<TempStatistics> {
                 timestamp: toSort[i][1]);
               temperatureData.add(seriesToAdd);
             }
+
+            // get average
+            average = getAverage(temperatureData);
+
             return Container(
-              height: 700,
-              padding: EdgeInsets.all(25),
+              height: 800,
+              width: double.infinity,
+              // padding: EdgeInsets.only(top: 25.0, bottom: 25.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(left: 25.0),
+                    padding: EdgeInsets.only(left: 25.0, right: 25.0, bottom: 45.0),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: TextWidget(
+                        'Monthly Temperature Data',
+                        'Montserrat',
+                        Colors.blueGrey,
+                        FontWeight.w500,
+                        20.0
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: 50.0),
                     child: Align(
                         alignment: Alignment.centerLeft,
                         child: TextWidget(
-                            getAverage(temperatureData).toString(),
+                            '${double.parse(average.toStringAsFixed(2))}' + '°C',
                             'Montserrat',
                             Colors.red,
                             FontWeight.w700,
-                            45.0
+                            30.0
                         ),
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(left: 25.0, bottom:15.0),
+                    padding: EdgeInsets.only(left: 50.0, bottom:15.0),
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: TextWidget(
                         'Monthly Avg.',
                         'Montserrat',
-                        Colors.grey,
+                        Colors.blueGrey,
                         FontWeight.bold,
                         12.0
                       ),
@@ -154,6 +173,20 @@ class _TempStatistics extends State<TempStatistics> {
                       child: TemperatureChart(temperatureData: temperatureData)
                     ),
                   ),
+                  Container(
+                    padding: EdgeInsets.only(top: 15.0),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: TextWidget(
+                        'Note: Chart is left-right scrollable, '
+                            '\ngiven sufficient data. Give it a try!',
+                        'Montserrat',
+                        Colors.blueGrey,
+                        FontWeight.bold,
+                        10.0
+                      )
+                    )
+                  )
                 ],
               ),
             );
