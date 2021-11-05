@@ -45,6 +45,10 @@ class ProfilePage extends StatefulWidget {
   ///Constructor
   ProfilePage(this._font, this.shelfNumber, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency);
 
+  getProfileNames() {
+    return profileNames.sublist(1);
+  }
+
   @override
   State<StatefulWidget> createState() => _ProfilePage(_font, shelfNumber, maxTemp, maxHumid, lightStart, lightEnd, duration, frequency);
 }
