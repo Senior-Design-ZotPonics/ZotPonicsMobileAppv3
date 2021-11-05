@@ -13,19 +13,21 @@ class Profile {
   int lightEnd;
   int duration;
   int frequency;
+  String plantType;
 
-  Profile(this.name, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency);
+  Profile(this.name, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency, this.plantType);
 }
 
 ///Preset profiles
-Profile Spinach = Profile("Spinach", 22, 60, 8, 20, 300, 10800);
-Profile Lettuce = Profile("Lettuce", 22, 60, 8, 18, 300, 10800);
-Profile Kale = Profile("Kale", 21, 60, 8, 4, 300, 10800);
-Profile Pepper = Profile("Pepper", 22, 60, 6, 22, 300, 10800);
-Profile Onion = Profile("Onion", 19, 70, 7, 19, 300, 10800);
-Profile Tomato = Profile("Tomato", 27, 60, 6, 22, 300, 10800);
+Profile Spinach = Profile("Spinach", 22, 60, 8, 20, 300, 10800, "Vegetable");
+Profile Lettuce = Profile("Lettuce", 22, 60, 8, 18, 300, 10800, "Vegetable");
+Profile Kale = Profile("Kale", 21, 60, 8, 4, 300, 10800, "Vegetable");
+Profile Pepper = Profile("Pepper", 22, 60, 6, 22, 300, 10800, "Vegetable");
+Profile Onion = Profile("Onion", 19, 70, 7, 19, 300, 10800, "Vegetable");
+Profile Tomato = Profile("Tomato", 27, 60, 6, 22, 300, 10800, "Fruit");
 
 List<Profile> profiles = [Spinach, Lettuce, Kale, Pepper, Onion, Tomato];
+List<Profile> filteredProfiles = [Spinach, Lettuce, Kale, Pepper, Onion, Tomato];
 List<String> profileNames = ["Select a profile"];
 String plantTypeFilterValue = "Plant Type";
 String orderFilterValue = "Order";
@@ -129,6 +131,27 @@ class _ProfilePage extends State<ProfilePage> {
   ///Constructor
   _ProfilePage(this._font, this.shelfNumber, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency);
 
+  void updateFilteredProfilesList() {
+    List<Profile> newProfileList = [];
+    for(var i = 0; i < profiles.length; i++) {
+      if (profiles[i].plantType == plantTypeFilterValue) {
+        newProfileList.add(profiles[i]);
+      }
+    }
+
+    if (plantTypeFilterValue == "Plant Type") {
+      newProfileList = profiles;
+    }
+
+    ///Sort profile list based on selected ordering
+    if (orderFilterValue == "A-Z") {
+      newProfileList.sort((a, b) => (a.name).compareTo(b.name));
+    } else if (orderFilterValue == "Z-A") {
+      newProfileList.sort((b, a) => (a.name).compareTo(b.name));
+    }
+    filteredProfiles = newProfileList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -188,6 +211,8 @@ class _ProfilePage extends State<ProfilePage> {
                           onChanged: (String newValue) {
                             setState(() {
                               plantTypeFilterValue = newValue;
+                              ///Filter through plants based on dropdown values
+                              updateFilteredProfilesList();
                             });
                           },
                           items: <String>['Plant Type', 'Fruit', 'Vegetable', 'Other']
@@ -217,6 +242,8 @@ class _ProfilePage extends State<ProfilePage> {
                           onChanged: (String newValue) {
                             setState(() {
                               orderFilterValue = newValue;
+                              ///Filter through plants based on dropdown values
+                              updateFilteredProfilesList();
                             });
                           },
                           items: <String>['Order', 'A-Z', 'Z-A']
@@ -234,18 +261,18 @@ class _ProfilePage extends State<ProfilePage> {
                   new Container(
                     height: 500,
                       child: ListView.builder(
-                      itemCount: profiles.length,
+                      itemCount: filteredProfiles.length,
                       itemBuilder: (context, int i) {
                         return Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               ListTile(
                                   dense: true,
-                                  title: TextWidget(profiles[i].name, _font, Colors.black, FontWeight.w300, 20.0),
+                                  title: TextWidget(filteredProfiles[i].name, _font, Colors.black, FontWeight.w300, 20.0),
                                   trailing: FlatButton( /// load button changes current settings to profile's settings
                                       child: TextWidget("Load", _font, Colors.green, FontWeight.w300, 15.0),
                                       onPressed: () {
-                                          if (postSettings(profiles[i])) {
+                                          if (postSettings(filteredProfiles[i])) {
                                             Scaffold.of(context).showSnackBar( /// pop-up confirmation bar
                                                 SnackBar(
                                                     shape: RoundedRectangleBorder(
@@ -304,7 +331,7 @@ class _ProfilePage extends State<ProfilePage> {
                                                List<String> existingProfiles = [];
                                                for (int p = 0; p < profiles.length; p++) { existingProfiles.add(profiles[p].name); }
                                                if (newName != "" && !existingProfiles.contains(newName)) {
-                                                   profiles.add(Profile(newName, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency));
+                                                   profiles.add(Profile(newName, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency, "Other"));
                                                    profileNames.add(newName);
                                                    Navigator.of(context).pop();
                                                }
