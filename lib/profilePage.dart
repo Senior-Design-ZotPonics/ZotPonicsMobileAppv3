@@ -260,7 +260,22 @@ class _ProfilePage extends State<ProfilePage> {
                   ),
                   new Container(
                     height: 500,
-                      child: ListView.builder(
+                      child: (filteredProfiles.isEmpty
+                          ? Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              child: Text(
+                                  'No Plants Match Selected Filters',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      height: 2,
+                                      fontFamily: _font,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 35.0)
+                              ),
+                            ),
+                          )
+                          : (ListView.builder(
                       itemCount: filteredProfiles.length,
                       itemBuilder: (context, int i) {
                         return Column(
@@ -295,7 +310,7 @@ class _ProfilePage extends State<ProfilePage> {
                             ]
                         );
                       }
-                    )
+                    )))
                   )
               ]
             )
