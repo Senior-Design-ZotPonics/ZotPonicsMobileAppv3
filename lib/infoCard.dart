@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'textWidget.dart';
 import 'tempStatistics.dart';
+import 'humidityStatistics.dart';
 
 ///Displays an info card
 
@@ -59,10 +60,11 @@ class _InfoCard extends State<InfoCard> {
                 splashColor: _color.withAlpha(1000),
                 onTap: () {
                   if (_subtitle == 'Temperature') {
-                    // go to statistics page
+                    // go to temperature statistics page
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => TempStatistics(_shelfNum)));
                   } else if (_subtitle == 'Humidity') {
-                    print(_shelfNum);
+                    // go to humidity statistics page
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => HumidityStatistics(_shelfNum)));
                   } else {}
                 },
                 child: Row(children: [

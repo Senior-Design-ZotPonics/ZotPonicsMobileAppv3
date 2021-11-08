@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter_app/tempSeries.dart';
+import 'package:flutter_app/humiditySeries.dart';
 
 /*
-Builds and formats the temperature bar chart widget
+Builds and formats humidity bar chart widget
  */
 
-class TemperatureChart extends StatelessWidget {
-  final List<TempSeries> temperatureData;
+class HumidityChart extends StatelessWidget {
+  final List<HumiditySeries> humidityData;
 
-  TemperatureChart({@required this.temperatureData});
+  HumidityChart({@required this.humidityData});
 
   @override
   Widget build(BuildContext context) {
-    List<charts.Series<TempSeries, String>> series = [
+    List<charts.Series<HumiditySeries, String>> series = [
       charts.Series(
-          id: "temperatures",
-          data: temperatureData,
-          domainFn: (TempSeries series, _) => series.timestamp.month.toString() +
-              '/' + series.timestamp.day.toString(),
-          measureFn: (TempSeries series, _) => series.temp,
-          colorFn: (TempSeries series, _) => charts.ColorUtil.fromDartColor(Colors.red)
+        id: "humidity values",
+        data: humidityData,
+        domainFn: (HumiditySeries series, _) => series.timestamp.month.toString() +
+          '/' + series.timestamp.day.toString(),
+        measureFn: (HumiditySeries series, _) => series.humidity,
+        colorFn: (HumiditySeries series, _) => charts.ColorUtil.fromDartColor(Colors.cyan)
       )
     ];
 
@@ -47,7 +47,7 @@ class TemperatureChart extends StatelessWidget {
               ),
             ),
 
-            new charts.ChartTitle('Temperature °C',
+            new charts.ChartTitle('Humidity %',
               behaviorPosition: charts.BehaviorPosition.start,
               titleOutsideJustification: charts.OutsideJustification.middleDrawArea,
               titleStyleSpec: charts.TextStyleSpec(

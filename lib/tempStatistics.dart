@@ -3,12 +3,12 @@ import 'package:flutter_app/tempBarChart.dart';
 import 'package:flutter_app/tempSeries.dart';
 import 'textWidget.dart';
 import 'services.dart';
-import 'TemperatureReading.dart';
+import 'temperatureReading.dart';
 
 /*
-Builds, calculates, and renders the average temperature for the previous month,
-and the temperature bar chart which displays the temperatures over the last
-month.
+Calculates and renders the average temperature for the previous month.
+Builds and renders the temperature bar chart which displays the temperatures
+over the last month.
  */
 
 class TempStatistics extends StatefulWidget {
@@ -24,15 +24,6 @@ class _TempStatistics extends State<TempStatistics> {
   final int shelfNum;
 
   _TempStatistics(this.shelfNum);
-
-  // hardcoded temperature data
-  // final List<TempSeries> temperatureData = [
-  //   TempSeries(temp: 22.0, timestamp: DateTime.parse("2021-10-11")),
-  //   TempSeries(temp: 21.2, timestamp: DateTime.parse("2021-10-23")),
-  //   TempSeries(temp: 21.4, timestamp: DateTime.parse("2021-10-09")),
-  //   TempSeries(temp: 19.9, timestamp: DateTime.parse("2021-10-21")),
-  //   TempSeries(temp: 24.7, timestamp: DateTime.parse("2021-10-07")),
-  // ];
 
   @override
   void initState() {
