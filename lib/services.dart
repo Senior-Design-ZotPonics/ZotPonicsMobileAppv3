@@ -4,7 +4,8 @@
 //     final post = postFromJson(jsonString);
 
 import 'dart:convert';
-import 'package:flutter_app/TemperatureReading.dart';
+import 'package:flutter_app/temperatureReading.dart';
+import 'package:flutter_app/humidityReading.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:io';
@@ -15,6 +16,7 @@ String url = 'http://192.168.0.48:5000';
 String sensorData = '/recentsensordata?shelf_number=';
 String controlGrowth = '/usercontrolgrowth?shelf_number=';
 String temperature = '/getTemperatureData?shelf_number=';
+String humidity = '/getHumidityData?shelf_number=';
 String userDemo = '/userdemo?shelf_number=';
 
 
@@ -291,15 +293,28 @@ class DemoWriting {
 
 ///Temperature GET/////////////////////////////////////////////////////////////
 //GETs all temperature and timestamp data for specified shelf_number
-Future<List<TemperatureReading>> getTemperatureData(int shelfNum) async{
+Future<List<TemperatureReading>> getTemperatureData(int shelfNum) async {
   final response = await http.get(Uri.parse(url + temperature + shelfNum.toString()));
 
   if (response.statusCode == 200) {
     var list = json.decode(response.body) as List;
     List<TemperatureReading> readings = list.map((i) => TemperatureReading.fromJson(i)).toList();
     return readings;
+  } else {
+    throw Exception('Failed to load temperature data');
   }
-  else {
-    throw Exception('Failed to load temperatures');
+}
+
+///Humidity GET/////////////////////////////////////////////////////////////
+//GETs all humidity and timestamp data for specified shelf_number
+Future<List<HumidityReading>> getHumidityData(int shelfNum) async {
+  final response = await http.get(Uri.parse(url + humidity + shelfNum.toString()));
+
+  if (response.statusCode == 200) {
+    var list = json.decode(response.body) as List;
+    List<HumidityReading> readings = list.map((i) => HumidityReading.fromJson(i)).toList();
+    return readings;
+  } else {
+    throw Exception('Failed to load humidity data');
   }
 }

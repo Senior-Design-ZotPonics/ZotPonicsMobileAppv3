@@ -2,6 +2,10 @@ import 'dart:convert';
 TemperatureReading trFromJson(String str) => TemperatureReading.fromJson(json.decode(str));
 String trToJson(TemperatureReading data) => json.encode(data.toJson());
 
+/*
+Defines logic to parse the temperature data from database
+ */
+
 class TemperatureReading {
   double temperature;
   DateTime timestamp;

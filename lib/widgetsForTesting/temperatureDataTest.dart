@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../services.dart';
 import '../textWidget.dart';
-import '../TemperatureReading.dart';
+import '../temperatureReading.dart';
 import 'package:flutter_app/tempSeries.dart';
 import 'package:flutter_app/tempBarChart.dart';
 
