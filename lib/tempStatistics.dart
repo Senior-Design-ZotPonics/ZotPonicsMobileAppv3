@@ -79,7 +79,7 @@ class _TempStatistics extends State<TempStatistics> {
           if (snapshot.connectionState==ConnectionState.done){
             if (!snapshot.hasData){
               return Center(child: TextWidget(
-                'No temperature data to display',
+                'No temperature data to display!',
                   'Montserrat',
                   Colors.red,
                   FontWeight.w400,
@@ -88,7 +88,7 @@ class _TempStatistics extends State<TempStatistics> {
             } else if (snapshot.hasError) {
               return Center(
                   child: TextWidget(
-                      'ERROR',
+                      'Error retrieving data!',
                       'Montserrat',
                       Colors.red,
                       FontWeight.w400,

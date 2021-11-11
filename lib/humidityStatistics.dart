@@ -79,7 +79,7 @@ class _HumidityStatistics extends State<HumidityStatistics> {
               if (snapshot.connectionState==ConnectionState.done){
                 if (!snapshot.hasData){
                   return Center(child: TextWidget(
-                      'No humidity data to display',
+                      'No humidity data to display!',
                       'Montserrat',
                       Colors.cyan,
                       FontWeight.w400,
@@ -88,7 +88,7 @@ class _HumidityStatistics extends State<HumidityStatistics> {
                 } else if (snapshot.hasError) {
                   return Center(
                       child: TextWidget(
-                          'ERROR',
+                          'Error retrieving data!',
                           'Montserrat',
                           Colors.red,
                           FontWeight.w400,
