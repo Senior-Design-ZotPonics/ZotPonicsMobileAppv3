@@ -5,6 +5,7 @@
 
 import 'dart:convert';
 import 'package:flutter_app/temperatureReading.dart';
+import 'package:flutter_app/plantReading.dart';
 import 'package:flutter_app/humidityReading.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -18,7 +19,7 @@ String controlGrowth = '/usercontrolgrowth?shelf_number=';
 String temperature = '/getTemperatureData?shelf_number=';
 String humidity = '/getHumidityData?shelf_number=';
 String userDemo = '/userdemo?shelf_number=';
-
+String plantData = '/getPlantData?shelf_number=';
 
 ///Sensor GET///////////////////////////////////////////////////////////////////
 //Executes the get api for retrieving most recent sensor data record
@@ -316,5 +317,19 @@ Future<List<HumidityReading>> getHumidityData(int shelfNum) async {
     return readings;
   } else {
     throw Exception('Failed to load humidity data');
+  }
+}
+
+///Plants GET/////////////////////////////////////////////////////////////
+//GETs all plant data for specified shelf_number
+Future<List<PlantReading>> getPlantData(int shelfNum) async {
+  final response = await http.get(Uri.parse(url + plantData + shelfNum.toString()));
+
+  if (response.statusCode == 200) {
+    var list = json.decode(response.body) as List;
+    List<PlantReading> readings = list.map((i) => PlantReading.fromJson(i)).toList();
+    return readings;
+  } else {
+    throw Exception('Failed to load plant data');
   }
 }
