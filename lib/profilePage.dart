@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'textWidget.dart';
 import 'services.dart';
+import 'package:flutter_app/plantReading.dart';
 
 ///Stores profile info
 class Profile {
@@ -27,7 +28,6 @@ Profile Onion = Profile("Onion", 19, 70, 7, 19, 300, 10800, "Vegetable");
 Profile Tomato = Profile("Tomato", 27, 60, 6, 22, 300, 10800, "Fruit");
 
 List<Profile> profiles = [Spinach, Lettuce, Kale, Pepper, Onion, Tomato];
-List<Profile> filteredProfiles = [Spinach, Lettuce, Kale, Pepper, Onion, Tomato];
 List<String> profileNames = ["Select a profile"];
 String plantTypeFilterValue = "Plant Type";
 String orderFilterValue = "Order";
@@ -131,25 +131,25 @@ class _ProfilePage extends State<ProfilePage> {
   ///Constructor
   _ProfilePage(this._font, this.shelfNumber, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency);
 
-  void updateFilteredProfilesList() {
-    List<Profile> newProfileList = [];
-    for(var i = 0; i < profiles.length; i++) {
-      if (profiles[i].plantType == plantTypeFilterValue) {
-        newProfileList.add(profiles[i]);
+  List<Profile> updateFilteredProfilesList(List<Profile> inputProfiles) {
+    List<Profile> filteredProfiles = [];
+    for(var i = 0; i < inputProfiles.length; i++) {
+      if (inputProfiles[i].plantType == plantTypeFilterValue) {
+        filteredProfiles.add(inputProfiles[i]);
       }
     }
 
     if (plantTypeFilterValue == "Plant Type") {
-      newProfileList = profiles;
+      filteredProfiles = inputProfiles;
     }
 
     ///Sort profile list based on selected ordering
     if (orderFilterValue == "A-Z") {
-      newProfileList.sort((a, b) => (a.name).compareTo(b.name));
+      filteredProfiles.sort((a, b) => (a.name).compareTo(b.name));
     } else if (orderFilterValue == "Z-A") {
-      newProfileList.sort((b, a) => (a.name).compareTo(b.name));
+      filteredProfiles.sort((b, a) => (a.name).compareTo(b.name));
     }
-    filteredProfiles = newProfileList;
+    return filteredProfiles;
   }
 
   @override
@@ -188,132 +188,179 @@ class _ProfilePage extends State<ProfilePage> {
             )
         ),
         ///Profile list view
-        body: Container(
-            child: new Column(
-                children: [
-                  new Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      new Container(
-                        child: DropdownButton<String>(
-                          value: plantTypeFilterValue,
-                          icon: const Icon(Icons.arrow_downward),
-                          iconSize: 24,
-                          elevation: 16,
-                          style: const TextStyle(
-                              fontSize: 20,
-                              color: Colors.green
-                          ),
-                          underline: Container(
-                            height: 2,
-                            color: Colors.green,
-                          ),
-                          onChanged: (String newValue) {
-                            setState(() {
-                              plantTypeFilterValue = newValue;
-                              ///Filter through plants based on dropdown values
-                              updateFilteredProfilesList();
-                            });
-                          },
-                          items: <String>['Plant Type', 'Fruit', 'Vegetable', 'Other']
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          })
-                              .toList(),
-                        ),
-                      ),
-                      new Container(
-                        child: DropdownButton<String>(
-                          value: orderFilterValue,
-                          icon: const Icon(Icons.arrow_downward),
-                          iconSize: 24,
-                          elevation: 16,
-                          style: const TextStyle(
-                              fontSize: 20,
-                              color: Colors.green
-                          ),
-                          underline: Container(
-                            height: 2,
-                            color: Colors.green,
-                          ),
-                          onChanged: (String newValue) {
-                            setState(() {
-                              orderFilterValue = newValue;
-                              ///Filter through plants based on dropdown values
-                              updateFilteredProfilesList();
-                            });
-                          },
-                          items: <String>['Order', 'A-Z', 'Z-A']
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          })
-                              .toList(),
-                        ),
-                      )
-                    ]
-                  ),
-                  new Container(
-                    height: 500,
-                      child: (filteredProfiles.isEmpty
-                          ? Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              child: Text(
-                                  'No Plants Match Selected Filters',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
+        body: FutureBuilder<List<PlantReading>>(
+          future: getPlantData(shelfNumber),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState==ConnectionState.done){
+                if (!snapshot.hasData){
+                  return Center(child: TextWidget(
+                      'No plant data to display!',
+                      'Montserrat',
+                      Colors.red,
+                      FontWeight.w400,
+                      40.0
+                  ));
+                } else if (snapshot.hasError) {
+                  return Center(
+                      child: TextWidget(
+                          'Error retrieving data!',
+                          'Montserrat',
+                          Colors.red,
+                          FontWeight.w400,
+                          40.0)
+                  );
+                }
+
+                ///Create plant profiles based on snapshot data
+                List<Profile> profilesFromSnapshot = [];
+                for (int i = 0; i < snapshot.data.length; i++) {
+                  profilesFromSnapshot.add(new Profile(snapshot.data[i].name,
+                    snapshot.data[i].maxTemp,
+                    snapshot.data[i].maxHumid,
+                    snapshot.data[i].lightStart,
+                    snapshot.data[i].lightEnd,
+                    snapshot.data[i].duration,
+                    snapshot.data[i].frequency,
+                    snapshot.data[i].plantType));
+                }
+
+                ///Filter through plant profiles based on user-selected filtering and ordering
+                profilesFromSnapshot = updateFilteredProfilesList(profilesFromSnapshot);
+
+                return Container(
+                    child: new Column(
+                        children: [
+                          new Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                new Container(
+                                  child: DropdownButton<String>(
+                                    value: plantTypeFilterValue,
+                                    icon: const Icon(Icons.arrow_downward),
+                                    iconSize: 24,
+                                    elevation: 16,
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.green
+                                    ),
+                                    underline: Container(
                                       height: 2,
-                                      fontFamily: _font,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 35.0)
-                              ),
-                            ),
-                          )
-                          : (ListView.builder(
-                      itemCount: filteredProfiles.length,
-                      itemBuilder: (context, int i) {
-                        return Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              ListTile(
-                                  dense: true,
-                                  title: TextWidget(filteredProfiles[i].name, _font, Colors.black, FontWeight.w300, 20.0),
-                                  trailing: FlatButton( /// load button changes current settings to profile's settings
-                                      child: TextWidget("Load", _font, Colors.green, FontWeight.w300, 15.0),
-                                      onPressed: () {
-                                          if (postSettings(filteredProfiles[i])) {
-                                            Scaffold.of(context).showSnackBar( /// pop-up confirmation bar
-                                                SnackBar(
-                                                    shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.only(
-                                                            topLeft: Radius.circular(10.0),
-                                                            topRight: Radius.circular(10.0))
-                                                    ),
-                                                    duration: Duration(seconds: 1, milliseconds: 500),
-                                                    content: Text('Profile loaded!')
-                                                )
-                                            );
-                                          }
-                                      }
-                                  )
-                              ),
-                              Divider(
-                                height: 5.0,
-                                color: Colors.black26,
+                                      color: Colors.green,
+                                    ),
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        plantTypeFilterValue = newValue;
+                                      });
+                                    },
+                                    items: <String>['Plant Type', 'Fruit', 'Vegetable', 'Other']
+                                        .map<DropdownMenuItem<String>>((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    })
+                                        .toList(),
+                                  ),
+                                ),
+                                new Container(
+                                  child: DropdownButton<String>(
+                                    value: orderFilterValue,
+                                    icon: const Icon(Icons.arrow_downward),
+                                    iconSize: 24,
+                                    elevation: 16,
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.green
+                                    ),
+                                    underline: Container(
+                                      height: 2,
+                                      color: Colors.green,
+                                    ),
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        orderFilterValue = newValue;
+                                      });
+                                    },
+                                    items: <String>['Order', 'A-Z', 'Z-A']
+                                        .map<DropdownMenuItem<String>>((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    })
+                                        .toList(),
+                                  ),
+                                )
+                              ]
+                          ),
+                          new Container(
+                              height: 500,
+                              child: (profilesFromSnapshot.isEmpty
+                                  ? Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  child: Text(
+                                      'No Plants Match Selected Filters',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          height: 2,
+                                          fontFamily: _font,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 35.0)
+                                  ),
+                                ),
                               )
-                            ]
-                        );
-                      }
-                    )))
-                  )
-              ]
-            )
+                                  : (ListView.builder(
+                                  itemCount: profilesFromSnapshot.length,
+                                  itemBuilder: (context, int i) {
+                                    return Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          ListTile(
+                                              dense: true,
+                                              title: TextWidget(profilesFromSnapshot[i].name, _font, Colors.black, FontWeight.w300, 20.0),
+                                              trailing: FlatButton( /// load button changes current settings to profile's settings
+                                                  child: TextWidget("Load", _font, Colors.green, FontWeight.w300, 15.0),
+                                                  onPressed: () {
+                                                    if (postSettings(profilesFromSnapshot[i])) {
+                                                      Scaffold.of(context).showSnackBar( /// pop-up confirmation bar
+                                                          SnackBar(
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius: BorderRadius.only(
+                                                                      topLeft: Radius.circular(10.0),
+                                                                      topRight: Radius.circular(10.0))
+                                                              ),
+                                                              duration: Duration(seconds: 1, milliseconds: 500),
+                                                              content: Text('Profile loaded!')
+                                                          )
+                                                      );
+                                                    }
+                                                  }
+                                              )
+                                          ),
+                                          Divider(
+                                            height: 5.0,
+                                            color: Colors.black26,
+                                          )
+                                        ]
+                                    );
+                                  }
+                              )))
+                          )
+                        ]
+                    )
+                );
+              } else {
+                return Center(
+                    child: TextWidget(
+                        'Loading...',
+                        'Montserrat',
+                        Colors.black,
+                        FontWeight.w400,
+                        20.0)
+                );
+              }
+            }
         ),
         bottomNavigationBar: new BottomAppBar( /// create and delete buttons
             child: Row(
