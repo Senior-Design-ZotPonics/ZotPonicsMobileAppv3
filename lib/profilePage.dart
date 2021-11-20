@@ -380,31 +380,34 @@ class _ProfilePage extends State<ProfilePage> {
                                              TextWidget("Current settings will be saved under this name", _font, Colors.black54, FontWeight.w400, 10.0)
                                          ]
                                      ),
-                                     content: new Column(
-                                       children: [
-                                         new TextField(
-                                             controller: profileField,
-                                             obscureText: false,
-                                             decoration: InputDecoration( border: OutlineInputBorder() )
-                                         ),
-                                         StatefulBuilder(
-                                             builder: (BuildContext context, StateSetter setState) {
-                                               return new DropdownButton(
-                                                   hint: Text("Select profile"),
-                                                   value: newPlantType,
-                                                   onChanged: (String name) {
-                                                     setState( () { newPlantType = name; } );
-                                                   },
-                                                   items: plantTypes.map((String name) {
-                                                     return new DropdownMenuItem<String>(
-                                                         value: name,
-                                                         child: new Text(name)
-                                                     );
-                                                   }).toList()
-                                               );
-                                             }
-                                         ),
-                                       ],
+                                     content: new Container (
+                                       height: 125,
+                                       child: new Column(
+                                         children: [
+                                           new TextField(
+                                               controller: profileField,
+                                               obscureText: false,
+                                               decoration: InputDecoration( border: OutlineInputBorder() )
+                                           ),
+                                           StatefulBuilder(
+                                               builder: (BuildContext context, StateSetter setState) {
+                                                 return new DropdownButton(
+                                                     hint: Text("Select profile"),
+                                                     value: newPlantType,
+                                                     onChanged: (String name) {
+                                                       setState( () { newPlantType = name; } );
+                                                     },
+                                                     items: plantTypes.map((String name) {
+                                                       return new DropdownMenuItem<String>(
+                                                           value: name,
+                                                           child: new Text(name)
+                                                       );
+                                                     }).toList()
+                                                 );
+                                               }
+                                           ),
+                                         ],
+                                       )
                                      ),
                                      actions: <Widget>[
                                        RaisedButton(
@@ -412,10 +415,19 @@ class _ProfilePage extends State<ProfilePage> {
                                            color: Colors.green,
                                            onPressed: () { /// make sure that the new profile name isn't empty and doesn't exist already
                                                getProfileValue();
+                                               if (newPlantType == "Select Plant Type") {
+                                                 newPlantType = "Other";
+                                               }
                                                if (!actualProfileNames.contains(newName)) {
                                                  postPlantData(shelfNumber, newName, newPlantType);
                                                }
-                                               newPlantType = "Select Plant Type";
+
+                                               setState(() {
+                                                 actualProfileNames.add(newName);
+                                                 newPlantType = "Select Plant Type";
+                                                 newName = '';
+                                                 Navigator.of(context).pop();
+                                               });
                                            }
                                        )
                                      ]
@@ -462,8 +474,12 @@ class _ProfilePage extends State<ProfilePage> {
                                           onPressed: () { /// make sure the user selected a profile
                                             if (deleteName != "Select a profile") {
                                               postPlantData(shelfNumber, deleteName, "");
+
+                                              setState( () { /// reset drop-down menu
+                                                actualProfileNames.remove(deleteName);
+                                                deleteName = actualProfileNames[0];
+                                              });
                                               Navigator.of(context).pop();
-                                              setState(() {});
                                             }
                                           }
                                       )
