@@ -31,6 +31,7 @@ List<Profile> profiles = [Spinach, Lettuce, Kale, Pepper, Onion, Tomato];
 List<String> profileNames = ["Select a profile"];
 String plantTypeFilterValue = "Plant Type";
 String orderFilterValue = "Order";
+List<String> actualProfileNames = ["Select a profile"];
 
 ///Profile selection page
 
@@ -213,7 +214,9 @@ class _ProfilePage extends State<ProfilePage> {
 
                 ///Create plant profiles based on snapshot data
                 List<Profile> profilesFromSnapshot = [];
+                actualProfileNames = ["Select a profile"];
                 for (int i = 0; i < snapshot.data.length; i++) {
+                  actualProfileNames.add(snapshot.data[i].name);
                   profilesFromSnapshot.add(new Profile(snapshot.data[i].name,
                     snapshot.data[i].maxTemp,
                     snapshot.data[i].maxHumid,
@@ -390,12 +393,8 @@ class _ProfilePage extends State<ProfilePage> {
                                            color: Colors.green,
                                            onPressed: () { /// make sure that the new profile name isn't empty and doesn't exist already
                                                getProfileValue();
-                                               List<String> existingProfiles = [];
-                                               for (int p = 0; p < profiles.length; p++) { existingProfiles.add(profiles[p].name); }
-                                               if (newName != "" && !existingProfiles.contains(newName)) {
-                                                   profiles.add(Profile(newName, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency, "Other"));
-                                                   profileNames.add(newName);
-                                                   Navigator.of(context).pop();
+                                               if (!actualProfileNames.contains(newName)) {
+                                                 postPlantData(shelfNumber, newName);
                                                }
                                            }
                                        )
@@ -427,7 +426,7 @@ class _ProfilePage extends State<ProfilePage> {
                                             onChanged: (String name) {
                                               setState( () { deleteName = name; } );
                                             },
-                                            items: profileNames.map((String name) {
+                                            items: actualProfileNames.map((String name) {
                                               return new DropdownMenuItem<String>(
                                                   value: name,
                                                   child: new Text(name)
@@ -442,8 +441,10 @@ class _ProfilePage extends State<ProfilePage> {
                                           color: Colors.green,
                                           onPressed: () { /// make sure the user selected a profile
                                             if (deleteName != "Select a profile") {
-                                              deleteProfile(deleteName);
+                                              ///deleteProfile(deleteName);
+                                              postPlantData(shelfNumber, deleteName);
                                               Navigator.of(context).pop();
+                                              setState(() {});
                                             }
                                           }
                                       )

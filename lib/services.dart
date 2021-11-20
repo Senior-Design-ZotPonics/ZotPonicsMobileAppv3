@@ -333,3 +333,12 @@ Future<List<PlantReading>> getPlantData(int shelfNum) async {
     throw Exception('Failed to load plant data');
   }
 }
+
+///Plants POST/////////////////////////////////////////////////////////////
+//POSTs all plant requests for specified shelf_number
+Future<http.Response> postPlantData(int shelfNum, String plantName) async {
+  print("here");
+  final response = await http.post(Uri.parse(url + '/postPlantData?shelf_number='
+      + shelfNum.toString() + '&plant_name="' + plantName + '"'));
+  return response;
+}
