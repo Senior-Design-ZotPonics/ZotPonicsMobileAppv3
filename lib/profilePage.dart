@@ -32,6 +32,7 @@ List<String> profileNames = ["Select a profile"];
 String plantTypeFilterValue = "Plant Type";
 String orderFilterValue = "Order";
 List<String> actualProfileNames = ["Select a profile"];
+List<String> plantTypes = ["Select Plant Type", "Fruit", "Vegetable", "Other"];
 
 ///Profile selection page
 
@@ -50,10 +51,6 @@ class ProfilePage extends StatefulWidget {
   ///Constructor
   ProfilePage(this._font, this.shelfNumber, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency);
 
-  getProfileNames() {
-    return profileNames.sublist(1);
-  }
-
   @override
   State<StatefulWidget> createState() => _ProfilePage(_font, shelfNumber, maxTemp, maxHumid, lightStart, lightEnd, duration, frequency);
 }
@@ -70,6 +67,7 @@ class _ProfilePage extends State<ProfilePage> {
 
   final profileField = TextEditingController();
   String newName = '';
+  String newPlantType = 'Select Plant Type';
 
   String deleteName = "Select a profile"; /// default value for delete drop-down menu
 
@@ -382,10 +380,31 @@ class _ProfilePage extends State<ProfilePage> {
                                              TextWidget("Current settings will be saved under this name", _font, Colors.black54, FontWeight.w400, 10.0)
                                          ]
                                      ),
-                                     content: new TextField(
-                                         controller: profileField,
-                                         obscureText: false,
-                                         decoration: InputDecoration( border: OutlineInputBorder() )
+                                     content: new Column(
+                                       children: [
+                                         new TextField(
+                                             controller: profileField,
+                                             obscureText: false,
+                                             decoration: InputDecoration( border: OutlineInputBorder() )
+                                         ),
+                                         StatefulBuilder(
+                                             builder: (BuildContext context, StateSetter setState) {
+                                               return new DropdownButton(
+                                                   hint: Text("Select profile"),
+                                                   value: newPlantType,
+                                                   onChanged: (String name) {
+                                                     setState( () { newPlantType = name; } );
+                                                   },
+                                                   items: plantTypes.map((String name) {
+                                                     return new DropdownMenuItem<String>(
+                                                         value: name,
+                                                         child: new Text(name)
+                                                     );
+                                                   }).toList()
+                                               );
+                                             }
+                                         ),
+                                       ],
                                      ),
                                      actions: <Widget>[
                                        RaisedButton(
@@ -394,8 +413,9 @@ class _ProfilePage extends State<ProfilePage> {
                                            onPressed: () { /// make sure that the new profile name isn't empty and doesn't exist already
                                                getProfileValue();
                                                if (!actualProfileNames.contains(newName)) {
-                                                 postPlantData(shelfNumber, newName);
+                                                 postPlantData(shelfNumber, newName, newPlantType);
                                                }
+                                               newPlantType = "Select Plant Type";
                                            }
                                        )
                                      ]
@@ -441,8 +461,7 @@ class _ProfilePage extends State<ProfilePage> {
                                           color: Colors.green,
                                           onPressed: () { /// make sure the user selected a profile
                                             if (deleteName != "Select a profile") {
-                                              ///deleteProfile(deleteName);
-                                              postPlantData(shelfNumber, deleteName);
+                                              postPlantData(shelfNumber, deleteName, "");
                                               Navigator.of(context).pop();
                                               setState(() {});
                                             }
