@@ -19,16 +19,6 @@ class Profile {
   Profile(this.name, this.maxTemp, this.maxHumid, this.lightStart, this.lightEnd, this.duration, this.frequency, this.plantType);
 }
 
-///Preset profiles
-Profile Spinach = Profile("Spinach", 22, 60, 8, 20, 300, 10800, "Vegetable");
-Profile Lettuce = Profile("Lettuce", 22, 60, 8, 18, 300, 10800, "Vegetable");
-Profile Kale = Profile("Kale", 21, 60, 8, 4, 300, 10800, "Vegetable");
-Profile Pepper = Profile("Pepper", 22, 60, 6, 22, 300, 10800, "Vegetable");
-Profile Onion = Profile("Onion", 19, 70, 7, 19, 300, 10800, "Vegetable");
-Profile Tomato = Profile("Tomato", 27, 60, 6, 22, 300, 10800, "Fruit");
-
-List<Profile> profiles = [Spinach, Lettuce, Kale, Pepper, Onion, Tomato];
-List<String> profileNames = ["Select a profile"];
 String plantTypeFilterValue = "Plant Type";
 String orderFilterValue = "Order";
 List<String> actualProfileNames = ["Select a profile"];
@@ -68,7 +58,6 @@ class _ProfilePage extends State<ProfilePage> {
   final profileField = TextEditingController();
   String newName = '';
   String newPlantType = 'Select Plant Type';
-
   String deleteName = "Select a profile"; /// default value for delete drop-down menu
 
   @override
@@ -78,19 +67,6 @@ class _ProfilePage extends State<ProfilePage> {
 
   getProfileValue() {
     setState( () { newName = profileField.text.toString(); } );
-  }
-
-  deleteProfile(String name) {
-    profiles.removeWhere( (item) => item.name == name);
-    profileNames.remove(name);
-    setState( () { /// reset drop-down menu
-      if (profileNames.length == 1) {
-        deleteName = profileNames[0];
-      }
-      else {
-        deleteName = profileNames[1];
-      }
-    });
   }
 
   @override
@@ -149,10 +125,6 @@ class _ProfilePage extends State<ProfilePage> {
       filteredProfiles.sort((b, a) => (a.name).compareTo(b.name));
     }
     return filteredProfiles;
-  }
-
-  void resetNewName() {
-    newName = '';
   }
 
   @override
@@ -376,8 +348,7 @@ class _ProfilePage extends State<ProfilePage> {
                            onPressed: () {
                              showDialog(
                                  context: context,
-                                 builder: (_) =>
-                                 new AlertDialog( /// pop-up window to enter new profile name
+                                 builder: (_) => new AlertDialog( /// pop-up window to enter new profile name
                                      title: Column(
                                          children: [
                                              TextWidget("New profile name", _font, Colors.black, FontWeight.w400, 15.0),
@@ -479,7 +450,6 @@ class _ProfilePage extends State<ProfilePage> {
                                               await postPlantData(shelfNumber, deleteName, "");
 
                                               setState( () { /// reset drop-down menu
-                                                ///actualProfileNames.remove(deleteName);
                                                 deleteName = actualProfileNames[0];
                                               });
                                               Navigator.of(context).pop();
