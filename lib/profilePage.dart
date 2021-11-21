@@ -151,6 +151,10 @@ class _ProfilePage extends State<ProfilePage> {
     return filteredProfiles;
   }
 
+  void resetNewName() {
+    newName = '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -224,7 +228,6 @@ class _ProfilePage extends State<ProfilePage> {
                     snapshot.data[i].frequency,
                     snapshot.data[i].plantType));
                 }
-
                 ///Filter through plant profiles based on user-selected filtering and ordering
                 profilesFromSnapshot = updateFilteredProfilesList(profilesFromSnapshot);
 
@@ -373,7 +376,8 @@ class _ProfilePage extends State<ProfilePage> {
                            onPressed: () {
                              showDialog(
                                  context: context,
-                                 builder: (_) => new AlertDialog( /// pop-up window to enter new profile name
+                                 builder: (_) =>
+                                 new AlertDialog( /// pop-up window to enter new profile name
                                      title: Column(
                                          children: [
                                              TextWidget("New profile name", _font, Colors.black, FontWeight.w400, 15.0),
@@ -413,19 +417,18 @@ class _ProfilePage extends State<ProfilePage> {
                                        RaisedButton(
                                            child: TextWidget("Create", _font, Colors.white, FontWeight.w400, 15.0),
                                            color: Colors.green,
-                                           onPressed: () { /// make sure that the new profile name isn't empty and doesn't exist already
+                                           onPressed: () async { /// make sure that the new profile name isn't empty and doesn't exist already
                                                getProfileValue();
                                                if (newPlantType == "Select Plant Type") {
                                                  newPlantType = "Other";
                                                }
                                                if (!actualProfileNames.contains(newName)) {
-                                                 postPlantData(shelfNumber, newName, newPlantType);
+                                                 await postPlantData(shelfNumber, newName, newPlantType);
                                                }
 
                                                setState(() {
-                                                 actualProfileNames.add(newName);
                                                  newPlantType = "Select Plant Type";
-                                                 newName = '';
+                                                 profileField.clear();
                                                  Navigator.of(context).pop();
                                                });
                                            }
@@ -471,12 +474,12 @@ class _ProfilePage extends State<ProfilePage> {
                                       RaisedButton(
                                           child: TextWidget("Delete", _font, Colors.white, FontWeight.w400, 15.0),
                                           color: Colors.green,
-                                          onPressed: () { /// make sure the user selected a profile
+                                          onPressed: () async { /// make sure the user selected a profile
                                             if (deleteName != "Select a profile") {
-                                              postPlantData(shelfNumber, deleteName, "");
+                                              await postPlantData(shelfNumber, deleteName, "");
 
                                               setState( () { /// reset drop-down menu
-                                                actualProfileNames.remove(deleteName);
+                                                ///actualProfileNames.remove(deleteName);
                                                 deleteName = actualProfileNames[0];
                                               });
                                               Navigator.of(context).pop();
