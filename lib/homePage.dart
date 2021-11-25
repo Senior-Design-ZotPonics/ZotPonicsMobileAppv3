@@ -4,8 +4,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
 import 'shelfButton.dart';
 import 'systemPage.dart';
+import 'package:flutter_app/plantReading.dart';
+import 'package:http/http.dart' as http;
 import 'services.dart';
 import 'textWidget.dart';
+import 'dart:convert';
 import 'demoPage.dart';
 import 'growGuide.dart';
 import 'profilePage.dart';
@@ -97,8 +100,24 @@ class _HomePage extends State<HomePage> {
     return double.tryParse(value) != null;
   }
 
+  Future<List<String>> getProfileNames(int shelfNum) async {
+    final response = await http.get(Uri.parse(url + plantData + shelfNum.toString()));
+    List<String> profileNames = [];
+
+    if (response.statusCode == 200) {
+      var list = json.decode(response.body) as List;
+      List<PlantReading> readings = list.map((i) => PlantReading.fromJson(i)).toList();
+      for (int i = 0; i < readings.length; i++) {
+        profileNames.add(readings[i].name);
+      }
+    } else {
+      return profileNames;
+    }
+    return profileNames;
+  }
+
   ///Updates list of shelves to display based on user's inputted search
-  void updateListedShelves(String searchText) {
+  void updateListedShelves(String searchText) async {
     listedShelves.removeRange(0, listedShelves.length);
     searchText = searchText.toLowerCase();
 
@@ -135,11 +154,9 @@ class _HomePage extends State<HomePage> {
     ///Search through shelves by plant name
     List<ShelfButton> allShelves = [shelf1, shelf2, shelf3];
     for(int shelfIndex = 0; shelfIndex < allShelves.length; shelfIndex++) {
-      ProfilePage profilePage = ProfilePage(_font, shelfIndex+1, 0, 0, 0, 0, 0, 0);
-      List<String> profileNames = profilePage.getProfileNames();
-
-      ///Add default plant profiles
-      profileNames.addAll(["Spinach", "Lettuce", "Kale", "Pepper", "Onion", "Tomato"]);
+      ///Get profile names from database.
+      List<String> profileNames = await getProfileNames(shelfIndex+1);
+      setState(() {}); ///Refresh state to display actual results.
 
       for(int profileIndex = 0; profileIndex < profileNames.length; profileIndex++) {
         if (searchText == profileNames[profileIndex].toLowerCase()) {
