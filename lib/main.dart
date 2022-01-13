@@ -22,9 +22,9 @@ class ZotPonics extends StatelessWidget {
         primarySwatch: Colors.green
       ),
         home: HomePage('Montserrat')
+        // home: DemoPage('Montserrat')
         // home: DataTest(1) -- used to test temperature data from database
         // home: TempStatistics() -- used to test bar chart
-        //home: DemoPage('Montserrat')
         // home: GetTest() -- used to test http request
     );
   }

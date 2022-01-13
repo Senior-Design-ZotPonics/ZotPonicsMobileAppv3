@@ -206,94 +206,146 @@ class _HomePage extends State<HomePage> {
         ///Off-white background
         backgroundColor: const Color(0xFFF8F8F8),
         appBar: PreferredSize(
-            ///Modifies height of AppBar
-            preferredSize: Size.fromHeight(70.0),
-            child: AppBar(
-                title: titleText,
-                actions: [
-                  ///Search button
-                  Padding(
-                      padding: EdgeInsets.only(top: 12.0),
-                      child: IconButton(
-                          icon: searchOrCancelIcon,
-                          iconSize: 35.0,
-                          splashColor: Colors.transparent,
-                          onPressed: () {
-                            ///Open search entry box
-                            setState(() {
-                              if (searchOrCancelIcon.icon == Icons.search) {
-                                ///Display text box for user's search input
-                                searchOrCancelIcon = const Icon(Icons.cancel);
-                                titleText = ListTile(
-                                  contentPadding: EdgeInsets.only(left: 0.0, top: 5.0),
-                                  leading: Padding(
-                                    padding: EdgeInsets.only(top: 12.0),
-                                    child: Icon (
-                                      Icons.search,
-                                      color: Colors.white,
-                                      size: 35.0,
-                                    )
-                                  ),
-                                  title: TextField(
-                                    decoration: InputDecoration(
-                                      hintText: 'Type in a shelf or plant...',
-                                      hintStyle: TextStyle(
-                                        color: Colors.white,
-                                        height: 2,
-                                        fontSize: 18.0,
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                      border: InputBorder.none,
-                                    ),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                    onSubmitted: (String searchText) {
-                                      ///Update listed shelves once user submits search entry
-                                      setState(() {
-                                        ///Remove whitespace before sending search.
-                                        updateListedShelves(searchText.replaceAll(' ', ''));
-                                      });
-                                    }
-                                  ),
-                                );
-                              }
-                              else {
-                                ///Reset to search button and default title
-                                searchOrCancelIcon = const Icon(Icons.search);
-                                titleText = Text(
-                                    'ZotPonics',
-                                    style: TextStyle(
-                                        height: 2,
-                                        fontFamily: _font,
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 40.0,
-                                        color: Colors.white)
-                                );
-                                setState(() {
-                                  updateListedShelves('');
-                                });
-                              }
-                            });
-                          }
-                      )
-                  ),
-                  ///Guide button
-                  Padding(
-                      padding: EdgeInsets.only(top: 12.0),
-                      child: IconButton(
-                          icon: Icon(Icons.help, color: Colors.white),
-                          iconSize: 35.0,
-                          splashColor: Colors.transparent,
-                          onPressed: () {
-                            ///Go to growing guide
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => GrowGuide(_font)));
-                          }
-                      )
-                  )
-                ]
-            )
+          preferredSize: Size.fromHeight(70.0),
+          child: AppBar(
+            title: titleText,
+            // search button should go here
+          )
         ),
+        drawer: Drawer(
+          child: Container(
+            color: Colors.green,
+            height: 100,
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                ListTile(
+                  leading: Icon(Icons.help, color: Colors.white),
+                  title: const Text(
+                    "Grow Guide",
+                    style: TextStyle(
+                      height: 2,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15.0,
+                      color: Colors.white
+                    ),
+                  ),
+                  onTap: () {
+                    print("tapped grow guide");
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.ios_share, color: Colors.white),
+                  title: const Text(
+                    "Share",
+                    style: TextStyle(
+                      height: 2,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15.0,
+                      color: Colors.white
+                    ),
+                  ),
+                  onTap: () {
+                    print("tapped share");
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        // appBar: PreferredSize(
+        //     ///Modifies height of AppBar
+        //     preferredSize: Size.fromHeight(70.0),
+        //     child: AppBar(
+        //         title: titleText,
+        //         actions: [
+        //           ///Search button
+        //           Padding(
+        //               padding: EdgeInsets.only(top: 12.0),
+        //               child: IconButton(
+        //                   icon: searchOrCancelIcon,
+        //                   iconSize: 35.0,
+        //                   splashColor: Colors.transparent,
+        //                   onPressed: () {
+        //                     ///Open search entry box
+        //                     setState(() {
+        //                       if (searchOrCancelIcon.icon == Icons.search) {
+        //                         ///Display text box for user's search input
+        //                         searchOrCancelIcon = const Icon(Icons.cancel);
+        //                         titleText = ListTile(
+        //                           contentPadding: EdgeInsets.only(left: 0.0, top: 5.0),
+        //                           leading: Padding(
+        //                             padding: EdgeInsets.only(top: 12.0),
+        //                             child: Icon (
+        //                               Icons.search,
+        //                               color: Colors.white,
+        //                               size: 35.0,
+        //                             )
+        //                           ),
+        //                           title: TextField(
+        //                             decoration: InputDecoration(
+        //                               hintText: 'Type in a shelf or plant...',
+        //                               hintStyle: TextStyle(
+        //                                 color: Colors.white,
+        //                                 height: 2,
+        //                                 fontSize: 18.0,
+        //                                 fontStyle: FontStyle.italic,
+        //                               ),
+        //                               border: InputBorder.none,
+        //                             ),
+        //                             style: TextStyle(
+        //                               color: Colors.white,
+        //                             ),
+        //                             onSubmitted: (String searchText) {
+        //                               ///Update listed shelves once user submits search entry
+        //                               setState(() {
+        //                                 ///Remove whitespace before sending search.
+        //                                 updateListedShelves(searchText.replaceAll(' ', ''));
+        //                               });
+        //                             }
+        //                           ),
+        //                         );
+        //                       }
+        //                       else {
+        //                         ///Reset to search button and default title
+        //                         searchOrCancelIcon = const Icon(Icons.search);
+        //                         titleText = Text(
+        //                             'ZotPonics',
+        //                             style: TextStyle(
+        //                                 height: 2,
+        //                                 fontFamily: _font,
+        //                                 fontWeight: FontWeight.w700,
+        //                                 fontSize: 40.0,
+        //                                 color: Colors.white)
+        //                         );
+        //                         setState(() {
+        //                           updateListedShelves('');
+        //                         });
+        //                       }
+        //                     });
+        //                   }
+        //               )
+        //           ),
+        //           ///Guide button
+        //           Padding(
+        //               padding: EdgeInsets.only(top: 12.0),
+        //               child: IconButton(
+        //                   icon: Icon(Icons.help, color: Colors.white),
+        //                   iconSize: 35.0,
+        //                   splashColor: Colors.transparent,
+        //                   onPressed: () {
+        //                     ///Go to growing guide
+        //                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => GrowGuide(_font)));
+        //                   }
+        //               )
+        //           )
+        //         ]
+        //     )
+        // ),
         ///Info cards
         body: FutureBuilder<List<Widget>>(
             future: getListedShelves(), ///Activates every time state changes
