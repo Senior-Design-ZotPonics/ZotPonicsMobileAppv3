@@ -1,10 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/demoPage.dart';
+import 'package:flutter_app/humidityReading.dart';
+import 'package:flutter_app/temperatureReading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
 import 'shelfButton.dart';
 import 'systemPage.dart';
 import 'package:flutter_app/plantReading.dart';
+import 'package:flutter_app/tempSeries.dart';
 import 'package:http/http.dart' as http;
 import 'services.dart';
 import 'textWidget.dart';
@@ -12,6 +16,7 @@ import 'dart:convert';
 import 'demoPage.dart';
 import 'growGuide.dart';
 import 'profilePage.dart';
+import 'tempStatistics.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 ///For more information on how to work with notifications, check these out:
@@ -39,6 +44,11 @@ class _HomePage extends State<HomePage> {
   ShelfButton shelf2;
   ShelfButton shelf3;
   List<Widget> listedShelves = [];
+  List<String> plantNames = [];
+  String topPlant = "";
+  int numberOfPlants = 0;
+  double averageTemperature = 0;
+  double averageHumidity = 0;
 
   @override
   void initState() {
@@ -114,6 +124,75 @@ class _HomePage extends State<HomePage> {
       return profileNames;
     }
     return profileNames;
+  }
+
+  void getNumberOfPlants() async {
+    List<String> profileNames = [];
+    profileNames.addAll(await getProfileNames(1));
+    profileNames.addAll(await getProfileNames(2));
+    profileNames.addAll(await getProfileNames(3));
+    numberOfPlants = profileNames.length;
+    print("hiii");
+  }
+
+  void getTopPlant() async {
+    List<String> plants = [];
+    plants.addAll(await getProfileNames(1));
+    plants.addAll(await getProfileNames(2));
+    plants.addAll(await getProfileNames(3));
+    plants.sort();
+    String mostUsedPlant = "";
+    int maxPlantCount = 0;
+    int currentPlantCount = 0;
+    String previousPlant = "";
+    for (int i = 0; i < plants.length; i++) {
+      if (plants[i] != previousPlant) {
+        if (maxPlantCount < currentPlantCount) {
+          maxPlantCount = currentPlantCount;
+          mostUsedPlant = previousPlant;
+        }
+        currentPlantCount = 0;
+      }
+      previousPlant = plants[i];
+      currentPlantCount += 1;
+    }
+    if (maxPlantCount < currentPlantCount) {
+      maxPlantCount = currentPlantCount;
+      mostUsedPlant = previousPlant;
+    }
+    topPlant = mostUsedPlant;
+  }
+
+  void getAverageTemperature() async {
+    List<TemperatureReading> temperatureReadings = [];
+    temperatureReadings.addAll(await getTemperatureData(1));
+    temperatureReadings.addAll(await getTemperatureData(2));
+    temperatureReadings.addAll(await getTemperatureData(3));
+
+    double temperatureAverage;
+    double totalTemperature = 0.0;
+    int numReadings = temperatureReadings.length;
+    for (var i=0; i<numReadings; i++){
+      totalTemperature += temperatureReadings[i].temperature;
+    }
+    temperatureAverage = totalTemperature/numReadings;
+    averageTemperature = temperatureAverage;
+  }
+
+  void getAverageHumidity() async {
+    List<HumidityReading> humidityReadings = [];
+    humidityReadings.addAll(await getHumidityData(1));
+    humidityReadings.addAll(await getHumidityData(2));
+    humidityReadings.addAll(await getHumidityData(3));
+
+    double humidityAverage;
+    double totalHumidity = 0.0;
+    int numReadings = humidityReadings.length;
+    for (var i=0; i<numReadings; i++){
+      totalHumidity += humidityReadings[i].humidity;
+    }
+    humidityAverage = totalHumidity/numReadings;
+    averageHumidity = humidityAverage;
   }
 
   ///Updates list of shelves to display based on user's inputted search
@@ -201,6 +280,12 @@ class _HomePage extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      getTopPlant();
+      getNumberOfPlants();
+      getAverageTemperature();
+      getAverageHumidity();
+    });
     return Scaffold(
         resizeToAvoidBottomInset : false,
         ///Off-white background
@@ -308,10 +393,16 @@ class _HomePage extends State<HomePage> {
                     );
                 }
                 catch (e) { /// Display just the shelves if the water level can't be identified
+                  String socialMediaData = "My Top Plant: " + topPlant
+                      + "\nNumber of Plants: " + numberOfPlants.toString()
+                      + "\nAverage Temperature: " + averageTemperature.toString()
+                      + "\nAverage Humidity: " + averageHumidity.toString();
+                  List<Widget> shelvesWithText = [TextWidget(socialMediaData, _font, Colors.black, FontWeight.w400, 15)];
+                  shelvesWithText.addAll(snapshot.data);
                   return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: snapshot.data
+                      children: shelvesWithText
                   );
                 }
             }
