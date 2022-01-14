@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/demoPage.dart';
 import 'package:flutter_app/humidityReading.dart';
@@ -52,6 +51,7 @@ class _HomePage extends State<HomePage> {
   double averageTemperature = 0;
   double averageHumidity = 0;
   ScreenshotController screenshotController = ScreenshotController();
+  var screenshotImage;
 
   @override
   void initState() {
@@ -135,7 +135,6 @@ class _HomePage extends State<HomePage> {
     profileNames.addAll(await getProfileNames(2));
     profileNames.addAll(await getProfileNames(3));
     numberOfPlants = profileNames.length;
-    print("hiii");
   }
 
   void getTopPlant() async {
@@ -281,6 +280,24 @@ class _HomePage extends State<HomePage> {
     return sensorData.readings.last.baseLevel;
   }
 
+  void takeScreenshot() async {
+    screenshotImage = await screenshotController.capture();
+
+    /// Commented code is to take a screenshot of an invisible widget.
+    /*screenshotController
+        .captureFromWidget(Container(
+        padding: const EdgeInsets.all(30.0),
+        decoration: BoxDecoration(
+          border:
+          Border.all(color: Colors.blueAccent, width: 5.0),
+          color: Colors.redAccent,
+        ),
+        child: Text("This is an invisible widget")))
+        .then((capturedImage) {
+      // Handle captured image
+    });*/
+  }
+
   @override
   Widget build(BuildContext context) {
     setState(() {
@@ -407,7 +424,8 @@ class _HomePage extends State<HomePage> {
                   shelvesWithText.addAll(snapshot.data);
 
                   /// Take a screenshot of the TextWidget.
-                  screenshotController.capture().then((value) => print(value));
+                  takeScreenshot();
+                  shelvesWithText.add(Image.file(screenshotImage));
 
                   return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
