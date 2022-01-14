@@ -5,6 +5,8 @@ import 'package:flutter_app/humidityReading.dart';
 import 'package:flutter_app/temperatureReading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
+import 'dart:typed_data';
+import 'package:screenshot/screenshot.dart';
 import 'shelfButton.dart';
 import 'systemPage.dart';
 import 'package:flutter_app/plantReading.dart';
@@ -49,6 +51,7 @@ class _HomePage extends State<HomePage> {
   int numberOfPlants = 0;
   double averageTemperature = 0;
   double averageHumidity = 0;
+  ScreenshotController screenshotController = ScreenshotController();
 
   @override
   void initState() {
@@ -397,8 +400,15 @@ class _HomePage extends State<HomePage> {
                       + "\nNumber of Plants: " + numberOfPlants.toString()
                       + "\nAverage Temperature: " + averageTemperature.toString()
                       + "\nAverage Humidity: " + averageHumidity.toString();
-                  List<Widget> shelvesWithText = [TextWidget(socialMediaData, _font, Colors.black, FontWeight.w400, 15)];
+                  List<Widget> shelvesWithText = [Screenshot(
+                    controller: screenshotController,
+                    child: TextWidget(socialMediaData, _font, Colors.black, FontWeight.w400, 15),
+                  )];
                   shelvesWithText.addAll(snapshot.data);
+
+                  /// Take a screenshot of the TextWidget.
+                  screenshotController.capture().then((value) => print(value));
+
                   return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
