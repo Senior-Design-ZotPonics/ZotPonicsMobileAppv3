@@ -1,23 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/demoPage.dart';
 import 'package:flutter_app/humidityReading.dart';
 import 'package:flutter_app/temperatureReading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
-import 'dart:typed_data';
 import 'package:screenshot/screenshot.dart';
 import 'shelfButton.dart';
-import 'systemPage.dart';
 import 'package:flutter_app/plantReading.dart';
-import 'package:flutter_app/tempSeries.dart';
 import 'package:http/http.dart' as http;
 import 'services.dart';
 import 'textWidget.dart';
 import 'dart:convert';
-import 'demoPage.dart';
 import 'growGuide.dart';
-import 'profilePage.dart';
-import 'tempStatistics.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 ///For more information on how to work with notifications, check these out:
