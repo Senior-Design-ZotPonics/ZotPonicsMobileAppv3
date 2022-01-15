@@ -274,11 +274,11 @@ class _HomePage extends State<HomePage> {
   }
 
   void takeScreenshot() async {
-    screenshotImage = await screenshotController.capture();
+    // screenshotImage = await screenshotController.capture();
 
     /// Commented code is to take a screenshot of an invisible widget.
-    /*screenshotController
-        .captureFromWidget(Container(
+    screenshotController.captureFromWidget(
+        Container(
         padding: const EdgeInsets.all(30.0),
         decoration: BoxDecoration(
           border:
@@ -288,7 +288,7 @@ class _HomePage extends State<HomePage> {
         child: Text("This is an invisible widget")))
         .then((capturedImage) {
       // Handle captured image
-    });*/
+    });
   }
 
   @override
