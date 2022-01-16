@@ -44,7 +44,7 @@ class _HomePage extends State<HomePage> {
   double averageTemperature = 0;
   double averageHumidity = 0;
   ScreenshotController screenshotController = ScreenshotController();
-  var screenshotImage;
+  Image screenshotImage;
 
   @override
   void initState() {
