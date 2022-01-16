@@ -274,31 +274,30 @@ class _HomePage extends State<HomePage> {
   }
 
   void takeScreenshot() async {
-    // screenshotImage = await screenshotController.capture();
+    String socialMediaData = "My Top Plant: " + topPlant
+        + "\nNumber of Plants: " + numberOfPlants.toString()
+        + "\nAverage Temperature: " + averageTemperature.toString()
+        + "\nAverage Humidity: " + averageHumidity.toString();
 
-    /// Commented code is to take a screenshot of an invisible widget.
-    screenshotController.captureFromWidget(
-        Container(
-        padding: const EdgeInsets.all(30.0),
-        decoration: BoxDecoration(
-          border:
-          Border.all(color: Colors.blueAccent, width: 5.0),
-          color: Colors.redAccent,
-        ),
-        child: Text("This is an invisible widget")))
-        .then((capturedImage) {
-      // Handle captured image
-    });
+    /// Take a screenshot of an invisible widget. Replace the TextWidget with the custom widget.
+    screenshotImage = await screenshotController.captureFromWidget(
+        TextWidget(socialMediaData, _font, Colors.black, FontWeight.w400, 15));
   }
 
   @override
   Widget build(BuildContext context) {
+
+    /// Gather data needed to display on social media story.
     setState(() {
       getTopPlant();
       getNumberOfPlants();
       getAverageTemperature();
       getAverageHumidity();
     });
+
+    /// Take a screenshot of an invisible widget.
+    takeScreenshot();
+
     return Scaffold(
         resizeToAvoidBottomInset : false,
         ///Off-white background
@@ -406,24 +405,10 @@ class _HomePage extends State<HomePage> {
                     );
                 }
                 catch (e) { /// Display just the shelves if the water level can't be identified
-                  String socialMediaData = "My Top Plant: " + topPlant
-                      + "\nNumber of Plants: " + numberOfPlants.toString()
-                      + "\nAverage Temperature: " + averageTemperature.toString()
-                      + "\nAverage Humidity: " + averageHumidity.toString();
-                  List<Widget> shelvesWithText = [Screenshot(
-                    controller: screenshotController,
-                    child: TextWidget(socialMediaData, _font, Colors.black, FontWeight.w400, 15),
-                  )];
-                  shelvesWithText.addAll(snapshot.data);
-
-                  /// Take a screenshot of the TextWidget.
-                  takeScreenshot();
-                  shelvesWithText.add(Image.file(screenshotImage));
-
                   return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: shelvesWithText
+                      children: snapshot.data
                   );
                 }
             }
