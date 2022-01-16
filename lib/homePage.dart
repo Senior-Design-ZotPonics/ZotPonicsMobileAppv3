@@ -273,15 +273,15 @@ class _HomePage extends State<HomePage> {
     return sensorData.readings.last.baseLevel;
   }
 
-  void takeScreenshot() async {
+  void takeScreenshotOfSocialMediaStory() async {
     String socialMediaData = "My Top Plant: " + topPlant
         + "\nNumber of Plants: " + numberOfPlants.toString()
         + "\nAverage Temperature: " + averageTemperature.toString()
         + "\nAverage Humidity: " + averageHumidity.toString();
 
     /// Take a screenshot of an invisible widget. Replace the TextWidget with the custom widget.
-    screenshotImage = await screenshotController.captureFromWidget(
-        TextWidget(socialMediaData, _font, Colors.black, FontWeight.w400, 15));
+    screenshotImage = Image.memory(await screenshotController.captureFromWidget(
+        TextWidget(socialMediaData, _font, Colors.black, FontWeight.w400, 15)));
   }
 
   @override
@@ -295,8 +295,8 @@ class _HomePage extends State<HomePage> {
       getAverageHumidity();
     });
 
-    /// Take a screenshot of an invisible widget.
-    takeScreenshot();
+    /// Take a screenshot of an invisible widget to display on user's social media story.
+    takeScreenshotOfSocialMediaStory();
 
     return Scaffold(
         resizeToAvoidBottomInset : false,
