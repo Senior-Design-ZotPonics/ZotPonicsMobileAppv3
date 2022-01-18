@@ -199,6 +199,94 @@ class _HomePage extends State<HomePage> {
     return sensorData.readings.last.baseLevel;
   }
 
+
+  Widget _buildPopupDialog(BuildContext context) {
+    final ButtonStyle style = ElevatedButton.styleFrom(
+      textStyle: const TextStyle(
+        fontFamily: "Montserrat",
+        fontSize: 20,
+        backgroundColor: Colors.green,
+        color: Colors.white
+      ),
+    );
+    return new AlertDialog(
+      title: Center(
+        child: Text("Share to...", style: TextStyle(
+            color: Colors.green,
+            fontFamily: "Montserrat",
+            fontWeight: FontWeight.w700,
+            fontSize: 25.0
+          )
+        )
+      ),
+      content: new Column (
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ElevatedButton.icon(
+            onPressed: () {
+              print("tapped fb"); // insert navigation to fb share
+            },
+            icon:  Icon(Icons.facebook_rounded, color: Colors.white),
+            label: Text("Facebook", style: TextStyle(
+                // height: 3,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w600,
+                fontSize: 15.0,
+                color: Colors.white,
+              ),
+            ),
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.only(right: 25.0, left: 25.0)),
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.green),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    side: BorderSide(color: Colors.white)
+                )
+              )
+            ),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              print("tapped ig"); // insert navigation to ig share
+            },
+            icon: FaIcon(FontAwesomeIcons.instagram, color: Colors.white),
+            label: Text("Instagram", style: TextStyle(
+                // height: 3,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w600,
+                fontSize: 15.0,
+                color: Colors.white
+            )),
+            style: ButtonStyle(
+                padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.only(right: 25.0, left: 25.0)),
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.green),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        side: BorderSide(color: Colors.white)
+                    )
+                )
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        new TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text("Close", style: TextStyle(
+            fontFamily: "Montserrat",
+            fontWeight: FontWeight.w600,
+            fontSize: 15.0
+          ))
+        )
+      ]
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -241,8 +329,12 @@ class _HomePage extends State<HomePage> {
                     ),
                   ),
                   onTap: () {
-                    print("tapped share");
-                    Navigator.pop(context);
+                    // print("tapped share");
+                    // Navigator.pop(context);
+                    showDialog (
+                      context: context,
+                      builder: (BuildContext context) => _buildPopupDialog(context),
+                    );
                   },
                 ),
               ],
