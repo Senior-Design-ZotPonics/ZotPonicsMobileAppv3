@@ -274,15 +274,15 @@ class _HomePage extends State<HomePage> {
     return sensorData.readings.last.baseLevel;
   }
 
+  /// Take a screenshot of an invisible widget.
   void takeScreenshotOfSocialMediaStory() async {
-    String socialMediaData = "My Top Plant: " + topPlant
-        + "\nNumber of Plants: " + numberOfPlants.toString()
-        + "\nAverage Temperature: " + averageTemperature.toString()
-        + "\nAverage Humidity: " + averageHumidity.toString();
-
-    /// Take a screenshot of an invisible widget. Replace the TextWidget with the custom widget.
     screenshotImage = Image.memory(await screenshotController.captureFromWidget(
-        TextWidget(socialMediaData, _font, Colors.black, FontWeight.w400, 15)));
+        MediaQuery(
+            data: MediaQueryData(),
+            child: SocialMediaWidget(_font, topPlant, numberOfPlants, averageTemperature, averageHumidity)
+        )
+      )
+    );
   }
 
   @override
@@ -406,20 +406,10 @@ class _HomePage extends State<HomePage> {
                     );
                 }
                 catch (e) { /// Display just the shelves if the water level can't be identified
-                  List<Widget> shelvesWithButton = [IconButton(
-                      icon: Icon(Icons.accessibility, color: Colors.black),
-                      iconSize: 35.0,
-                      splashColor: Colors.transparent,
-                      onPressed: () {
-                        ///Go to growing guide
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => SocialMediaWidget(_font, topPlant, numberOfPlants, averageTemperature, averageHumidity)));
-                      }
-                  )];
-                  shelvesWithButton.addAll(snapshot.data);
                   return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: shelvesWithButton
+                      children: snapshot.data
                   );
                 }
             }

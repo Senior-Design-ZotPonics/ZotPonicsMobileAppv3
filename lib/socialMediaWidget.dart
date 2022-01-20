@@ -6,12 +6,6 @@ import 'gettingStarted.dart';
 import 'hydroponicGardening.dart';
 import 'systemMaintenance.dart';
 
-///Currently only has hard-coded profiles
-///If we were to allow users to add their own profiles or load from the database,
-///this would require a bit more work
-
-///Guide page with various topics for beginners
-
 class SocialMediaWidget extends StatefulWidget {
   final String _font;
   final String _topPlant;
@@ -72,7 +66,7 @@ class _SocialMediaWidget extends State<SocialMediaWidget> {
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white)
                         ),
                         Text(
-                            "Lettuce",
+                            _topPlant,
                             textAlign: TextAlign.center,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26, color: Colors.green.shade900)
                         ),
@@ -95,7 +89,7 @@ class _SocialMediaWidget extends State<SocialMediaWidget> {
                             textAlign: TextAlign.center,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.white)
                         ),
-                        Text("57%",
+                        Text(_averageHumidity.toString() + "%",
                             textAlign: TextAlign.center,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 29, color: Colors.green.shade800)
                         ),
@@ -122,7 +116,7 @@ class _SocialMediaWidget extends State<SocialMediaWidget> {
                             textAlign: TextAlign.center,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)
                         ),
-                        Text("30.4\u00B0C",
+                        Text(_averageTemperature.toString() + "\u00B0C",
                             textAlign: TextAlign.center,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26, color: Colors.green.shade700)
                         ),
@@ -145,7 +139,7 @@ class _SocialMediaWidget extends State<SocialMediaWidget> {
                             textAlign: TextAlign.center,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white)
                         ),
-                        Text("25",
+                        Text(_numberOfPlants.toString(),
                             textAlign: TextAlign.center,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.green.shade900)
                         ),
