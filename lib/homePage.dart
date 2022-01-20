@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/humidityReading.dart';
+import 'package:flutter_app/socialMediaWidget.dart';
 import 'package:flutter_app/temperatureReading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
@@ -405,10 +406,20 @@ class _HomePage extends State<HomePage> {
                     );
                 }
                 catch (e) { /// Display just the shelves if the water level can't be identified
+                  List<Widget> shelvesWithButton = [IconButton(
+                      icon: Icon(Icons.accessibility, color: Colors.black),
+                      iconSize: 35.0,
+                      splashColor: Colors.transparent,
+                      onPressed: () {
+                        ///Go to growing guide
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => SocialMediaWidget(_font, topPlant, numberOfPlants, averageTemperature, averageHumidity)));
+                      }
+                  )];
+                  shelvesWithButton.addAll(snapshot.data);
                   return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: snapshot.data
+                      children: shelvesWithButton
                   );
                 }
             }
