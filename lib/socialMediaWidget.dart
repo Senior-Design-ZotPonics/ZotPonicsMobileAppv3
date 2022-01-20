@@ -1,10 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'textWidget.dart';
-import 'hydroponicsOverview.dart';
-import 'gettingStarted.dart';
-import 'hydroponicGardening.dart';
-import 'systemMaintenance.dart';
 
 class SocialMediaWidget extends StatefulWidget {
   final String _font;
