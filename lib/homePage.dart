@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/humidityReading.dart';
+import 'package:flutter_app/socialMediaWidget.dart';
 import 'package:flutter_app/temperatureReading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
@@ -363,16 +364,15 @@ class _HomePage extends State<HomePage> {
         ]
     );
   }
-
+  
   void takeScreenshotOfSocialMediaStory() async {
-    String socialMediaData = "My Top Plant: " + topPlant
-        + "\nNumber of Plants: " + numberOfPlants.toString()
-        + "\nAverage Temperature: " + averageTemperature.toString()
-        + "\nAverage Humidity: " + averageHumidity.toString();
-
-    /// Take a screenshot of an invisible widget. Replace the TextWidget with the custom widget.
     screenshotImage = Image.memory(await screenshotController.captureFromWidget(
-        TextWidget(socialMediaData, _font, Colors.black, FontWeight.w400, 15)));
+        MediaQuery(
+            data: MediaQueryData(),
+            child: SocialMediaWidget(_font, topPlant, numberOfPlants, averageTemperature, averageHumidity)
+        )
+      )
+    );
   }
 
   @override
