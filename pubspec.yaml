@@ -18,10 +18,10 @@ environment:
 
 dependencies:
   intl: ^0.17.0
-  json_annotation: ^3.0.0
+  json_annotation: ^4.4.0
   flutter:
     sdk: flutter
-  font_awesome_flutter: ^8.10.0
+  font_awesome_flutter: ^9.2.0
   flutter_local_notifications:
     path: ./flutter_local_notifications-1.4.2-modified/
   path_provider: ^1.6.7
@@ -30,18 +30,19 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
-  english_words: ^3.1.0
+  cupertino_icons: ^1.0.4
+  english_words: ^4.0.0
   http: ^0.13.4
   e2e: ^0.3.0
   social_share: ^2.0.6
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
-  build_runner: ^1.0.0
-  json_serializable: ^3.2.0
+  build_runner: ^2.1.7
+  json_serializable: ^6.1.4
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.7.5
+  flutter_launcher_icons: ^0.9.2
 
 dependency_overrides:
   charts_flutter:
@@ -78,6 +79,7 @@ flutter:
     - assets/images/horizontal-hp.jpg
     - assets/images/vertical-hp.jpg
     - assets/images/diagonal-hp.jpg
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

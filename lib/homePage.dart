@@ -1,11 +1,18 @@
+import 'dart:ffi';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/humidityReading.dart';
 import 'package:flutter_app/socialMediaWidget.dart';
 import 'package:flutter_app/temperatureReading.dart';
+import 'package:flutter_app/widgetsForTesting/socialMediaTest.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'package:screenshot/screenshot.dart';
 import 'package:social_share/social_share.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'shelfButton.dart';
 import 'package:flutter_app/plantReading.dart';
 import 'package:http/http.dart' as http;
@@ -46,7 +53,7 @@ class _HomePage extends State<HomePage> {
   double averageTemperature = 0;
   double averageHumidity = 0;
   ScreenshotController screenshotController = ScreenshotController();
-  Image screenshotImage;
+  Uint8List screenshotImage;
 
   @override
   void initState() {
@@ -276,6 +283,7 @@ class _HomePage extends State<HomePage> {
   }
 
   Widget _buildPopupDialog(BuildContext context) {
+
     final ButtonStyle style = ElevatedButton.styleFrom(
       textStyle: const TextStyle(
           fontFamily: "Montserrat",
@@ -300,17 +308,22 @@ class _HomePage extends State<HomePage> {
           children: [
             ElevatedButton.icon(
               onPressed: () {
-                print("tapped fb");
-                // /// Take a screenshot of an invisible widget to display on user's social media story.
-                // takeScreenshotOfSocialMediaStory();
-                //
-                // // try iOS:
-                // try {
-                //   SocialShare.shareFacebookStory("./socialMediaWidget.dart",
-                //       backgroundTopColor: "#ffffff",
-                //       backgroundBottomColor: "#000000"
-                //   );
-                // }
+
+                //takeScreenshotOfSocialMediaStory();
+                takeScreenshotOfSocialMediaTest();
+
+                // app id reqd for Android
+                // Platform.isAndroid
+                //   ? SocialShare.shareFacebookStory(
+                //     "./social_media_ss.png",
+                //     "#ffffff",
+                //     "#000000",
+                //     "https://deep-link-url",
+                //   appId: dotenv.env['FB_APP_ID']) : SocialShare.shareFacebookStory(
+                //     "./social_media_ss.png",
+                //     "#ffffff",
+                //     "#000000",
+                //     "https://deep-link-url");
               },
               icon: Icon(Icons.facebook_rounded, color: Colors.white),
               label: Text("Facebook", style: TextStyle(
@@ -336,14 +349,14 @@ class _HomePage extends State<HomePage> {
             ),
             ElevatedButton.icon(
               onPressed: () {
-                /// Take a screenshot of an invisible widget to display on user's social media story.
-                takeScreenshotOfSocialMediaStory();
 
-                SocialShare.shareInstagramStory(
-                  "./socialMediaWidget.dart",
-                  backgroundTopColor: "#ffffff",
-                  backgroundBottomColor: "000000"
-                );
+                takeScreenshotOfSocialMediaTest();
+
+                // SocialShare.shareInstagramStory(
+                //   "./social_media_ss.png",
+                //   backgroundTopColor: "#ffffff",
+                //   backgroundBottomColor: "000000"
+                // );
               },
               icon: FaIcon(FontAwesomeIcons.instagram, color: Colors.white),
               label: Text("Instagram", style: TextStyle(
@@ -383,14 +396,31 @@ class _HomePage extends State<HomePage> {
     );
   }
   
-  void takeScreenshotOfSocialMediaStory() async {
-    screenshotImage = Image.memory(await screenshotController.captureFromWidget(
-        MediaQuery(
-            data: MediaQueryData(),
-            child: SocialMediaWidget(_font, topPlant, numberOfPlants, averageTemperature, averageHumidity)
+  // void takeScreenshotOfSocialMediaStory() async {
+  //   screenshotImage = Image.memory(await screenshotController.captureFromWidget(
+  //       MediaQuery(
+  //           data: MediaQueryData(),
+  //           child: SocialMediaWidget(_font, topPlant, numberOfPlants, averageTemperature, averageHumidity)
+  //       )
+  //     )
+  //   );
+  // }
+
+  void takeScreenshotOfSocialMediaTest() async {
+    screenshotImage = await screenshotController.captureFromWidget(
+      MediaQuery(
+          data: MediaQueryData(),
+          child: SocialMediaTest()
         )
-      )
-    );
+      );
+    if (screenshotImage != null) {
+      final directory = await getApplicationDocumentsDirectory();
+      print(directory);
+      String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+      final imagePath = await(File('${directory.path}/$fileName.png')).create();
+      // final Uint8List pngBytes = screenshotImage.buffer.asUint8List();
+      imagePath.writeAsBytesSync(screenshotImage);
+    }
   }
 
   @override
