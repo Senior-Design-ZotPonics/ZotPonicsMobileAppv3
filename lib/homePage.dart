@@ -5,6 +5,7 @@ import 'package:flutter_app/temperatureReading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
 import 'package:screenshot/screenshot.dart';
+import 'package:social_share/social_share.dart';
 import 'shelfButton.dart';
 import 'package:flutter_app/plantReading.dart';
 import 'package:http/http.dart' as http;
@@ -299,7 +300,17 @@ class _HomePage extends State<HomePage> {
           children: [
             ElevatedButton.icon(
               onPressed: () {
-                print("tapped fb"); // insert navigation to fb share
+                print("tapped fb");
+                // /// Take a screenshot of an invisible widget to display on user's social media story.
+                // takeScreenshotOfSocialMediaStory();
+                //
+                // // try iOS:
+                // try {
+                //   SocialShare.shareFacebookStory("./socialMediaWidget.dart",
+                //       backgroundTopColor: "#ffffff",
+                //       backgroundBottomColor: "#000000"
+                //   );
+                // }
               },
               icon: Icon(Icons.facebook_rounded, color: Colors.white),
               label: Text("Facebook", style: TextStyle(
@@ -325,7 +336,14 @@ class _HomePage extends State<HomePage> {
             ),
             ElevatedButton.icon(
               onPressed: () {
-                print("tapped ig"); // insert navigation to ig share
+                /// Take a screenshot of an invisible widget to display on user's social media story.
+                takeScreenshotOfSocialMediaStory();
+
+                SocialShare.shareInstagramStory(
+                  "./socialMediaWidget.dart",
+                  backgroundTopColor: "#ffffff",
+                  backgroundBottomColor: "000000"
+                );
               },
               icon: FaIcon(FontAwesomeIcons.instagram, color: Colors.white),
               label: Text("Instagram", style: TextStyle(
@@ -385,9 +403,6 @@ class _HomePage extends State<HomePage> {
       getAverageTemperature();
       getAverageHumidity();
     });
-
-    /// Take a screenshot of an invisible widget to display on user's social media story.
-    takeScreenshotOfSocialMediaStory();
 
     return Scaffold(
         resizeToAvoidBottomInset : false,
