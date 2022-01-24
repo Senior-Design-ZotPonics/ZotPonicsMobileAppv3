@@ -32,7 +32,7 @@ class ZotPonics extends StatelessWidget {
         // home: DataTest(1) -- used to test temperature data from database
         // home: TempStatistics() -- used to test bar chart
         // home: GetTest() -- used to test http request
-        // home: SocialMediaWidget('Montserrat', 'tomato', 12, 26.0, 85.0)
+        // home: SocialMediaWidget('Montserrat', 'tomato', 12, 26.0, 85.0) -- used to teset social media widget
     );
   }
 }

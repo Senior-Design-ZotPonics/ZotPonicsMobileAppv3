@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -6,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/humidityReading.dart';
 import 'package:flutter_app/socialMediaWidget.dart';
 import 'package:flutter_app/temperatureReading.dart';
-import 'package:flutter_app/widgetsForTesting/socialMediaTest.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
@@ -283,15 +281,6 @@ class _HomePage extends State<HomePage> {
   }
 
   Widget _buildPopupDialog(BuildContext context) {
-
-    final ButtonStyle style = ElevatedButton.styleFrom(
-      textStyle: const TextStyle(
-          fontFamily: "Montserrat",
-          fontSize: 20,
-          backgroundColor: Colors.green,
-          color: Colors.white
-      ),
-    );
     return new AlertDialog(
         title: Center(
             child: Text("Share to...", style: TextStyle(
@@ -308,31 +297,30 @@ class _HomePage extends State<HomePage> {
           children: [
             ElevatedButton.icon(
               onPressed: () {
-
-                //takeScreenshotOfSocialMediaStory();
-                takeScreenshotOfSocialMediaTest();
-
-                // app id reqd for Android
-                // Platform.isAndroid
-                //   ? SocialShare.shareFacebookStory(
-                //     "./social_media_ss.png",
-                //     "#ffffff",
-                //     "#000000",
-                //     "https://deep-link-url",
-                //   appId: dotenv.env['FB_APP_ID']) : SocialShare.shareFacebookStory(
-                //     "./social_media_ss.png",
-                //     "#ffffff",
-                //     "#000000",
-                //     "https://deep-link-url");
-              },
-              icon: Icon(Icons.facebook_rounded, color: Colors.white),
-              label: Text("Facebook", style: TextStyle(
-                // height: 3,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w600,
-                fontSize: 15.0,
-                color: Colors.white,
-              ),
+                takeScreenshotOfSocialMediaStory().then((String path) {
+                  // app id required for Android
+                  Platform.isAndroid
+                      ? SocialShare.shareFacebookStory(
+                        path,
+                        "#ffffff",
+                        "#000000",
+                        "https://google.com",
+                      appId: dotenv.env['FB_APP_ID'])
+                        : SocialShare.shareFacebookStory(
+                        path,
+                        "#ffffff",
+                        "#000000",
+                        "https://google.com");
+                  });
+                },
+                icon: Icon(Icons.facebook_rounded, color: Colors.white),
+                label: Text("Facebook", style: TextStyle(
+                  // height: 3,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15.0,
+                  color: Colors.white,
+                ),
               ),
               style: ButtonStyle(
                   padding: MaterialStateProperty.all<EdgeInsets>(
@@ -350,13 +338,13 @@ class _HomePage extends State<HomePage> {
             ElevatedButton.icon(
               onPressed: () {
 
-                takeScreenshotOfSocialMediaTest();
-
-                // SocialShare.shareInstagramStory(
-                //   "./social_media_ss.png",
-                //   backgroundTopColor: "#ffffff",
-                //   backgroundBottomColor: "000000"
-                // );
+                takeScreenshotOfSocialMediaStory().then((String path) {
+                  SocialShare.shareInstagramStory(
+                      path,
+                      backgroundTopColor: "#ffffff",
+                      backgroundBottomColor: "000000"
+                  );
+                });
               },
               icon: FaIcon(FontAwesomeIcons.instagram, color: Colors.white),
               label: Text("Instagram", style: TextStyle(
@@ -395,32 +383,31 @@ class _HomePage extends State<HomePage> {
         ]
     );
   }
-  
-  // void takeScreenshotOfSocialMediaStory() async {
-  //   screenshotImage = Image.memory(await screenshotController.captureFromWidget(
-  //       MediaQuery(
-  //           data: MediaQueryData(),
-  //           child: SocialMediaWidget(_font, topPlant, numberOfPlants, averageTemperature, averageHumidity)
-  //       )
-  //     )
-  //   );
-  // }
 
-  void takeScreenshotOfSocialMediaTest() async {
+  /// Function to test writing of file
+  void readFile(String filePath) async {
+    File file = File(await filePath);
+    Uint8List fileContent = await file.readAsBytesSync();
+
+    print('File Content: $fileContent');
+  }
+
+  Future<String> takeScreenshotOfSocialMediaStory() async {
     screenshotImage = await screenshotController.captureFromWidget(
-      MediaQuery(
-          data: MediaQueryData(),
-          child: SocialMediaTest()
+        MediaQuery(
+            data: MediaQueryData(),
+            child: SocialMediaWidget(_font, topPlant, numberOfPlants, averageTemperature, averageHumidity)
         )
       );
-    if (screenshotImage != null) {
+
       final directory = await getApplicationDocumentsDirectory();
-      print(directory);
       String fileName = DateTime.now().microsecondsSinceEpoch.toString();
-      final imagePath = await(File('${directory.path}/$fileName.png')).create();
-      // final Uint8List pngBytes = screenshotImage.buffer.asUint8List();
-      imagePath.writeAsBytesSync(screenshotImage);
-    }
+      String filePath = '${directory.path}/$fileName.png';
+
+      File imageFile = await(File('$filePath')).create();
+      imageFile.writeAsBytesSync(screenshotImage);
+
+      return filePath;
   }
 
   @override
