@@ -35,9 +35,9 @@ class _SocialMediaWidget extends State<SocialMediaWidget> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "ZotPonics",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green.shade900, fontSize: 40)
+                "ZotPonics",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green.shade900, fontSize: 40)
             ),
             Text(
               "A Sustainable Hydroponic System",
@@ -99,56 +99,56 @@ class _SocialMediaWidget extends State<SocialMediaWidget> {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(left: 10.0),
-                  decoration: BoxDecoration(
-                      color: Colors.green.shade300,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 3)
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10.0, top: 60.0, bottom: 60.0, right: 10.0),
-                    child: Column(
-                      children: [
-                        Text("Average\nTemperature",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)
-                        ),
-                        Text(_averageTemperature.toString() + "\u00B0C",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.green.shade700)
-                        ),
-                      ],
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 10.0),
+                    decoration: BoxDecoration(
+                        color: Colors.green.shade300,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 3)
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0, top: 60.0, bottom: 60.0, right: 10.0),
+                      child: Column(
+                        children: [
+                          Text("Average\nTemperature",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)
+                          ),
+                          Text(_averageTemperature.toString() + "\u00B0C",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.green.shade700)
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 10.0),
-                  decoration: BoxDecoration(
-                      color: Colors.green.shade600,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 3)
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 50.0, bottom: 50.0),
-                    child: Column(
-                      children: [
-                        Text("Number of\nPlants Grown",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white)
-                        ),
-                        Text(_numberOfPlants.toString(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26, color: Colors.green.shade900)
-                        ),
-                      ],
+                  Container(
+                    margin: EdgeInsets.only(left: 10.0),
+                    decoration: BoxDecoration(
+                        color: Colors.green.shade600,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 3)
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 50.0, bottom: 50.0),
+                      child: Column(
+                        children: [
+                          Text("Number of\nPlants Grown",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white)
+                          ),
+                          Text(_numberOfPlants.toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26, color: Colors.green.shade900)
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ]
+                ]
             ),
           ],
         )
