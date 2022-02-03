@@ -97,7 +97,7 @@ class _HomePage extends State<HomePage> {
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
     double waterLevel = getWaterBaseLevel();
-    String notifBody = (waterLevel < 5.0) ? "Water level is too low! Please refill the water reservoir."
+    String notifBody = (waterLevel < 20.0) ? "Water level is too low! Please refill the water reservoir."
         : "Water level is good! Check back in a couple days.";
 
     ///Biweekly notifications handled by modified package code in directory
