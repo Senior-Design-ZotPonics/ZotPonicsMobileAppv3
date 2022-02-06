@@ -96,8 +96,12 @@ class _HomePage extends State<HomePage> {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
+    double waterLevel = getWaterBaseLevel();
+    String notifBody = (waterLevel < 20.0) ? "Water level is too low! Please refill the water reservoir."
+        : "Water level is good! Check back in a couple days.";
+
     ///Biweekly notifications handled by modified package code in directory
-    notifPlugin.showWeeklyAtDayAndTime(0, 'ZotPonics', 'Replace your nutrient water!', Day.Sunday, time, RepeatInterval.Biweekly, platformChannelSpecifics);
+    notifPlugin.showWeeklyAtDayAndTime(0, 'ZotPonics', notifBody, Day.Sunday, time, RepeatInterval.Weekly, platformChannelSpecifics);
   }
 
   bool isNumeric(String value) {
