@@ -102,7 +102,13 @@ class _HomePage extends State<HomePage> {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-    double waterLevel = getWaterBaseLevel();
+    double waterLevel;
+    try {
+      getWaterBaseLevel();
+    } catch (e) {
+      waterLevel = 0.0;
+      print(e);
+    }
     String notifBody = (waterLevel < 20.0) ? "Water level is too low! Please refill the water reservoir."
         : "Water level is good! Check back in a couple days.";
 
