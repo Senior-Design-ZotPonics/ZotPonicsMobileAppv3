@@ -1,10 +1,16 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/humidityReading.dart';
 import 'package:flutter_app/socialMediaWidget.dart';
 import 'package:flutter_app/temperatureReading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'package:screenshot/screenshot.dart';
+import 'package:social_share/social_share.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'shelfButton.dart';
 import 'package:flutter_app/plantReading.dart';
 import 'package:http/http.dart' as http;
@@ -45,7 +51,7 @@ class _HomePage extends State<HomePage> {
   double averageTemperature = 0;
   double averageHumidity = 0;
   ScreenshotController screenshotController = ScreenshotController();
-  Image screenshotImage;
+  Uint8List screenshotImage;
 
   @override
   void initState() {
@@ -279,14 +285,6 @@ class _HomePage extends State<HomePage> {
   }
 
   Widget _buildPopupDialog(BuildContext context) {
-    final ButtonStyle style = ElevatedButton.styleFrom(
-      textStyle: const TextStyle(
-          fontFamily: "Montserrat",
-          fontSize: 20,
-          backgroundColor: Colors.green,
-          color: Colors.white
-      ),
-    );
     return new AlertDialog(
         title: Center(
             child: Text("Share to...", style: TextStyle(
@@ -303,16 +301,30 @@ class _HomePage extends State<HomePage> {
           children: [
             ElevatedButton.icon(
               onPressed: () {
-                print("tapped fb"); // insert navigation to fb share
-              },
-              icon: Icon(Icons.facebook_rounded, color: Colors.white),
-              label: Text("Facebook", style: TextStyle(
-                // height: 3,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w600,
-                fontSize: 15.0,
-                color: Colors.white,
-              ),
+                takeScreenshotOfSocialMediaStory().then((String path) {
+                  // app id required for Android
+                  Platform.isAndroid
+                      ? SocialShare.shareFacebookStory(
+                        path,
+                        "#ffffff",
+                        "#000000",
+                        "https://google.com",
+                      appId: dotenv.env['FB_APP_ID'])
+                        : SocialShare.shareFacebookStory(
+                        path,
+                        "#ffffff",
+                        "#000000",
+                        "https://google.com");
+                  });
+                },
+                icon: Icon(Icons.facebook_rounded, color: Colors.white),
+                label: Text("Facebook", style: TextStyle(
+                  // height: 3,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15.0,
+                  color: Colors.white,
+                ),
               ),
               style: ButtonStyle(
                   padding: MaterialStateProperty.all<EdgeInsets>(
@@ -329,7 +341,14 @@ class _HomePage extends State<HomePage> {
             ),
             ElevatedButton.icon(
               onPressed: () {
-                print("tapped ig"); // insert navigation to ig share
+
+                takeScreenshotOfSocialMediaStory().then((String path) {
+                  SocialShare.shareInstagramStory(
+                      path,
+                      backgroundTopColor: "#ffffff",
+                      backgroundBottomColor: "000000"
+                  );
+                });
               },
               icon: FaIcon(FontAwesomeIcons.instagram, color: Colors.white),
               label: Text("Instagram", style: TextStyle(
@@ -368,15 +387,31 @@ class _HomePage extends State<HomePage> {
         ]
     );
   }
-  
-  void takeScreenshotOfSocialMediaStory() async {
-    screenshotImage = Image.memory(await screenshotController.captureFromWidget(
+
+  /// Function to test writing of file
+  void readFile(String filePath) async {
+    File file = File(await filePath);
+    Uint8List fileContent = await file.readAsBytesSync();
+
+    print('File Content: $fileContent');
+  }
+
+  Future<String> takeScreenshotOfSocialMediaStory() async {
+    screenshotImage = await screenshotController.captureFromWidget(
         MediaQuery(
             data: MediaQueryData(),
             child: SocialMediaWidget(_font, topPlant, numberOfPlants, averageTemperature, averageHumidity)
         )
-      )
-    );
+      );
+
+      final directory = await getApplicationDocumentsDirectory();
+      String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+      String filePath = '${directory.path}/$fileName.png';
+
+      File imageFile = await(File('$filePath')).create();
+      imageFile.writeAsBytesSync(screenshotImage);
+
+      return filePath;
   }
 
   @override
@@ -389,9 +424,6 @@ class _HomePage extends State<HomePage> {
       getAverageTemperature();
       getAverageHumidity();
     });
-
-    /// Take a screenshot of an invisible widget to display on user's social media story.
-    takeScreenshotOfSocialMediaStory();
 
     return Scaffold(
         resizeToAvoidBottomInset : false,
