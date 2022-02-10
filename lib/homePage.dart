@@ -329,9 +329,8 @@ class _HomePage extends State<HomePage> {
                         "#000000",
                         "https://google.com");
                   });
-                } catch(error) {
-                  print("Error");
-                  print(error.toString());
+                } catch (e) {
+                  print("Sharing to Facebook failed.");
                 }
 
                 },
@@ -359,14 +358,18 @@ class _HomePage extends State<HomePage> {
             ),
             ElevatedButton.icon(
               onPressed: () {
+                try {
+                  takeScreenshotOfSocialMediaStory().then((String path) {
+                    SocialShare.shareInstagramStory(
+                        path,
+                        backgroundTopColor: "#ffffff",
+                        backgroundBottomColor: "000000"
+                    );
+                  });
+                } catch (e) {
+                  print("Sharing to Instagram failed.");
+                }
 
-                takeScreenshotOfSocialMediaStory().then((String path) {
-                  SocialShare.shareInstagramStory(
-                      path,
-                      backgroundTopColor: "#ffffff",
-                      backgroundBottomColor: "000000"
-                  );
-                });
               },
               icon: FaIcon(FontAwesomeIcons.instagram, color: Colors.white),
               label: Text("Instagram", style: TextStyle(
