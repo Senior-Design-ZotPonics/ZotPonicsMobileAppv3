@@ -313,21 +313,27 @@ class _HomePage extends State<HomePage> {
           children: [
             ElevatedButton.icon(
               onPressed: () {
-                takeScreenshotOfSocialMediaStory().then((String path) {
-                  // app id required for Android
-                  Platform.isAndroid
-                      ? SocialShare.shareFacebookStory(
+                try {
+                  takeScreenshotOfSocialMediaStory().then((String path) {
+                    // app id required for Android
+                    Platform.isAndroid
+                        ? SocialShare.shareFacebookStory(
                         path,
                         "#ffffff",
                         "#000000",
                         "https://google.com",
-                      appId: dotenv.env['FB_APP_ID'])
+                        appId: dotenv.env['FB_APP_ID'])
                         : SocialShare.shareFacebookStory(
                         path,
                         "#ffffff",
                         "#000000",
                         "https://google.com");
                   });
+                } catch(error) {
+                  print("Error");
+                  print(error.toString());
+                }
+
                 },
                 icon: Icon(Icons.facebook_rounded, color: Colors.white),
                 label: Text("Facebook", style: TextStyle(
