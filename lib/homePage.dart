@@ -112,6 +112,12 @@ class _HomePage extends State<HomePage> {
     String notifBody = (waterLevel < 20.0) ? "Water level is too low! Please refill the water reservoir."
         : "Water level is good! Check back in a couple days.";
 
+    // Testing notifications package
+    // double count = 0.0;
+    // while (count < 2) {
+    //   notifPlugin.show(0, 'test', notifBody, platformChannelSpecifics, payload: 'testing');
+    //   count += 1;
+    // }
     ///Biweekly notifications handled by modified package code in directory
     notifPlugin.showWeeklyAtDayAndTime(0, 'ZotPonics', notifBody, Day.Sunday, time, RepeatInterval.Weekly, platformChannelSpecifics);
   }
