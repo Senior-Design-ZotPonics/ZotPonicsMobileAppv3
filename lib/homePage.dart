@@ -18,8 +18,8 @@ import 'services.dart';
 import 'textWidget.dart';
 import 'dart:convert';
 import 'growGuide.dart';
+import 'notification_service.dart';
 
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 ///For more information on how to work with notifications, check these out:
 /// - https://pub.dev/packages/flutter_local_notifications#-readme-tab-
 /// - https://www.youtube.com/watch?v=xMeCwF5MO6w
@@ -57,13 +57,6 @@ class _HomePage extends State<HomePage> {
   void initState() {
     super.initState();
 
-    ///Initializing settings for notifications
-    final androidSettings = AndroidInitializationSettings('notif_icon');
-    final iOSSettings = IOSInitializationSettings(
-        onDidReceiveLocalNotification: (id, title, body, payload) => notificationSelected(payload));
-
-    notifPlugin.initialize(InitializationSettings(androidSettings, iOSSettings), onSelectNotification: notificationSelected);
-
     shelf1 = ShelfButton('Shelf 1', Colors.amberAccent, FontAwesomeIcons.solidSun, _font, 1);
     shelf2 = ShelfButton('Shelf 2', Colors.lightGreen, FontAwesomeIcons.seedling, _font, 2);
     shelf3 = ShelfButton('Shelf 3', Colors.lightBlue, FontAwesomeIcons.water, _font, 3);
@@ -81,27 +74,8 @@ class _HomePage extends State<HomePage> {
     );
   }
 
-  ///Plugin to handle notifications
-  FlutterLocalNotificationsPlugin notifPlugin = FlutterLocalNotificationsPlugin();
-
-  ///When notification is tapped, this function is run
-  Future notificationSelected(String payload) async => await Navigator.push(
-      context, MaterialPageRoute(builder: (context) => HomePage(_font))
-  );
-
   ///Displays reminder notifications
   Future displayReminderNotifPeriodically() {
-    ///Notification setup
-    var time = Time(12, 0, 0); ///Notification appears biweekly Sunday at 12:00
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'Channel ID', 'ZotPonics', 'Channel Description',
-        importance: Importance.Default,
-        priority: Priority.Default,
-        ticker: 'Replace your nutrient water!');
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-
     double waterLevel;
     try {
       getWaterBaseLevel();
@@ -109,17 +83,11 @@ class _HomePage extends State<HomePage> {
       waterLevel = 0.0;
       print(e);
     }
-    String notifBody = (waterLevel < 20.0) ? "Water level is too low! Please refill the water reservoir."
-        : "Water level is good! Check back in a couple days.";
 
-    // Testing notifications package
-    // double count = 0.0;
-    // while (count < 2) {
-    //   notifPlugin.show(0, 'test', notifBody, platformChannelSpecifics, payload: 'testing');
-    //   count += 1;
-    // }
-    ///Biweekly notifications handled by modified package code in directory
-    notifPlugin.showWeeklyAtDayAndTime(0, 'ZotPonics', notifBody, Day.Sunday, time, RepeatInterval.Weekly, platformChannelSpecifics);
+    if (waterLevel < 20.0) {
+      NotificationService().pushScheduledNotification("Water level is too low! Please refill the water reservoir.");
+    }
+
   }
 
   bool isNumeric(String value) {

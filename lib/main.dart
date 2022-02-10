@@ -7,12 +7,14 @@ import 'getTest.dart';
 import 'tempStatistics.dart';
 import 'widgetsForTesting/temperatureDataTest.dart';
 import 'socialMediaWidget.dart';
+import 'notification_service.dart';
 
 
 ///Guide to JSON: https://stackoverflow.com/questions/51061412/how-to-set-the-text-value-dynamically-from-the-json-in-flutter
 
 void main() async {
   await dotenv.load(fileName: ".env");
+  await NotificationService().init();
   runApp(ZotPonics());
 }
 
