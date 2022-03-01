@@ -34,11 +34,15 @@ class _HumidityStatistics extends State<HumidityStatistics> {
     double humidityAverage;
     double totalHumidity = 0.0;
     int numReadings = humidityData.length;
-    for (var i=0; i<numReadings; i++){
-      totalHumidity += humidityData[i].humidity;
+    if (numReadings == 0) {
+      return 0.0;
+    } else {
+      for (var i=0; i<numReadings; i++){
+        totalHumidity += humidityData[i].humidity;
+      }
+      humidityAverage = totalHumidity/numReadings;
+      return humidityAverage;
     }
-    humidityAverage = totalHumidity/numReadings;
-    return humidityAverage;
   }
 
   @override

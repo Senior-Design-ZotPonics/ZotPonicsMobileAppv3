@@ -34,11 +34,15 @@ class _TempStatistics extends State<TempStatistics> {
     double temperatureAverage;
     double totalTemperature = 0.0;
     int numReadings = temperatureData.length;
-    for (var i=0; i<numReadings; i++){
-      totalTemperature += temperatureData[i].temp;
+    if (numReadings == 0) {
+      return 0.0;
+    } else {
+      for (var i=0; i<numReadings; i++){
+        totalTemperature += temperatureData[i].temp;
+      }
+      temperatureAverage = totalTemperature/numReadings;
+      return temperatureAverage;
     }
-    temperatureAverage = totalTemperature/numReadings;
-    return temperatureAverage;
   }
   
   @override
